@@ -22,6 +22,9 @@ public class Main extends Game{
     public String activeSpritePath;
     public String activeUniIDPath;
 
+    public static final String menuFontAsset = "fonts/menuScreenFont.fnt";
+    public static final String buttonSkinAsset = "skins/uiskin.json";
+
     public float gameTimer = 300;
     public float score = 300;
 
@@ -41,8 +44,7 @@ public class Main extends Game{
     public void create() {
         batch = new SpriteBatch();
 
-
-        menuFont = new BitmapFont(Gdx.files.internal("fonts/menuScreenFont.fnt"));
+        menuFont = new BitmapFont(Gdx.files.internal(menuFontAsset));
         viewport = new FitViewport(800, 450);
 
         //Scale font to our viewport by ratio of viewport height to screen height
@@ -50,11 +52,11 @@ public class Main extends Game{
         menuFont.getData().setScale(0.8f);
         menuFont.setColor(Color.valueOf("4287f5FF"));
 
-        gameFont = new BitmapFont(Gdx.files.internal("fonts/menuScreenFont.fnt"));
+        gameFont = new BitmapFont(Gdx.files.internal(menuFontAsset));
         gameFont.getData().setScale(0.4f);
         gameFont.setColor(Color.valueOf("4287f5FF"));
 
-        buttonSkin = new Skin(Gdx.files.internal("skins/uiskin.json"));
+        buttonSkin = new Skin(Gdx.files.internal(buttonSkinAsset));
 
         this.setScreen(new MainMenuScreen(this));
     }
@@ -75,18 +77,13 @@ public class Main extends Game{
 
         // Return to main menu
         this.setScreen(new MainMenuScreen(this));
-
     }
+
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);
         super.resize(width, height);
     }
-
-    public void setInputProcessor(com.badlogic.gdx.InputProcessor processor) {
-        Gdx.input.setInputProcessor(processor);
-    }
-
 
     public void render() {
         Gdx.gl.glClearColor(0, 0, 0, 1);    // black environment

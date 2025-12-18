@@ -14,7 +14,6 @@ import java.util.HashMap;
  * Represents and controls the main player character
  */
 public class Player extends SpriteAnimations{
-    private HashMap<String, Integer[]> animationInfo = new HashMap<String, Integer[]>();
     public TextureRegion currentPlayerFrame;
     public float speed = 1.25f;
     final Main game;
@@ -22,7 +21,7 @@ public class Player extends SpriteAnimations{
     protected int mapWaterId;
 
     public Sprite sprite;
-    private Texture torchTexture;
+    private final Texture torchTexture;
     public Image torch;
 
     public boolean isFacingUp = false;
@@ -31,8 +30,9 @@ public class Player extends SpriteAnimations{
     public boolean isMovingHorizontally;
     public boolean inWater;
     public boolean hasEnteredLangwith;
-    private AudioManager audioManager;
+    private final AudioManager audioManager;
     boolean isFootsteps = false;
+
     /**
      * Initialises the player and its animations
      * @param g current instance of Main
@@ -46,6 +46,7 @@ public class Player extends SpriteAnimations{
         // HashMap<String, Integer[]> animationInfo:
         //      key - Name of animation
         //      Value - Array representing row of animation on sprite sheet and index of start and end frames
+        HashMap<String, Integer[]> animationInfo = new HashMap<>();
         animationInfo.put("idle", new Integer[]{0,0,8});
         animationInfo.put("walkForwards", new Integer[]{1,0,8});
         animationInfo.put("walkLeftForwards", new Integer[]{2,0,8});
@@ -64,8 +65,6 @@ public class Player extends SpriteAnimations{
         torch.setPosition(sprite.getX(), sprite.getY());
         torch.setScale(0.02f);
         torch.setRotation(180);
-
-
     }
 
     /**
@@ -81,16 +80,16 @@ public class Player extends SpriteAnimations{
         int mapWidth = wallsLayer.getWidth();
         int mapHeight = wallsLayer.getHeight();
 
-
         isMoving = false;
         isFacingLeft = false;
         isFacingUp = false;
         isMovingHorizontally = false;
+
         // move up
         if (Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
             if (y + 1 < mapHeight) {
                 cell = wallsLayer.getCell(x, y + 1);
-                if (cell == null || cell.getTile().getId() != mapWallsId &&(cell.getTile().getId() != mapLangwithBarriersId || hasEnteredLangwith)) {
+                if (cell == null || cell.getTile().getId() != mapWallsId && (cell.getTile().getId() != mapLangwithBarriersId || hasEnteredLangwith)) {
                     sprite.translateY(actualSpeed);
                     isMoving = true;
                     isFacingUp = true;
@@ -102,8 +101,8 @@ public class Player extends SpriteAnimations{
         // move down
         if (Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             if (y - 1 >= 0) {
-                cell = wallsLayer.getCell(x, y -1);
-                if (cell == null || cell.getTile().getId() != mapWallsId&&(cell.getTile().getId() != mapLangwithBarriersId || hasEnteredLangwith)) {
+                cell = wallsLayer.getCell(x, y - 1);
+                if (cell == null || cell.getTile().getId() != mapWallsId && (cell.getTile().getId() != mapLangwithBarriersId || hasEnteredLangwith)) {
                     sprite.translateY(-actualSpeed);
                     isMoving = true;
                     isFacingUp = false;
@@ -115,8 +114,8 @@ public class Player extends SpriteAnimations{
         // move left
         if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             if (x - 1 >= 0) {
-                cell = wallsLayer.getCell(x -1 , y);
-                if (cell == null || cell.getTile().getId() != mapWallsId &&(cell.getTile().getId() != mapLangwithBarriersId || hasEnteredLangwith)) {
+                cell = wallsLayer.getCell(x - 1 , y);
+                if (cell == null || cell.getTile().getId() != mapWallsId && (cell.getTile().getId() != mapLangwithBarriersId || hasEnteredLangwith)) {
                     sprite.translateX(-actualSpeed);
                     isMoving = true;
                     isFacingLeft = true;
@@ -124,14 +123,13 @@ public class Player extends SpriteAnimations{
                 }
                 checkIfInWater(cell);
             }
-
         }
 
         // move right
         if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             if (x + 1 < mapWidth) {
                 cell = wallsLayer.getCell(x + 1, y);
-                if (cell == null || cell.getTile().getId() != mapWallsId&&(cell.getTile().getId() != mapLangwithBarriersId || hasEnteredLangwith)) {
+                if (cell == null || cell.getTile().getId() != mapWallsId && (cell.getTile().getId() != mapLangwithBarriersId || hasEnteredLangwith)) {
                     sprite.translateX(actualSpeed);
                     isMoving = true;
                     isFacingLeft = false;
@@ -142,7 +140,6 @@ public class Player extends SpriteAnimations{
             }
 
         }
-
 
         // check boundary
         keepPlayerInBounds();
@@ -157,32 +154,32 @@ public class Player extends SpriteAnimations{
 
     }
 
-    private void checkIfInWater(TiledMapTileLayer.Cell cell){
-        if( cell != null && cell.getTile().getId() == mapWaterId){
-            inWater = true;
-
-        }
-        else{
-            inWater = false;
-        }
+    private void checkIfInWater(TiledMapTileLayer.Cell cell) {
+        inWater = cell != null && cell.getTile().getId() == mapWaterId;
     }
+
     /**
      * Ensure player can't leave the map
      */
     private void keepPlayerInBounds() {
-
         float worldWidth = game.viewport.getWorldWidth() * tileDimensions;
         float worldHeight = game.viewport.getWorldHeight() * tileDimensions;
 
-        if (sprite.getX() < 0) sprite.setX(0);
+        if (sprite.getX() < 0) {
+            sprite.setX(0);
+        }
 
-        if (sprite.getY() < 0) sprite.setY(0);
+        if (sprite.getY() < 0) {
+            sprite.setY(0);
+        }
 
-        if (sprite.getX() > worldWidth - sprite.getWidth())
+        if (sprite.getX() > worldWidth - sprite.getWidth()) {
             sprite.setX(worldWidth - sprite.getWidth());
+        }
 
-        if (sprite.getY() > worldHeight - sprite.getHeight())
+        if (sprite.getY() > worldHeight - sprite.getHeight()) {
             sprite.setY(worldHeight - sprite.getHeight());
+        }
     }
 
     /**
@@ -190,8 +187,6 @@ public class Player extends SpriteAnimations{
      * @param stateTime time in seconds since last frame
      */
     public void updatePlayer(float stateTime){
-
-
         if (isMoving){
             if(isFacingUp){
                 if(isMovingHorizontally) {
@@ -206,7 +201,6 @@ public class Player extends SpriteAnimations{
                     }
                 }
                 else{
-
                     currentPlayerFrame = animations.get("walkBackwards").getKeyFrame(stateTime, true);
                     torch.setRotation(120);
                     torch.setPosition(sprite.getX() + 22, sprite.getY() + 30);
@@ -230,10 +224,8 @@ public class Player extends SpriteAnimations{
                     torch.setPosition(sprite.getX() + 20, sprite.getY() + 25);
                 }
             }
-
         }
         else{
-
             currentPlayerFrame = animations.get("idle").getKeyFrame(stateTime, true);
             torch.setRotation(-60);
             torch.setPosition(sprite.getX() + 22, sprite.getY() + 26);

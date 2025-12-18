@@ -32,7 +32,7 @@ public class RonCookeScreen implements Screen {
     float worldHeight ;
 
     float speechTimer = 0;
-    ArrayList<String> speech = new ArrayList<String>();
+    ArrayList<String> speech = new ArrayList<>();
 
     private boolean isEPressed = false;
     private boolean isPaused = false;
@@ -57,6 +57,7 @@ public class RonCookeScreen implements Screen {
      * Initialise player and set its position
      */
     private void initialisePlayer(int x, int y) {
+        System.out.println("gameScreen.mapLangwithBarriersId: "+ gameScreen.mapLangwithBarriersId + ", gameScreen.mapWaterId: " + gameScreen.mapWaterId);
         player = new Player(game, buildingManager.audioManager, gameScreen.mapLangwithBarriersId, gameScreen.mapWaterId);
         player.loadSprite(new TiledMapTileLayer( 400, 225, 16,16), 0, 16);
         player.sprite.setPosition(x, y);
@@ -110,7 +111,7 @@ public class RonCookeScreen implements Screen {
             }
             speechTimer += delta;
             if (gameScreen.items.get("keyCard").playerHas && gameScreen.items.get("torch").playerHas) {
-                buildingManager.update(delta);
+                buildingManager.update();
             }
             stateTime += delta;
             isEPressed = Gdx.input.isKeyJustPressed(Input.Keys.E);
@@ -125,14 +126,14 @@ public class RonCookeScreen implements Screen {
 
     /**
      * Helper method: text rendering logic to avoid repeated setColor() calls
-     * @param font  The BitmapFont to use for rendering
-     * @param text  The text string to display
-     * @param colour The colour of the text
-     * @param x     The x-coordinate for text position
-     * @param y     The y-coordinate for text position
+     *
+     * @param font The BitmapFont to use for rendering
+     * @param text The text string to display
+     * @param x    The x-coordinate for text position
+     * @param y    The y-coordinate for text position
      */
-    private void drawText(BitmapFont font, String text, Color colour, float x, float y) {
-        font.setColor(colour);
+    private void drawText(BitmapFont font, String text, float x, float y) {
+        font.setColor(Color.WHITE);
         font.draw(game.batch, text, x, y);
     }
     private GlyphLayout layout = new GlyphLayout();
@@ -162,19 +163,18 @@ public class RonCookeScreen implements Screen {
         float lineSpacing = 15f;
 
         // Requirements: Events tracker and game timer
-        drawText(smallFont, ("Negative Events: " + game.foundNegativeEvents +"/" + game.totalNegativeEvents), Color.WHITE, 20, y);
+        drawText(smallFont, ("Negative Events: " + game.foundNegativeEvents +"/" + game.totalNegativeEvents), 20, y);
         y -= lineSpacing;
-        drawText(smallFont, ("Positive Events: "+ game.foundPositiveEvents+"/"+ game.totalPositiveEvents), Color.WHITE, 20, y);
+        drawText(smallFont, ("Positive Events: "+ game.foundPositiveEvents+"/"+ game.totalPositiveEvents), 20, y);
         y -= lineSpacing;
-        drawText(smallFont, ("Hidden Events:   "+ game.foundHiddenEvents+"/"+ game.totalHiddenEvents), Color.WHITE, 20, y);
-        y -= lineSpacing;
+        drawText(smallFont, ("Hidden Events:   "+ game.foundHiddenEvents+"/"+ game.totalHiddenEvents), 20, y);
         layout.setText(game.menuFont, instructions);
         float textX = (worldWidth - layout.width) / 2;
-        drawText(font, instructions, Color.WHITE, textX, worldHeight * 0.75f);
+        drawText(font, instructions, textX, worldHeight * 0.75f);
         //Display time with 2 digits for seconds
-        drawText(font, ((int)game.gameTimer/60 + ":" +((int)game.gameTimer % 60 <10?"0" :"" ) +(int)game.gameTimer % 60), Color.WHITE, worldWidth - 80f, worldHeight-20f);
+        drawText(font, ((int)game.gameTimer/60 + ":" +((int)game.gameTimer % 60 <10?"0" :"" ) +(int)game.gameTimer % 60), worldWidth - 80f, worldHeight-20f);
         layout = new GlyphLayout(game.menuFont, ("Score: " + (int)game.score));
-        drawText(font, ("Score: " +(int)game.score), Color.WHITE, (worldWidth - layout.width)/2, worldHeight-20f);
+        drawText(font, ("Score: " +(int)game.score), (worldWidth - layout.width)/2, worldHeight-20f);
 
         if(gameScreen.items.get("keyCard").playerHas){
             speech.clear();

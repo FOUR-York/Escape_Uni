@@ -1,6 +1,4 @@
 package io.github.team6ENG.EscapeUni;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
@@ -14,7 +12,8 @@ public class Collectable {
     public float x, y;
     public boolean isVisible;
     public String originScreen;
-    private AudioManager audioManager;
+    private final AudioManager audioManager;
+
     public Collectable(final Main game, String path,float x, float y, float scale, boolean isVisible, String originScreen, AudioManager audioManager) {
         this.game = game;
         this.x = x;
@@ -26,25 +25,21 @@ public class Collectable {
         this.isVisible = isVisible;
         this.originScreen = originScreen;
         this.audioManager = audioManager;
-
     }
 
     /**
      * Check if player is in range
-     * @param playerX
-     * @param playerY
+     * @param playerX: [need to add a description]
+     * @param playerY: [need to add a description]
      * @return true if in range
      */
     public boolean checkInRange(float playerX, float playerY){
-
-        if(!playerHas) {
-            float dx = x -8 -playerX;
-            float dy = y -16 - playerY ;
+        if (!playerHas) {
+            float dx = x - 8 - playerX;
+            float dy = y - 16 - playerY;
             float distance = (float) Math.sqrt((dx * dx) + (dy * dy));
             return distance < 30f;
-
-
-            }
+        }
 
         return false;
     }
@@ -53,7 +48,6 @@ public class Collectable {
      * Mark as collected and scale to inventory bar size
      */
     public void Collect(){
-
         playerHas = true;
         img.setScale(1f, 1f);
         float multiplier = img.getHeight()/img.getWidth();

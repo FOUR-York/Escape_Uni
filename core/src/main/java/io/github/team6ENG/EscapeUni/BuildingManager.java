@@ -2,9 +2,7 @@ package io.github.team6ENG.EscapeUni;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,9 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 /**
  * Manages building-related interactions and rendering in the game world.
- *
  * Features:
- *
  *   Detects when the player approaches the Ron Cooke building trigger zone.
  *   Allows entering/exiting the building with specific key inputs.
  *   Displays prompts and simple UI transitions.
@@ -59,10 +55,8 @@ public class BuildingManager {
 
     /**
      * Updates building logic each frame.
-     *
-     * @param delta Time elapsed since the last frame (in seconds).
      */
-    public void update(float delta) {
+    public void update() {
         if (inRonCooke || inLangwith) {
             // Inside Ron Cooke: allow exit with I key
             if (Gdx.input.isKeyJustPressed(Input.Keys.G)) {
@@ -75,13 +69,12 @@ public class BuildingManager {
             if (showEnterPrompt && currentBuilding.equals("Ron Cooke") && Gdx.input.isKeyJustPressed(Input.Keys.G)) {
                 enterRonCooke();
             }
-            else if(showEnterPrompt && currentBuilding.equals("Langwith") && Gdx.input.isKeyJustPressed(Input.Keys.G)) {
-                if(gameScreen.items.get("keyCard").playerHas) {
-
+            else if (showEnterPrompt && currentBuilding.equals("Langwith") && Gdx.input.isKeyJustPressed(Input.Keys.G)) {
+                if (gameScreen.items.get("keyCard").playerHas) {
                     gameScreen.items.get("keyCard").playSound();
                     enterLangwith();
                 }
-                else{
+                else {
                     lockedOutTime = 5;
                     audioManager.playNoAccess();
                 }
@@ -99,20 +92,18 @@ public class BuildingManager {
                 player.sprite.getWidth(),
                 player.sprite.getHeight()
         );
+
         currentBuilding = "";
         showEnterPrompt = false;
-        if(playerRect.overlaps(ronCookeTrigger)) {
+
+        if (playerRect.overlaps(ronCookeTrigger)) {
             showEnterPrompt = true;
             currentBuilding = "Ron Cooke";
         }
         else if (playerRect.overlaps(langwithTrigger)) {
-
             showEnterPrompt = true;
             currentBuilding = "Langwith";
         }
-
-
-
     }
 
     /**
@@ -127,8 +118,8 @@ public class BuildingManager {
         gameScreen.hasTorch = true;
         gameScreen.lighting.isVisible("playerNoTorch", true);
         gameScreen.lighting.isVisible("gooseNoTorch", true);
-
     }
+
     /**
      * Enters the Langwith College.
      * Switches to an indoor view.
@@ -146,7 +137,6 @@ public class BuildingManager {
         inRonCooke = false;
         inLangwith = false;
         game.setScreen(gameScreen);
-
     }
 
     /**
@@ -167,6 +157,8 @@ public class BuildingManager {
      */
     GlyphLayout layout = new GlyphLayout();
     private void renderWorldPrompts(SpriteBatch batch, BitmapFont font, float worldWidth, float worldHeight) {
+        System.out.println("showEnterPrompt: " +  showEnterPrompt);
+        System.out.println("lockedOutTime: " +  lockedOutTime);
         if (showEnterPrompt) {
             font.setColor(Color.YELLOW);
             String text = "Press G to enter " + currentBuilding;
@@ -176,7 +168,7 @@ public class BuildingManager {
             font.draw(batch, text, (worldWidth - textWidth) / 2, worldHeight - PROMPT_OFFSET_Y);
         }
 
-        if(lockedOutTime > 0){
+        if (lockedOutTime > 0) {
             String lockedOutText = "Looks like you've lost your keycard\nhead over to Ron Cooke for a new one";
             layout = new GlyphLayout(font, lockedOutText);
             float textWidth = layout.width;
@@ -188,10 +180,8 @@ public class BuildingManager {
 
     /**
      * Renders the building map (placeholder for future map logic).
-     *
-     * @param camera The game camera used for view rendering.
      */
-    public void renderBuildingMap(OrthographicCamera camera) {
+    public void renderBuildingMap() {
         // Placeholder for map rendering logic
     }
 
@@ -199,12 +189,11 @@ public class BuildingManager {
      * Renders building-related UI.
      *
      * @param batch       The SpriteBatch used to render.
-     * @param smallFont   A smaller font for hints or labels.
      * @param bigFont     A larger font for titles or messages.
      * @param worldWidth  The game world width.
      * @param worldHeight The game world height.
      */
-    public void renderUI(SpriteBatch batch, BitmapFont smallFont, BitmapFont bigFont, float worldWidth, float worldHeight) {
+    public void renderUI(SpriteBatch batch, BitmapFont bigFont, float worldWidth, float worldHeight) {
         render(batch, bigFont, worldWidth, worldHeight);
     }
 
@@ -224,6 +213,7 @@ public class BuildingManager {
     public boolean isInRonCooke() {
         return inRonCooke;
     }
+
     /**
      * Returns whether the player is currently inside Langwith.
      *

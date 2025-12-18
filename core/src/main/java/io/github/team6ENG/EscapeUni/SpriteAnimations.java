@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 
-import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -14,10 +13,9 @@ import java.util.HashMap;
  */
 public class SpriteAnimations  {
 
-    public HashMap<String, Animation<TextureRegion>> animations = new HashMap<String, Animation<TextureRegion>>();
+    public HashMap<String, Animation<TextureRegion>> animations = new HashMap<>();
     public float x;
     public float y;
-    private HashMap<String, Integer[]> animationInfo = new HashMap<String, Integer[]>();
     private final int COLUMNS;
     private final int ROWS;
     private final Texture sheet;
@@ -44,7 +42,7 @@ public class SpriteAnimations  {
      * Stores map info for later boundary detection
      * @param walls tilemap of game walls
      * @param id tilemap layer which represents the walls
-     * @param d dimentions of each tile on the map i.e. 8 or 16
+     * @param d dimensions of each tile on the map i.e. 8 or 16
      */
     public void loadSprite(TiledMapTileLayer walls, int id, int d) {
         wallsLayer = walls;
@@ -62,21 +60,19 @@ public class SpriteAnimations  {
      */
     protected void generateAnimation( HashMap<String, Integer[]> animInfo, float animationSpeed){
         //animationInfo [0] = Row of animation, [1] = start frame [2] = end frame
-        animationInfo = animInfo;
 
         TextureRegion[][] tmp = TextureRegion.split(sheet,
             sheet.getWidth() / COLUMNS,
             sheet.getHeight() / ROWS);
 
         TextureRegion[] frames;
-        for(String key : animationInfo.keySet())
+        for(String key : animInfo.keySet())
         {
-            frames = new TextureRegion[animationInfo.get(key)[2]- animationInfo.get(key)[1]];
-            for (int i = animationInfo.get(key)[1]; i < animationInfo.get(key)[2]; i++ ){
-                frames[i - animationInfo.get(key)[1]] = tmp[animationInfo.get(key)[0]][i];
+            frames = new TextureRegion[animInfo.get(key)[2]- animInfo.get(key)[1]];
+            for (int i = animInfo.get(key)[1]; i < animInfo.get(key)[2]; i++ ){
+                frames[i - animInfo.get(key)[1]] = tmp[animInfo.get(key)[0]][i];
             }
-            animations.put(key, new Animation<TextureRegion>(animationSpeed, frames));
-
+            animations.put(key, new Animation<>(animationSpeed, frames));
         }
     }
 
@@ -84,8 +80,15 @@ public class SpriteAnimations  {
         if (sheet != null) {
             sheet.dispose();
         }
+     }
 
-    }
+     // Function needed for testing.
+     public void setTileDimensions(int tileDimensions) {
+        this.tileDimensions = tileDimensions;
+     }
 
+     public void setWallLayer(TiledMapTileLayer wallsLayer) {
+        this.wallsLayer = wallsLayer;
+     }
 
 }

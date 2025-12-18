@@ -23,6 +23,9 @@ public class CharacterSelectScreen implements Screen {
     private final Main game;
     private Stage stage;
 
+    public static final String img1Asset = "images/femaleSpriteImg.png";
+    public static final String img2Asset = "images/maleSpriteImg.png";
+
     /**
      * Initialises scene
      * @param game instance of Main
@@ -39,9 +42,9 @@ public class CharacterSelectScreen implements Screen {
         table.defaults().pad(50).fillX().uniformX().padBottom(0);
 
 
-        Texture img1 = new Texture(Gdx.files.internal("images/femaleSpriteImg.png"));
+        Texture img1 = new Texture(Gdx.files.internal(img1Asset));
         TextureRegionDrawable drawable1 = new TextureRegionDrawable(img1);
-        Texture img2 = new Texture(Gdx.files.internal("images/maleSpriteImg.png"));
+        Texture img2 = new Texture(Gdx.files.internal(img2Asset));
         TextureRegionDrawable drawable2 = new TextureRegionDrawable(img2);
         drawable1.setMinSize(drawable1.getMinWidth() *10, drawable1.getMinHeight() * 10);
         drawable2.setMinSize(drawable2.getMinWidth() * 10, drawable2.getMinHeight() * 10);
@@ -54,34 +57,32 @@ public class CharacterSelectScreen implements Screen {
         table.add(characterButton2).height(Value.percentHeight(1f, table));
 
 
-        characterButton1.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-
-                Gdx.app.postRunnable(() -> {
-                    game.activeSpritePath = "sprites/femaleSprite.png";
-                    game.activeUniIDPath = "items/idFemale.png";
-                    game.setScreen(new InstructionsScreen(game));
-                    dispose();
-                });
-            } });
-        characterButton2.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-
-                Gdx.app.postRunnable(() -> {
-                    game.activeSpritePath = "sprites/maleSprite.png";
-                    game.activeUniIDPath = "items/idMale.png";
-                    game.setScreen(new InstructionsScreen(game));
-                    dispose();
-                });
-            }
-        });
+        characterButton1.addListener(
+            new ClickListener(){
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    Gdx.app.postRunnable(() -> {
+                        game.activeSpritePath = "sprites/femaleSprite.png";
+                        game.activeUniIDPath = "items/idFemale.png";
+                        game.setScreen(new InstructionsScreen(game));
+                        dispose();
+                    });
+                } });
+        characterButton2.addListener(
+            new ClickListener(){
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    Gdx.app.postRunnable(() -> {
+                        game.activeSpritePath = "sprites/maleSprite.png";
+                        game.activeUniIDPath = "items/idMale.png";
+                        game.setScreen(new InstructionsScreen(game));
+                        dispose();
+                    });
+                } });
     }
 
     @Override
     public void show() {
-
         Gdx.input.setInputProcessor(stage);
     }
 
@@ -91,13 +92,11 @@ public class CharacterSelectScreen implements Screen {
      */
     @Override
     public void render(float delta) {
-
         ScreenUtils.clear(Color.BLACK);
         game.viewport.apply();
         game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
 
         game.batch.begin();
-
 
         float worldWidth = game.viewport.getWorldWidth();
         float worldHeight = game.viewport.getWorldHeight();
@@ -112,14 +111,11 @@ public class CharacterSelectScreen implements Screen {
 
         stage.act();
         stage.draw();
-
-
     }
 
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
-
     }
 
     @Override
@@ -139,8 +135,6 @@ public class CharacterSelectScreen implements Screen {
 
     @Override
     public void dispose() {
-
-
         if (stage != null) {
             stage.dispose();
             stage = null;

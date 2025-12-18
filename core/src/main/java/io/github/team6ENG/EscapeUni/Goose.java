@@ -12,14 +12,11 @@ import java.util.List;
  */
 public class Goose extends SpriteAnimations {
 
-    private HashMap<String, Integer[]> animationInfo = new HashMap<String, Integer[]>();
     public boolean isFacingLeft = true;
-    public boolean hasStolenTorch = false;
     public TextureRegion currentGooseFrame;
     private float speed = 0.75f;
     private int idleDistance = 20;
     public boolean isFlying;
-    private TiledMapTileLayer.Cell cell;
     public Goose baby = null;
     public boolean attackModeActivated = false;
     public boolean isSleeping = false;
@@ -33,6 +30,7 @@ public class Goose extends SpriteAnimations {
         // HashMap<String, Integer[]> animationInfo:
         //      key - Name of animation
         //      Value - Array representing row of animation on sprite sheet and index of start and end frames
+        HashMap<String, Integer[]> animationInfo = new HashMap<>();
         animationInfo.put("walkLeft", new Integer[]{5,0,4});
         animationInfo.put("walkRight", new Integer[]{6,0,4});
         animationInfo.put("idleLeft", new Integer[]{16,0,5});
@@ -60,7 +58,7 @@ public class Goose extends SpriteAnimations {
         }
 
         // check if tile is empty (null) or contains a wall
-        cell = wallsLayer.getCell(tileX, tileY);
+        TiledMapTileLayer.Cell cell = wallsLayer.getCell(tileX, tileY);
         if (cell == null || cell.getTile() == null) {
             return true;
         }
@@ -77,14 +75,20 @@ public class Goose extends SpriteAnimations {
      * @param isPlayerMoving is player moving
      */
     public void moveGoose(float stateTime, float followX, float followY, boolean isPlayerMoving, boolean followIsSleeping) {
-
-        int tileX = (int)(x+ getWidth() / 2) / tileDimensions;
-        int tileY = (int)(y+ getHeight() / 2) / tileDimensions;
+        int tileX = (int)(x + getWidth() / 2) / tileDimensions;
+        int tileY = (int)(y + getHeight() / 2) / tileDimensions;
         currentGooseFrame = animations.get("sleep").getKeyFrame(stateTime, true);
         if(isSleeping){return;}
 
+        System.out.println("getWidth: " + getWidth());
+        System.out.println("tileDimensions: " + tileDimensions);
+
         float distance = (float) Math.sqrt(((x-followX) * (x-followX)) + ((y-followY)*(y-followY)));
         // If target is in range, idle
+
+        System.out.println("distance = " + distance + ", idleDistance = " + idleDistance);
+        System.out.println("isPlayerMoving = " + isPlayerMoving);
+        System.out.println("isMoveAllowed = " + isMoveAllowed(tileX, tileY));
         if( distance <= idleDistance && !isPlayerMoving && isMoveAllowed(tileX, tileY) ) {
             if(isFacingLeft){
                 currentGooseFrame = animations.get("idleLeft").getKeyFrame(stateTime, true);
@@ -99,16 +103,18 @@ public class Goose extends SpriteAnimations {
 
         }
         else{
+            System.out.println("x = " + x + ", followX = " + followX);
             isFlying = false;
             if (x > followX) {
                 isFacingLeft = true;
 
+                System.out.println("isMoveAllowed(tileX,tileY): " + isMoveAllowed(tileX,tileY));
+                System.out.println("isMoveAllowed(tileX-1,tileY): " + isMoveAllowed(tileX-1,tileY));
                 if ((!isMoveAllowed(tileX-1,tileY) && Math.abs(x-followX) > 50)|| !isMoveAllowed(tileX,tileY)) {
                     isFlying = true;
                     x -= speed;
                 }
                 else if (isMoveAllowed(tileX-1,tileY)){
-
                     x -= speed;
                 }
             }
@@ -179,7 +185,6 @@ public class Goose extends SpriteAnimations {
      * @return height of goose
      */
     public float getHeight() {
-
         return currentGooseFrame != null ? currentGooseFrame.getRegionHeight() : 16f;
     }
 
@@ -218,11 +223,10 @@ public class Goose extends SpriteAnimations {
      * @return destination coordinates
      */
     public int[] nextRunLocation(){
-        if (Math.abs(x -runPath.get(0)[0]) <=5 && Math.abs(y - runPath.get(0)[1] ) <= 5&& runPath.size()>1) {
-
+        if (Math.abs(x - runPath.get(0)[0]) <= 5 && Math.abs(y - runPath.get(0)[1]) <= 5 && runPath.size() > 1) {
             runPath = runPath.subList(1,runPath.size());
         }
-        else if(Math.abs(x -runPath.get(0)[0]) <=5 && Math.abs(y - runPath.get(0)[1] ) <= 5){
+        else if(Math.abs(x -runPath.get(0)[0]) <=5 && Math.abs(y - runPath.get(0)[1] ) <= 5) {
             isSleeping = true;
         }
         return runPath.get(0);

@@ -63,7 +63,7 @@ configure(subprojects) {
 }
 
 subprojects {
-  version = "$projectVersion"
+  version = '$projectVersion'
   ext.appName = 'Escape_Uni'
   repositories {
     mavenCentral()

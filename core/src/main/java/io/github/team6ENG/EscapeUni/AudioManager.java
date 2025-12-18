@@ -17,63 +17,74 @@ public class AudioManager {
     private final Sound noAccess;
     private final Sound collect;
 
+    public static final String honkAsset = "soundEffects/honk.mp3";
+    public static final String torchClickAsset = "soundEffects/click.mp3";
+    public static final String footStepsAsset = "soundEffects/footSteps.mp3";
+    public static final String noAccessAsset = "soundEffects/wrong.mp3";
+    public static final String collectAsset = "soundEffects/tap.mp3";
+    public static final String musicAsset = "soundEffects/music.mp3";
+
     /**
      * Initialised audio manager
      * @param game current instance of Main
      */
-    public AudioManager(final Main game){
+    public AudioManager(final Main game) {
         this.game = game;
 
-        honk = Gdx.audio.newSound(Gdx.files.internal("soundEffects/honk.mp3"));
-        torchClick = Gdx.audio.newSound(Gdx.files.internal("soundEffects/click.mp3"));
-        footSteps = Gdx.audio.newSound(Gdx.files.internal("soundEffects/footsteps.mp3"));
-        noAccess = Gdx.audio.newSound(Gdx.files.internal("soundEffects/wrong.mp3"));
-        collect = Gdx.audio.newSound(Gdx.files.internal("soundEffects/tap.mp3"));
-        music = Gdx.audio.newMusic(Gdx.files.internal("soundEffects/music.mp3"));
+        honk = Gdx.audio.newSound(Gdx.files.internal(honkAsset));
+        torchClick = Gdx.audio.newSound(Gdx.files.internal(torchClickAsset));
+        footSteps = Gdx.audio.newSound(Gdx.files.internal(footStepsAsset));
+        noAccess = Gdx.audio.newSound(Gdx.files.internal(noAccessAsset));
+        collect = Gdx.audio.newSound(Gdx.files.internal(collectAsset));
+        music = Gdx.audio.newMusic(Gdx.files.internal(musicAsset));
         playMusic();
     }
-
 
     public void playHonk(){
         honk.play(game.gameVolume);
     }
+
     public void playTorch(){
         torchClick.play(game.gameVolume);
     }
+
     public void playNoAccess(){
         noAccess.play(game.gameVolume);
     }
-    public void playCollect(){collect.play(game.gameVolume);}
+
+    public void playCollect() {
+        collect.play(game.gameVolume);
+    }
+
     public void loopFootsteps(){
         footSteps.loop(.2f *game.gameVolume);
     }
+
     public void stopFootsteps(){
         footSteps.stop();
     }
-    public void playMusic(){
+
+    public void playMusic() {
         setMusicVolume();
         music.play();
         music.setLooping(true);
     }
+
     public void setMusicVolume(){
         music.setVolume(0.01f * game.musicVolume);
     }
+
     public void stopMusic(){
         music.stop();
     }
+
     public void pauseMusic(){
         music.pause();
     }
 
-
-
-    public void dispose(){
-
-        if (torchClick != null) {
-            torchClick.dispose();
-        }
-        if (honk != null) {
-            honk.dispose();
-        }
+    public void dispose() {
+        // torchClick and honk can never be null.
+        torchClick.dispose();
+        honk.dispose();
     }
 }

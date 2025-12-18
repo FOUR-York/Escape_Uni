@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -19,7 +18,6 @@ import com.badlogic.gdx.utils.TimeUtils;
  * Displays then the player looses
  */
 public class GameOverScreen implements Screen {
-
     private final Main game;
 
     // stage and resources created in show() and disposed in dispose()
@@ -41,7 +39,7 @@ public class GameOverScreen implements Screen {
      */
     public GameOverScreen(final Main game, String deathMessage) {
         this.game = game;
-        this.titleText = deathMessage;
+        titleText = deathMessage;
         // DO NOT initialize stage/input here — do it in show()
     }
 

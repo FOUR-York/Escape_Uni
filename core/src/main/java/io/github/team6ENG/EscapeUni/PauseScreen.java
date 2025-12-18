@@ -20,7 +20,7 @@ public class PauseScreen implements Screen {
     private final Main game;
     private final Screen playScreen;
     private final AudioManager audioManager;
-    private Stage stage;
+    private final Stage stage;
     private final Skin skin;
 
     private final Slider musicSlider;
@@ -108,7 +108,7 @@ public class PauseScreen implements Screen {
         });
         // Main menu button resets the game
         mainMenuButton.addListener(new ClickListener() {
-            public void clicked(InputEvent event, float x, float y) {;
+            public void clicked(InputEvent event, float x, float y) {
                 dispose();
                 game.resetGame();
             }

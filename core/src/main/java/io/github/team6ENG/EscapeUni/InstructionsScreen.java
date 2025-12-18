@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -62,7 +61,7 @@ public class InstructionsScreen implements Screen {
      *Add required UI elements to stage
      */
     private void setupUI() {
-        playButton = createButton("Play");
+        playButton = createButton();
 
         stage.addActor(playButton);
 
@@ -72,12 +71,12 @@ public class InstructionsScreen implements Screen {
 
     /**
      * Set up each button
-     * @param text buttons display text
+     *
      * @return new button with required parameters
      */
-    private TextButton createButton(String text) {
+    private TextButton createButton() {
         // If skin is null, fallback to a simple TextButton may fail; ensure game.buttonSkin exists in assets
-        TextButton button = new TextButton(text, skin);
+        TextButton button = new TextButton("Play", skin);
         button.getLabel().setFontScale(1.6f);
         button.pad(25f);
         button.setSize(320, 100);

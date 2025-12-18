@@ -23,12 +23,9 @@ import java.util.Random;
  *
  */
 public class GameScreen implements Screen {
-
-    private static final boolean DEBUG = false;
-
     private final Main game;
     private Player player;
-    private BuildingManager buildingManager;
+    private final BuildingManager buildingManager;
 
     private OrthographicCamera camera;
     private TiledMapTileLayer collisionLayer;
@@ -54,17 +51,14 @@ public class GameScreen implements Screen {
     private boolean isTorchOn = false;
     private boolean isCamOnGoose = false;
     private boolean hasGooseFood = false;
-    private boolean gameoverTrigger = false;
+    private boolean gameOverTrigger = false;
     private boolean gooseStolenTorch = false;
 
-    private final float probabilityOfHonk = 1000;
-
-    public final HashMap<String, Collectable> items = new HashMap<String, Collectable>();
+    public HashMap<String, Collectable> items = new HashMap<>();
     public int numOfInventoryItems = 0;
 
     private Texture busTexture;
     private float busX, busY;
-    private boolean busVisible = false;
     private boolean playerOnBus = false;
     private boolean busLeaving = false;
 
@@ -79,17 +73,17 @@ public class GameScreen implements Screen {
     public GameScreen(final Main game) {
         this.game = game;
 
-        initialiseMap(0);
+        initialiseMap();
 
         initialiseAudio();
 
-        initialisePlayer(940,1215);
+        initialisePlayer();
 
         initialiseCamera();
 
         initialiseLighting();
 
-        initialiseGoose(100,100);
+        initialiseGoose();
 
         initialiseItems();
 
@@ -102,21 +96,21 @@ public class GameScreen implements Screen {
     /**
      * Load map and collision layer
      */
-    private void initialiseMap(int wallLayer) {
+    private void initialiseMap() {
         Texture mapTex = new Texture(Gdx.files.internal("tileMap/map.png"));
         mapImg = new Image(mapTex);
         map = new TmxMapLoader().load("tileMap/map.tmx");
         mapRenderer = new OrthogonalTiledMapRenderer(map, 1);
-        collisionLayer = (TiledMapTileLayer)map.getLayers().get(wallLayer);
+        collisionLayer = (TiledMapTileLayer)map.getLayers().get(0);
     }
 
     /**
      * Initialise player and set its position
      */
-    private void initialisePlayer(int x, int y) {
+    private void initialisePlayer() {
         player = new Player(game, audioManager, mapLangwithBarriersId, mapWaterId);
         player.loadSprite(collisionLayer, mapWallsId, tileDimensions);
-        player.sprite.setPosition(x, y);
+        player.sprite.setPosition(940, 1215);
         player.speed = 1;
 
     }
@@ -136,11 +130,11 @@ public class GameScreen implements Screen {
     /**
      * Initialise goose and set its position
      */
-    private void initialiseGoose(int x, int y){
+    private void initialiseGoose(){
 
         goose.loadSprite(collisionLayer, mapWallsId, tileDimensions);
-        goose.x = x;
-        goose.y = y;
+        goose.x = 100;
+        goose.y = 100;
 
         stealTorchTrigger = new com.badlogic.gdx.math.Rectangle(510, 560, 50, 50);
 
@@ -251,45 +245,42 @@ public class GameScreen implements Screen {
 
             game.gameTimer -= delta;
             game.score -= delta;
-            handleInput(delta);
+            handleInput();
             player.handleInput(delta, playerSpeedModifier);
             float mapWidth = collisionLayer.getWidth() * collisionLayer.getTileWidth();
             float mapHeight = collisionLayer.getHeight() * collisionLayer.getTileHeight();
-
-
-
 
             // Update light positions
             lighting.updateLightSource("playerTorch", player.sprite.getX() + (player.sprite.getWidth() / 2), player.sprite.getY() + (player.sprite.getHeight() / 2));
             lighting.updateLightSource("playerNoTorch", player.sprite.getX() + (player.sprite.getWidth() / 2), player.sprite.getY() + (player.sprite.getHeight() / 2));
             lighting.updateLightSource("gooseNoTorch", goose.x+ (goose.getWidth() / 2), goose.y + (goose.getHeight() / 2));
 
-            if(gooseStolenTorch){
+            if (gooseStolenTorch) {
                 lighting.updateLightSource("gooseTorch", goose.x+ (goose.getWidth() / 2), goose.y + (goose.getHeight() / 2));
-
             }
 
             player.updatePlayer(stateTime);
-            if(player.isMoving && !player.isFootsteps){
+            if (player.isMoving && !player.isFootsteps) {
                 audioManager.loopFootsteps();
                 player.isFootsteps = true;
             }
-            else if (!player.isMoving){
+            else if (!player.isMoving) {
                 player.isFootsteps = false;
                 audioManager.stopFootsteps();
             }
 
             // Goose follow player
-            if(!gooseStolenTorch) {
+            if (!gooseStolenTorch) {
                 goose.moveGoose(stateTime,
                     player.sprite.getX() + (player.sprite.getWidth() / 2) - 20,
                     player.sprite.getY() + (player.sprite.getHeight() / 2),
                     player.isMoving, false);
             }
-            else{
+            else {
                 int[] runCoords = goose.nextRunLocation();
                 goose.moveGoose(stateTime,runCoords[0],runCoords[1],true, false);
-                }
+            }
+
             // If there are baby geese, they follow the goose directly in front of them
             Goose trail = goose;
             float stateOffset = 0.075f;
@@ -303,14 +294,14 @@ public class GameScreen implements Screen {
             }
 
             // Check if player can pick up items
-            for(String key: items.keySet()){
+            for (String key: items.keySet()) {
                 Collectable item = items.get(key);
-                if(!item.playerHas && item.isVisible && item.originScreen.equals("GameScreen")){
-                    if (item.checkInRange(player.sprite.getX(), player.sprite.getY()) && isEPressed){
+                if (!item.playerHas && item.isVisible && item.originScreen.equals("GameScreen")) {
+                    if (item.checkInRange(player.sprite.getX(), player.sprite.getY()) && isEPressed) {
                         item.Collect();
                         numOfInventoryItems += 1;
                         isEPressed = false;
-                        if (key.equals("gooseFood")){
+                        if (key.equals("gooseFood")) {
                             hasGooseFood = true;
                         }
 
@@ -390,7 +381,7 @@ public class GameScreen implements Screen {
         } // End isPaused
 
         // If time up
-        if(!gameoverTrigger && game.gameTimer <= 0) {
+        if(!gameOverTrigger && game.gameTimer <= 0) {
            gameOver();
            return;
         }
@@ -401,7 +392,7 @@ public class GameScreen implements Screen {
             game.setScreen(new PauseScreen(game, GameScreen.this, audioManager));
         }
 
-        buildingManager.update(delta);
+        buildingManager.update();
 
         playAudio();
 
@@ -487,7 +478,7 @@ public class GameScreen implements Screen {
             mapRenderer.render();
             Gdx.gl.glFlush();
         }
-        buildingManager.renderBuildingMap(camera);
+        buildingManager.renderBuildingMap();
 
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
@@ -542,7 +533,7 @@ public class GameScreen implements Screen {
         int mapHeight = collisionLayer.getHeight() * collisionLayer.getTileHeight();
 
         if(isDark) {
-            game.batch.draw(lighting.render(camera, mapWidth, mapHeight), 0, 0);
+            game.batch.draw(lighting.render(mapWidth, mapHeight), 0, 0);
         }
 
 
@@ -555,6 +546,7 @@ public class GameScreen implements Screen {
     }
     Random random = new Random();
     private void playAudio(){
+        float probabilityOfHonk = 1000;
         int doHonk = random.nextInt((int) probabilityOfHonk);
         if(doHonk == 0 && !isPaused) {
             audioManager.playHonk();
@@ -563,15 +555,11 @@ public class GameScreen implements Screen {
 
     /**
      * Check for keyboard input
-     * @param delta time in seconds since last frame
      */
-    private void handleInput(float delta) {
-
-
+    private void handleInput() {
         if(Gdx.input.isKeyJustPressed(Input.Keys.E)) {
             isEPressed = true;
         }
-
 
         // Toggle the torch with click
         if(Gdx.input.justTouched() && hasTorch){
@@ -633,7 +621,7 @@ public class GameScreen implements Screen {
         drawText(smallFont, ("Positive Events: "+ game.foundPositiveEvents +"/"+ game.totalPositiveEvents), Color.WHITE, 20, y);
         y -= lineSpacing;
         drawText(smallFont, ("Hidden Events:   "+ game.foundHiddenEvents+"/"+ game.totalHiddenEvents), Color.WHITE, 20, y);
-        y -= lineSpacing;
+
         //Display time with 2 digits for seconds
         drawText(bigFont, ((int)game.gameTimer/60 + ":" +((int)game.gameTimer % 60 <10?"0" :"" ) +(int)game.gameTimer % 60), Color.WHITE, worldWidth - 80f, worldHeight-20f);
         layout = new GlyphLayout(game.menuFont, ("Score: " + (int)game.score));
@@ -652,11 +640,11 @@ public class GameScreen implements Screen {
         drawText(bigFont, "Use Arrow Keys or WASD to move", Color.WHITE, 20, 30);
 
         if(isPaused) {
-            smallFont.draw(game.batch, "PAUSED", (float) worldWidth / 2, worldHeight - 100);
+            smallFont.draw(game.batch, "PAUSED", worldWidth / 2, worldHeight - 100);
         }
 
 
-        buildingManager.renderUI(game.batch, smallFont, bigFont, worldWidth, worldHeight);
+        buildingManager.renderUI(game.batch, bigFont, worldWidth, worldHeight);
         game.batch.end();
 
     }
@@ -681,7 +669,7 @@ public class GameScreen implements Screen {
     }
 
     public void gameOver(){
-        gameoverTrigger = true;
+        gameOverTrigger = true;
         audioManager.stopMusic();
         audioManager.stopFootsteps();
         Gdx.app.postRunnable(() -> game.setScreen(
@@ -711,11 +699,11 @@ public class GameScreen implements Screen {
 
     @Override
     public void pause() {
+        isPaused = true;
     }
 
     @Override
     public void resume() {
-
         isPaused = false;
     }
 

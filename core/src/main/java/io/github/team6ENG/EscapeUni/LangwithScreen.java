@@ -36,22 +36,21 @@ public class LangwithScreen implements Screen {
         this.gameScreen = gameScreen;
         this.font = game.menuFont;
         this.smallFont = game.gameFont;
-        initialisePlayer((int) 60,(int) game.viewport.getWorldHeight()/2);
+        initialisePlayer((int) game.viewport.getWorldHeight()/2);
         stateTime = 0;
     }
 
     /**
      * Initialise player and set its position
      */
-    private void initialisePlayer(int x, int y) {
+    private void initialisePlayer(int y) {
         player = new Player(game, buildingManager.audioManager, gameScreen.mapLangwithBarriersId, gameScreen.mapWaterId);
         player.loadSprite(new TiledMapTileLayer( 400, 225, 16,16), 0, 16);
-        player.sprite.setPosition(x, y);
+        player.sprite.setPosition(60, y);
         player.sprite.setScale(4);
         player.speed  = 2;
 
     }
-
 
     @Override
     public void render(float delta) {
@@ -99,7 +98,7 @@ public class LangwithScreen implements Screen {
             return;
         }
         pizzaText -= delta;
-        buildingManager.update(delta);
+        buildingManager.update();
         stateTime += delta;
         isEPressed = Gdx.input.isKeyJustPressed(Input.Keys.E);
 
@@ -115,14 +114,14 @@ public class LangwithScreen implements Screen {
 
     /**
      * Helper method: text rendering logic to avoid repeated setColor() calls
-     * @param font  The BitmapFont to use for rendering
-     * @param text  The text string to display
-     * @param colour The colour of the text
-     * @param x     The x-coordinate for text position
-     * @param y     The y-coordinate for text position
+     *
+     * @param font The BitmapFont to use for rendering
+     * @param text The text string to display
+     * @param x    The x-coordinate for text position
+     * @param y    The y-coordinate for text position
      */
-    private void drawText(BitmapFont font, String text, Color colour, float x, float y) {
-        font.setColor(colour);
+    private void drawText(BitmapFont font, String text, float x, float y) {
+        font.setColor(Color.WHITE);
         font.draw(game.batch, text, x, y);
     }
     private void renderUI(){
@@ -159,21 +158,20 @@ public class LangwithScreen implements Screen {
         float lineSpacing = 15f;
 
         // Requirements: Events tracker and game timer
-        drawText(smallFont, ("Negative Events: " + game.foundNegativeEvents +"/" + game.totalNegativeEvents), Color.WHITE, 20, y);
+        drawText(smallFont, ("Negative Events: " + game.foundNegativeEvents +"/" + game.totalNegativeEvents), 20, y);
         y -= lineSpacing;
-        drawText(smallFont, ("Positive Events: "+ game.foundPositiveEvents+"/"+ game.totalPositiveEvents), Color.WHITE, 20, y);
+        drawText(smallFont, ("Positive Events: "+ game.foundPositiveEvents+"/"+ game.totalPositiveEvents), 20, y);
         y -= lineSpacing;
-        drawText(smallFont, ("Hidden Events:   "+ game.foundHiddenEvents+"/"+ game.totalHiddenEvents), Color.WHITE, 20, y);
-        y -= lineSpacing;
+        drawText(smallFont, ("Hidden Events:   "+ game.foundHiddenEvents+"/"+ game.totalHiddenEvents), 20, y);
 
         GlyphLayout layout = new GlyphLayout(game.menuFont, instructions);
         float textX = (worldWidth - layout.width) / 2;
-        drawText(font, instructions, Color.WHITE, textX, worldHeight -120);
+        drawText(font, instructions, textX, worldHeight -120);
         //Display time with 2 digits for seconds
-        drawText(font, ((int)game.gameTimer/60 + ":" +((int)game.gameTimer % 60 <10?"0" :"" ) +(int)game.gameTimer % 60), Color.WHITE, worldWidth - 80f, worldHeight-20f);
+        drawText(font, ((int)game.gameTimer/60 + ":" +((int)game.gameTimer % 60 <10?"0" :"" ) +(int)game.gameTimer % 60), worldWidth - 80f, worldHeight-20f);
 
         layout = new GlyphLayout(game.menuFont, ("Score: " + (int)game.score));
-        drawText(font, ("Score: " +(int)game.score), Color.WHITE, (worldWidth - layout.width)/2, worldHeight-20f);
+        drawText(font, ("Score: " +(int)game.score), (worldWidth - layout.width)/2, worldHeight-20f);
 
         font.setColor(Color.GRAY);
         String exitText = "Press G to leave";
