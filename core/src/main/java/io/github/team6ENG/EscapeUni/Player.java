@@ -33,6 +33,8 @@ public class Player extends SpriteAnimations{
     public boolean hasEnteredLangwith;
     private AudioManager audioManager;
     boolean isFootsteps = false;
+
+    public boolean isInverted = false;
     /**
      * Initialises the player and its animations
      * @param g current instance of Main
@@ -88,59 +90,110 @@ public class Player extends SpriteAnimations{
         isMovingHorizontally = false;
         // move up
         if (Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            if (y + 1 < mapHeight) {
-                cell = wallsLayer.getCell(x, y + 1);
-                if (cell == null || cell.getTile().getId() != mapWallsId &&(cell.getTile().getId() != mapLangwithBarriersId || hasEnteredLangwith)) {
-                    sprite.translateY(actualSpeed);
-                    isMoving = true;
-                    isFacingUp = true;
+            if (!isInverted) {
+                if (y + 1 < mapHeight) {
+                    cell = wallsLayer.getCell(x, y + 1);
+                    if (cell == null || cell.getTile().getId() != mapWallsId &&(cell.getTile().getId() != mapLangwithBarriersId || hasEnteredLangwith)) {
+                        sprite.translateY(actualSpeed);
+                        isMoving = true;
+                        isFacingUp = true;
+                    }
+                    checkIfInWater(cell);
                 }
-                checkIfInWater(cell);
+            }
+            else {
+                if (y - 1 >= 0) {
+                    cell = wallsLayer.getCell(x, y -1);
+                    if (cell == null || cell.getTile().getId() != mapWallsId&&(cell.getTile().getId() != mapLangwithBarriersId || hasEnteredLangwith)) {
+                        sprite.translateY(-actualSpeed);
+                        isMoving = true;
+                        isFacingUp = false;
+                    }
+                    checkIfInWater(cell);
+                }
             }
         }
 
         // move down
         if (Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            if (y - 1 >= 0) {
-                cell = wallsLayer.getCell(x, y -1);
-                if (cell == null || cell.getTile().getId() != mapWallsId&&(cell.getTile().getId() != mapLangwithBarriersId || hasEnteredLangwith)) {
-                    sprite.translateY(-actualSpeed);
-                    isMoving = true;
-                    isFacingUp = false;
+            if (!isInverted) {
+                if (y - 1 >= 0) {
+                    cell = wallsLayer.getCell(x, y -1);
+                    if (cell == null || cell.getTile().getId() != mapWallsId&&(cell.getTile().getId() != mapLangwithBarriersId || hasEnteredLangwith)) {
+                        sprite.translateY(-actualSpeed);
+                        isMoving = true;
+                        isFacingUp = false;
+                    }
+                    checkIfInWater(cell);
                 }
-                checkIfInWater(cell);
+            }
+            else {
+                if (y + 1 < mapHeight) {
+                    cell = wallsLayer.getCell(x, y + 1);
+                    if (cell == null || cell.getTile().getId() != mapWallsId &&(cell.getTile().getId() != mapLangwithBarriersId || hasEnteredLangwith)) {
+                        sprite.translateY(actualSpeed);
+                        isMoving = true;
+                        isFacingUp = true;
+                    }
+                    checkIfInWater(cell);
+                }
             }
         }
 
         // move left
         if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            if (x - 1 >= 0) {
-                cell = wallsLayer.getCell(x -1 , y);
-                if (cell == null || cell.getTile().getId() != mapWallsId &&(cell.getTile().getId() != mapLangwithBarriersId || hasEnteredLangwith)) {
-                    sprite.translateX(-actualSpeed);
-                    isMoving = true;
-                    isFacingLeft = true;
-                    isMovingHorizontally = true;
+            if (!isInverted) {
+                if (x - 1 >= 0) {
+                    cell = wallsLayer.getCell(x -1 , y);
+                    if (cell == null || cell.getTile().getId() != mapWallsId &&(cell.getTile().getId() != mapLangwithBarriersId || hasEnteredLangwith)) {
+                        sprite.translateX(-actualSpeed);
+                        isMoving = true;
+                        isFacingLeft = true;
+                        isMovingHorizontally = true;
+                    }
+                    checkIfInWater(cell);
                 }
-                checkIfInWater(cell);
             }
-
+            else {
+                if (x + 1 < mapWidth) {
+                    cell = wallsLayer.getCell(x + 1, y);
+                    if (cell == null || cell.getTile().getId() != mapWallsId&&(cell.getTile().getId() != mapLangwithBarriersId || hasEnteredLangwith)) {
+                        sprite.translateX(actualSpeed);
+                        isMoving = true;
+                        isFacingLeft = false;
+                        isMovingHorizontally = true;
+                    }
+                    checkIfInWater(cell);
+                }
+            }
         }
 
         // move right
         if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            if (x + 1 < mapWidth) {
-                cell = wallsLayer.getCell(x + 1, y);
-                if (cell == null || cell.getTile().getId() != mapWallsId&&(cell.getTile().getId() != mapLangwithBarriersId || hasEnteredLangwith)) {
-                    sprite.translateX(actualSpeed);
-                    isMoving = true;
-                    isFacingLeft = false;
-                    isMovingHorizontally = true;
+            if (!isInverted) {
+                if (x + 1 < mapWidth) {
+                    cell = wallsLayer.getCell(x + 1, y);
+                    if (cell == null || cell.getTile().getId() != mapWallsId&&(cell.getTile().getId() != mapLangwithBarriersId || hasEnteredLangwith)) {
+                        sprite.translateX(actualSpeed);
+                        isMoving = true;
+                        isFacingLeft = false;
+                        isMovingHorizontally = true;
+                    }
+                    checkIfInWater(cell);
                 }
-                checkIfInWater(cell);
-
             }
-
+            else {
+                if (x - 1 >= 0) {
+                    cell = wallsLayer.getCell(x -1 , y);
+                    if (cell == null || cell.getTile().getId() != mapWallsId &&(cell.getTile().getId() != mapLangwithBarriersId || hasEnteredLangwith)) {
+                        sprite.translateX(-actualSpeed);
+                        isMoving = true;
+                        isFacingLeft = true;
+                        isMovingHorizontally = true;
+                    }
+                    checkIfInWater(cell);
+                }
+            }
         }
 
 
