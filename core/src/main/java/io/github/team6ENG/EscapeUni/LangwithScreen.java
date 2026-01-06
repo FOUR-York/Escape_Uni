@@ -69,7 +69,6 @@ public class LangwithScreen implements Screen {
         worldWidth = game.viewport.getWorldWidth();
         worldHeight = game.viewport.getWorldHeight();
 
-
         for(String key: gameScreen.items.keySet()){
             Collectable item = gameScreen.items.get(key);
             if(item.isVisible && !item.playerHas && item.originScreen.equals("LangwithScreen")){
@@ -83,7 +82,6 @@ public class LangwithScreen implements Screen {
                         game.foundPositiveEvents += 1;
                     }
                     else {
-
                         item.Collect();
                         isEPressed = false;
                     }
@@ -102,14 +100,10 @@ public class LangwithScreen implements Screen {
         stateTime += delta;
         isEPressed = Gdx.input.isKeyJustPressed(Input.Keys.E);
 
-
-
         if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
             isPaused = true;
             game.setScreen(new PauseScreen(game, this, buildingManager.audioManager));
-
         }
-
     }
 
     /**
@@ -124,6 +118,7 @@ public class LangwithScreen implements Screen {
         font.setColor(Color.WHITE);
         font.draw(game.batch, text, x, y);
     }
+
     private void renderUI(){
 
         game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
@@ -133,7 +128,6 @@ public class LangwithScreen implements Screen {
 
         // draw items either in inventory or on screen
         for(String key:gameScreen.items.keySet()) {
-
             Collectable item = gameScreen.items.get(key);
             if (item.playerHas){
                 item.img.setPosition(itemXPos, worldHeight - 50);
@@ -146,11 +140,8 @@ public class LangwithScreen implements Screen {
                         instructions = "Press 'e' to eat pizza";
                     }
                     else {
-
                         instructions = "Press 'e' to collect " + key;
                     }
-
-
                 }
             }
         }
@@ -190,7 +181,7 @@ public class LangwithScreen implements Screen {
 
     @Override public void show() {}
     @Override public void resize(int width, int height) { game.viewport.update(width, height); }
-    @Override public void pause() {}
+    @Override public void pause() { isPaused = true; }
     @Override public void resume() {
         isPaused = false;
     }

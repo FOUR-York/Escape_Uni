@@ -157,8 +157,6 @@ public class BuildingManager {
      */
     GlyphLayout layout = new GlyphLayout();
     private void renderWorldPrompts(SpriteBatch batch, BitmapFont font, float worldWidth, float worldHeight) {
-        System.out.println("showEnterPrompt: " +  showEnterPrompt);
-        System.out.println("lockedOutTime: " +  lockedOutTime);
         if (showEnterPrompt) {
             font.setColor(Color.YELLOW);
             String text = "Press G to enter " + currentBuilding;

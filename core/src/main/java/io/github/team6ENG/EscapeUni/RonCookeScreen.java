@@ -57,14 +57,13 @@ public class RonCookeScreen implements Screen {
      * Initialise player and set its position
      */
     private void initialisePlayer(int x, int y) {
-        System.out.println("gameScreen.mapLangwithBarriersId: "+ gameScreen.mapLangwithBarriersId + ", gameScreen.mapWaterId: " + gameScreen.mapWaterId);
         player = new Player(game, buildingManager.audioManager, gameScreen.mapLangwithBarriersId, gameScreen.mapWaterId);
         player.loadSprite(new TiledMapTileLayer( 400, 225, 16,16), 0, 16);
         player.sprite.setPosition(x, y);
         player.sprite.setScale(4);
         player.speed  = 2;
-
     }
+
     private void initialiseReceptionist(){
         Texture tex = new Texture(Gdx.files.internal("sprites/receptionist.png"));
         receptionist = new Image(tex);
@@ -94,10 +93,9 @@ public class RonCookeScreen implements Screen {
             Collectable item = gameScreen.items.get(key);
             if(item.isVisible && !item.playerHas && item.originScreen.equals("RonCookeScreen")){
                 item.img.draw(game.batch, 1);
-                if (item.checkInRange(player.sprite.getX()- (player.sprite.getHeight()/2) , player.sprite.getY() - (player.sprite.getHeight()/2)) && isEPressed){
+                if (item.checkInRange(player.sprite.getX() - (player.sprite.getHeight()/2) , player.sprite.getY() - (player.sprite.getHeight()/2)) && isEPressed){
                     item.Collect();
                     isEPressed = false;
-
                 }
             }
         }
@@ -119,7 +117,6 @@ public class RonCookeScreen implements Screen {
             if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
                 isPaused = true;
                 game.setScreen(new PauseScreen(game, this, buildingManager.audioManager));
-
             }
         }
     }
@@ -136,9 +133,10 @@ public class RonCookeScreen implements Screen {
         font.setColor(Color.WHITE);
         font.draw(game.batch, text, x, y);
     }
-    private GlyphLayout layout = new GlyphLayout();
-    private void renderUI(){
 
+    private GlyphLayout layout = new GlyphLayout();
+
+    private void renderUI(){
         game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
         game.batch.begin();
         float itemXPos = (worldWidth - (gameScreen.numOfInventoryItems * 32))/2;
@@ -146,7 +144,6 @@ public class RonCookeScreen implements Screen {
 
         // draw items either in inventory or on screen
         for(String key:gameScreen.items.keySet()) {
-
             Collectable item = gameScreen.items.get(key);
             if (item.playerHas){
                 item.img.setPosition(itemXPos, worldHeight * 0.8f);
@@ -199,7 +196,7 @@ public class RonCookeScreen implements Screen {
             gameScreen.items.get("torch").x = (float) (game.viewport.getWorldWidth() * 0.3);
             gameScreen.items.get("torch").y = (float) (game.viewport.getWorldHeight() *0.45);
 
-            if(gameScreen.items.get("keyCard").playerHas) {
+            if (gameScreen.items.get("keyCard").playerHas) {
                 font.setColor(Color.GRAY);
                 String exitText = "Press G to leave";
                 GlyphLayout exitLayout = new GlyphLayout(font, exitText);
@@ -212,7 +209,7 @@ public class RonCookeScreen implements Screen {
 
     @Override public void show() {}
     @Override public void resize(int width, int height) { game.viewport.update(width, height); }
-    @Override public void pause() {}
+    @Override public void pause() {isPaused = true;}
     @Override public void resume() {
         isPaused = false;
     }
