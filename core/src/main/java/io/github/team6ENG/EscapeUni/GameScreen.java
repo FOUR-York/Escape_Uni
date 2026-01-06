@@ -72,6 +72,8 @@ public class GameScreen implements Screen {
 
     public AudioManager audioManager;
 
+    Random random = new Random();
+
     /**
      * Initialise the game elements
      * @param game - Instance of Main
@@ -187,18 +189,16 @@ public class GameScreen implements Screen {
         items.put("torch", new Collectable(game, "items/torch.png",   300, 220, 0.1f, false, "RonCookeScreen", audioManager));
         items.put("pizza", new Collectable(game, "items/pizza.png", 600, 100, 0.4f, true, "LangwithScreen", audioManager));
         items.put("phone", new Collectable(game, "items/phone.png", 100, 100, 0.05f, true, "LangwithScreen", audioManager));
-
-
-
     }
+
     private void initialiseBus() {
         busTexture = new Texture(Gdx.files.internal("images/bus.png"));
         busX = 1100;
         busY = 1545;
     }
+
     private  void initialiseAudio() {
         audioManager = new AudioManager(game);
-
     }
 
     /**
@@ -545,15 +545,11 @@ public class GameScreen implements Screen {
             game.batch.draw(lighting.render(camera, mapWidth, mapHeight), 0, 0);
         }
 
-
-
         game.batch.end();
 
         renderUI();
-
-
     }
-    Random random = new Random();
+
     private void playAudio(){
         int doHonk = random.nextInt((int) probabilityOfHonk);
         if(doHonk == 0 && !isPaused) {

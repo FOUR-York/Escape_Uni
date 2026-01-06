@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 /**
  * Main class initialises the game
  */
-public class Main extends Game{
+public class Main extends Game {
 
     public SpriteBatch batch;
     public BitmapFont menuFont;

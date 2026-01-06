@@ -26,7 +26,6 @@ public class Collectable {
         this.isVisible = isVisible;
         this.originScreen = originScreen;
         this.audioManager = audioManager;
-
     }
 
     /**

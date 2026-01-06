@@ -107,7 +107,7 @@ public class InstructionsScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 playButton.setColor(clickColor);
-                game.setScreen(new GameScreen(game));
+                game.setScreen(new NewGameScreen(game));
             }
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
