@@ -1,29 +1,19 @@
 package io.github.team6ENG.EscapeUni;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.TimeUtils;
 
 /**
  * screen displayed when player wins
  */
-public class WinScreen implements Screen {
+public class WinScreen extends GameScreenBase {
     private final Main game;
 
     // stage and resources created in show() and disposed in dispose()
     private Stage stage;
     private Skin skin;
-    private final GlyphLayout layout = new GlyphLayout();
 
     private TextButton exitButton;
     private TextButton mainMenuButton;
@@ -37,6 +27,8 @@ public class WinScreen implements Screen {
      * @param game current Instance of Main
      */
     public WinScreen(final Main game) {
+        super(game,TITLE_TEXT);
+
         this.game = game;
         // DO NOT initialize stage/input here — do it in show()
     }
@@ -44,7 +36,7 @@ public class WinScreen implements Screen {
     @Override
     public void show() {
         // create stage with a fixed virtual size (you used 800x450)
-        stage = new Stage(game.viewport);
+        stage = new Stage(game.viewport, game.batch);
 
         // remember previous input processor so we can restore it later
         previousInputProcessor = Gdx.input.getInputProcessor();
@@ -52,132 +44,40 @@ public class WinScreen implements Screen {
 
         // Prefer shared skin from game (do NOT dispose it later)
         skin = game.buttonSkin;
+        super.setStage(stage);
 
         // build UI
         setupUI();
     }
 
     private void setupUI() {
-        exitButton = createButton("Exit");
-        mainMenuButton = createButton("Main Menu");
+        exitButton = createButton("Exit", skin);
+        mainMenuButton = createButton("Main Menu", skin);
 
         stage.addActor(exitButton);
         stage.addActor(mainMenuButton);
+        super.setStage(stage);
 
         positionButtons();
         addListeners();
     }
 
-    private TextButton createButton(String text) {
-        // If skin is null, fallback to a simple TextButton may fail; ensure game.buttonSkin exists in assets
-        TextButton button = new TextButton(text, skin);
-        button.getLabel().setFontScale(1.6f);
-        button.pad(25f);
-        button.setSize(320, 100);
-        button.setColor(new Color(0.0f, 0.95f, 0.95f, 1f));
-        return button;
-    }
-
     private void positionButtons() {
         float w = stage.getViewport().getWorldWidth();
         float h = stage.getViewport().getWorldHeight();
+        super.setStage(stage);
 
         mainMenuButton.setPosition((w - mainMenuButton.getWidth()) / 2f, h / 2f -60);
         exitButton.setPosition((w - exitButton.getWidth()) / 2f, h / 2f -170);
     }
 
-    private void addListeners() {
-        Color normalColor = new Color(0.0f, 0.95f, 0.95f, 1f);
-        Color clickColor = new Color(0.4f, 1f, 1f, 1f);
-
-
-        exitButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                exitButton.setColor(clickColor);
-                Gdx.app.postRunnable(Gdx.app::exit);
-            }
-            @Override
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                exitButton.setColor(clickColor);
-            }
-            @Override
-            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                exitButton.setColor(normalColor);
-            }
-        });
-        mainMenuButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                mainMenuButton.setColor(clickColor);
-                dispose();
-                game.resetGame();
-            }
-            @Override
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                mainMenuButton.setColor(clickColor);
-            }
-            @Override
-            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                mainMenuButton.setColor(normalColor);
-            }
-        });
-    }
-
-    @Override
-    public void render(float delta) {
-        ScreenUtils.clear(Color.BLACK);
-
-        // update stage
-        if (stage != null) {
-            stage.act(delta);
-        }
-
-        // Draw background + title using game's batch (aligned to stage camera)
-        if (stage != null) {
-            game.batch.setProjectionMatrix(stage.getCamera().combined);
-        } else {
-            game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
-        }
-
-        game.batch.begin();
-        float w = (stage != null) ? stage.getViewport().getWorldWidth() : game.viewport.getWorldWidth();
-        float h = (stage != null) ? stage.getViewport().getWorldHeight() : game.viewport.getWorldHeight();
-
-
-        float brightness = 0.85f + 0.15f * (float) Math.sin(TimeUtils.millis() / 500f);
-        if (game.menuFont != null) {
-            game.menuFont.setColor(brightness, brightness, brightness, 1f);
-            layout.setText(game.menuFont, TITLE_TEXT);
-            game.menuFont.draw(game.batch, TITLE_TEXT, (w - layout.width) / 2f, h * 0.82f);
-            game.menuFont.setColor(Color.WHITE);
-
-            layout.setText(game.menuFont, "Score: "+ (int)game.score);
-            game.menuFont.draw(game.batch, ("Score: "+ (int)game.score), (w - layout.width) / 2f, h * 0.7f);
-
-        }
-
-        game.batch.end();
-
-        if (stage != null) stage.draw();
-
-        // allow quick keyboard start (space)
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            Gdx.app.postRunnable(() -> game.setScreen(new CharacterSelectScreen(game)));
-        }
-    }
-
     @Override
     public void resize(int width, int height) {
-        if (stage != null) stage.getViewport().update(width, height, true);
+        if (stage == null) return;
+        stage.getViewport().update(width, height, true);
+        super.setStage(stage);
         positionButtons();
     }
-
-    @Override
-    public void pause() { }
-
-    @Override
-    public void resume() { }
 
     @Override
     public void hide() {
@@ -197,8 +97,8 @@ public class WinScreen implements Screen {
         if (stage != null) {
             stage.dispose();
             stage = null;
+            super.setStage(stage);
         }
-
 
         // DO NOT dispose game.menuFont or game.buttonSkin or game.batch here
     }

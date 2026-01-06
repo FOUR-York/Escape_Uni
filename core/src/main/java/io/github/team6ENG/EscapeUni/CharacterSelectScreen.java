@@ -41,7 +41,6 @@ public class CharacterSelectScreen implements Screen {
         table.bottom();
         table.defaults().pad(50).fillX().uniformX().padBottom(0);
 
-
         Texture img1 = new Texture(Gdx.files.internal(img1Asset));
         TextureRegionDrawable drawable1 = new TextureRegionDrawable(img1);
         Texture img2 = new Texture(Gdx.files.internal(img2Asset));
@@ -56,29 +55,22 @@ public class CharacterSelectScreen implements Screen {
 
         table.add(characterButton2).height(Value.percentHeight(1f, table));
 
+        characterButton1.addListener(SelectCharacter("sprites/femaleSprite.png", "items/idFemale.png"));
+        characterButton2.addListener(SelectCharacter("sprites/maleSprite.png","items/idMale.png"));
+    }
 
-        characterButton1.addListener(
-            new ClickListener(){
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    Gdx.app.postRunnable(() -> {
-                        game.activeSpritePath = "sprites/femaleSprite.png";
-                        game.activeUniIDPath = "items/idFemale.png";
-                        game.setScreen(new InstructionsScreen(game));
-                        dispose();
-                    });
-                } });
-        characterButton2.addListener(
-            new ClickListener(){
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    Gdx.app.postRunnable(() -> {
-                        game.activeSpritePath = "sprites/maleSprite.png";
-                        game.activeUniIDPath = "items/idMale.png";
-                        game.setScreen(new InstructionsScreen(game));
-                        dispose();
-                    });
-                } });
+    ClickListener SelectCharacter(String activeSpritePath, String activeUniIDPath) {
+        return new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.postRunnable(() -> {
+                    game.activeSpritePath = activeSpritePath;
+                    game.activeUniIDPath = activeUniIDPath;
+                    game.setScreen(new InstructionsScreen(game));
+                    dispose();
+                });
+            }
+        };
     }
 
     @Override

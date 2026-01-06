@@ -64,6 +64,9 @@ public class GameScreen implements Screen {
 
     public float playerSpeedModifier = 1;
 
+    public static final String mapTexAsset = "tileMap/map.png";
+    public static final String mapTmxAsset = "tileMap/map.tmx";
+
     public AudioManager audioManager;
 
     /**
@@ -72,7 +75,6 @@ public class GameScreen implements Screen {
      */
     public GameScreen(final Main game) {
         this.game = game;
-
         initialiseMap();
 
         initialiseAudio();
@@ -97,9 +99,9 @@ public class GameScreen implements Screen {
      * Load map and collision layer
      */
     private void initialiseMap() {
-        Texture mapTex = new Texture(Gdx.files.internal("tileMap/map.png"));
+        Texture mapTex = new Texture(Gdx.files.internal(mapTexAsset));
         mapImg = new Image(mapTex);
-        map = new TmxMapLoader().load("tileMap/map.tmx");
+        map = new TmxMapLoader().load(mapTmxAsset);
         mapRenderer = new OrthogonalTiledMapRenderer(map, 1);
         collisionLayer = (TiledMapTileLayer)map.getLayers().get(0);
     }
@@ -181,9 +183,6 @@ public class GameScreen implements Screen {
         items.put("torch", new Collectable(game, "items/torch.png",   300, 220, 0.1f, false, "RonCookeScreen", audioManager));
         items.put("pizza", new Collectable(game, "items/pizza.png", 600, 100, 0.4f, true, "LangwithScreen", audioManager));
         items.put("phone", new Collectable(game, "items/phone.png", 100, 100, 0.05f, true, "LangwithScreen", audioManager));
-
-
-
     }
     private void initialiseBus() {
         busTexture = new Texture(Gdx.files.internal("images/bus.png"));
@@ -310,10 +309,8 @@ public class GameScreen implements Screen {
             }
 
             // Feed goose if player has food and in range
-            float dx = (goose.x + (goose.getWidth())/2) - (player.sprite.getX()+ (player.sprite.getWidth()/2));
-            float dy = (goose.y + (goose.getHeight()/2)) - (player.sprite.getY() + (player.sprite.getHeight()/2));
+            float distance = calculateDistance();
 
-            float distance = (float) Math.sqrt(dx * dx + dy * dy);
             if (distance < 30f && hasGooseFood && isEPressed) {
                 items.get("gooseFood").playSound();
                 items.remove("gooseFood");
@@ -396,6 +393,13 @@ public class GameScreen implements Screen {
 
         playAudio();
 
+    }
+
+    private float calculateDistance() {
+        float dx = (goose.x + (goose.getWidth())/2) - (player.sprite.getX()+ (player.sprite.getWidth()/2));
+        float dy = (goose.y + (goose.getHeight()/2)) - (player.sprite.getY() + (player.sprite.getHeight()/2));
+
+        return (float) Math.sqrt(dx * dx + dy * dy);
     }
 
     /**
@@ -657,10 +661,7 @@ public class GameScreen implements Screen {
     private String getInstructions(String key) {
         if(key.equals("gooseFood")) {
 
-            float dx = (goose.x + (goose.getWidth())/2) - (player.sprite.getX()+ (player.sprite.getWidth()/2));
-            float dy = (goose.y + (goose.getHeight()/2)) - (player.sprite.getY() + (player.sprite.getHeight()/2));
-
-            float distance = (float) Math.sqrt(dx * dx + dy * dy);
+            float distance = calculateDistance();
             if (distance < 30f) {
                 return "Press 'e' to feed seeds to goose";
             }
