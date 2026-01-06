@@ -1,26 +1,27 @@
 package io.github.team6ENG.EscapeUni.headless;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import io.github.team6ENG.EscapeUni.*;
 
+import io.github.team6ENG.EscapeUni.*;
 import org.junit.jupiter.api.Test;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class MainMenuScreenTest extends AbstractHeadlessGdxTest {
-    MainMenuScreen mainMenuScreen;
-
+public class InstructionsScreenTest extends AbstractHeadlessGdxTest {
+    InstructionsScreen instructionsScreen;
     @Test
-    public void testMainMenuScreen() {
+    public void testInstructionsScreen() {
         Main game = mock(Main.class);
-        game.menuFont = new BitmapFont();
+        game.menuFont = null;
 
         game.viewport = new FitViewport(800, 600);
         Camera mockCamera = new OrthographicCamera(400,225);
@@ -29,45 +30,51 @@ public class MainMenuScreenTest extends AbstractHeadlessGdxTest {
         game.batch = mock(SpriteBatch.class);
         when(game.batch.getProjectionMatrix()).thenReturn(new Matrix4());
         when(game.batch.getTransformMatrix()).thenReturn(new Matrix4());
+        when(game.batch.getColor()).thenReturn(Color.BLACK);
 
         game.buttonSkin = new Skin(Gdx.files.internal(Main.buttonSkinAsset));
 
-        mainMenuScreen = new MainMenuScreen(game);
+        Gdx.input = mock(Input.class);
+
+        instructionsScreen = new InstructionsScreen(game);
     }
 
     @Test
-    public void testMainMenuShow() {
-        testMainMenuScreen();
+    public void testShow() {
+        testInstructionsScreen();
 
-        mainMenuScreen.show();
+        instructionsScreen.show();
     }
 
     @Test
     public void testResize() {
-        // this sets the stage.
-        testMainMenuShow();
+        testInstructionsScreen();
 
-        mainMenuScreen.resize(200, 200);
+        instructionsScreen.show();
+        instructionsScreen.resize(200, 200);
 
-        // make stage = null.
-        mainMenuScreen.dispose();
-        mainMenuScreen.dispose();
-        mainMenuScreen.resize(200, 200);
+        instructionsScreen.dispose();
+        instructionsScreen.dispose();
+        instructionsScreen.resize(200, 200);
     }
 
     @Test
     public void testHide() {
-        testMainMenuScreen();
-        mainMenuScreen.hide();
+        testInstructionsScreen();
+        instructionsScreen.hide();
 
-        mainMenuScreen.show();
-        mainMenuScreen.hide();
+        instructionsScreen.show();
+        instructionsScreen.hide();
     }
 
     @Test
     public void testRender() {
-        testMainMenuScreen();
+        testInstructionsScreen();
 
-        mainMenuScreen.render(1/60f);
+        instructionsScreen.show();
+        when(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)).thenReturn(true);
+
+        instructionsScreen.render(1/60f);
     }
+
 }

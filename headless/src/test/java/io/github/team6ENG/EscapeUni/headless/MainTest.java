@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import io.github.team6ENG.EscapeUni.Main;
+import io.github.team6ENG.EscapeUni.*;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -81,5 +81,15 @@ public class MainTest extends AbstractHeadlessGdxTest {
         main.viewport = mock(FitViewport.class);
 
         main.resize(800, 450);
+    }
+
+    @Test
+    public void testResetGame() {
+        Main main = new Main();
+        main.viewport = new FitViewport(800, 600);
+        main.batch = mock(SpriteBatch.class);
+        main.buttonSkin = new Skin(Gdx.files.internal(Main.buttonSkinAsset));
+
+        main.resetGame();
     }
 }

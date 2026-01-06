@@ -267,7 +267,6 @@ public class PlayerTest extends AbstractHeadlessGdxTest {
     @Test
     public void testPlayerDispose() {
         SetPlayerUp();
-
         playerTest.dispose();
     }
 

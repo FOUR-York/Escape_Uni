@@ -9,9 +9,6 @@ import io.github.team6ENG.EscapeUni.Goose;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -99,8 +96,6 @@ public class GooseTest extends AbstractHeadlessGdxTest {
         // isMoveAllowed(tileX, tileY) = false when tileX < 0..
         gooseTest.x = -100;
         gooseTest.moveGoose(1 / 60f, -150, 0, true, true);
-
-        System.out.println();
 
         // iaMoveAllowed(tileX, tileY) = true.
         gooseTest.x = 0;
