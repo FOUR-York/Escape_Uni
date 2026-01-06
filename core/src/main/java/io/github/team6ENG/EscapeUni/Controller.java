@@ -1,5 +1,6 @@
 package io.github.team6ENG.EscapeUni;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 
 // implement smooth transitions between tiles
@@ -26,11 +27,11 @@ public class Controller {
     }
     public void hop(int dir) {
         int nX = gridInstance.getGridX(), nY = gridInstance.getGridY();
-        GridObject.push(NewGameScreen.room.grid, NewGameScreen.room.width, NewGameScreen.room.height, nX, nY, dir);
+        GridObject.push(NewGameScreen.room.grid, NewGameScreen.room.width, NewGameScreen.room.height, nX, nY, dir, 3);
     }
     public void hit() {
         // restart
         // TODO: implement restarting procedure
-//        NewGameScreen.start();
+        NewGameScreen.start();
     }
 }

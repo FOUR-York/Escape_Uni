@@ -43,7 +43,7 @@ public class Main extends Game {
 
 
         menuFont = new BitmapFont(Gdx.files.internal("fonts/menuScreenFont.fnt"));
-        viewport = new FitViewport(800, 450);
+        viewport = new FitViewport(640, 480);
 
         //Scale font to our viewport by ratio of viewport height to screen height
         menuFont.setUseIntegerPositions(false);

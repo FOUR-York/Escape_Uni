@@ -20,7 +20,7 @@ public class ShiftTile extends RoomObject {
 
     @Override
     public void step(float delta) {
-        GridObject.push(NewGameScreen.room.grid, NewGameScreen.room.width, NewGameScreen.room.height, posX, posY, dir);
+        GridObject.push(NewGameScreen.room.grid, NewGameScreen.room.width, NewGameScreen.room.height, posX, posY, dir, 99);
     }
 
     @Override

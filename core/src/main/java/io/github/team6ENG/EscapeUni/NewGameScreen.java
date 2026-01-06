@@ -3,9 +3,7 @@ package io.github.team6ENG.EscapeUni;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -23,7 +21,6 @@ public class NewGameScreen implements Screen {
 
     private final Main game;
 
-    private SpriteBatch batch;
     private Texture drawerTexture;
     private ShapeDrawer shapeDrawer;
     public static Controller player;
@@ -44,9 +41,8 @@ public class NewGameScreen implements Screen {
     public static Texture turretTex;
 
     NewGameScreen(final Main game) {
-       this.game = game;
+        this.game = game;
 
-        batch = new SpriteBatch();
         // init shapeDrawer
         Pixmap drawerPixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         drawerPixmap.setColor(Color.WHITE);
@@ -54,7 +50,7 @@ public class NewGameScreen implements Screen {
         drawerTexture = new Texture(drawerPixmap); //remember to dispose of later
         drawerPixmap.dispose();
         TextureRegion drawerRegion = new TextureRegion(drawerTexture, 0, 0, 1, 1);
-        shapeDrawer = new ShapeDrawer(batch, drawerRegion);
+        shapeDrawer = new ShapeDrawer(game.batch, drawerRegion);
 
         start();
     }
@@ -321,28 +317,29 @@ public class NewGameScreen implements Screen {
         // input
         input();
         update(delta);
-        ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
 
-        batch.begin();
-        room.draw(shapeDrawer, batch);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        game.viewport.apply();
+        Gdx.gl.glFlush();
+
+        game.batch.begin();
+
+        room.draw(shapeDrawer, game.batch);
 
         // render grid
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
+                float theta = tileWidth / 8f;
                 if (roomCell(i, j) == GridObject.TYPE.NONE) {
-                    float theta = tileWidth / 8f;
-//                    shapeDrawer.setColor(0.0f, 0.0f, 0.0f, 1.0f);
-//                    shapeDrawer.filledRectangle(i*tileWidth, j*tileHeight, tileWidth, tileHeight);
                     shapeDrawer.setColor(1.0f, 1.0f, 1.0f, 0.2f);
                     shapeDrawer.rectangle(i * tileWidth + theta, j * tileHeight + theta,
                         tileWidth - theta * 2, tileHeight - theta * 2);
                 } else if (roomCell(i, j) == GridObject.TYPE.PLAYER) {
-                    float theta = tileWidth / 8f;
-//                    shapeDrawer.setColor(0.0f, 0.0f, 0.0f, 1.0f);
-//                    shapeDrawer.filledRectangle(i * tileWidth, j * tileHeight, tileWidth, tileHeight);
                     shapeDrawer.setColor(Color.CYAN.r, Color.CYAN.g, Color.CYAN.b, 0.2f);
                     shapeDrawer.rectangle(i * tileWidth + theta, j * tileHeight + theta,
-                        tileWidth - delta * 2, tileHeight - delta * 2);
+                        tileWidth - theta * 2, tileHeight - theta * 2);
                 }
             }
         }
@@ -360,11 +357,11 @@ public class NewGameScreen implements Screen {
 
         for (RoomObject roomObject : room.objects) {
             if (roomObject != null) {
-                roomObject.draw(shapeDrawer, batch);
+                roomObject.draw(shapeDrawer, game.batch);
             }
         }
 
-        batch.end();
+        game.batch.end();
     }
 
     public static GridObject.TYPE roomCell(int x, int y) {
@@ -437,7 +434,7 @@ public class NewGameScreen implements Screen {
 
     @Override
     public void dispose() {
-        batch.dispose();
+        game.batch.dispose();
         drawerTexture.dispose();
     }
 

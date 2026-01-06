@@ -18,10 +18,14 @@ public class GridObject {
         gridY = y;
     }
 
-    public static int push(GridObject[] grid, int gridW, int gridH, int x, int y, int dir) {
+    public static int push(GridObject[] grid, int gridW, int gridH, int x, int y, int dir, int force) {
         int idx = x + (gridH - y - 1) * gridW;
         if (idx < 0 || idx >= grid.length) {
             NewGameScreen.errorMsg("Cannot push GridObject to null Grid position");
+            return 0;
+        }
+        if (force < 0) {
+            NewGameScreen.errorMsg("Force too low to push GridObject");
             return 0;
         }
         switch (grid[idx].type) {
@@ -42,7 +46,7 @@ public class GridObject {
                         nX += 1;
                         break;
                 }
-                if (push(grid, gridW, gridH, nX, nY, dir) > 0) {
+                if (push(grid, gridW, gridH, nX, nY, dir, force-1) > 0) {
                     move(grid, gridW, gridH, x, y, nX, nY);
                     return 1;
                 } else {

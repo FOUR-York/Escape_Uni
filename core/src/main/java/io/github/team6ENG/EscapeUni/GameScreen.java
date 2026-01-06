@@ -120,7 +120,6 @@ public class GameScreen implements Screen {
         player.loadSprite(collisionLayer, mapWallsId, tileDimensions);
         player.sprite.setPosition(x, y);
         player.speed = 1;
-
     }
 
     /**
