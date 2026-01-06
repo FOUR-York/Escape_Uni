@@ -21,11 +21,14 @@ public class Goose extends SpriteAnimations {
     public boolean attackModeActivated = false;
     public boolean isSleeping = false;
     private List<int[]> runPath =  Arrays.asList(new int[]{700, 400}, new int[]{340, 300}, new int[]{600, 150}, new int[]{550, 50});
+
+    public static final String gooseSpriteAsset = "sprites/goose.png";
+
     /**
      * Generate goose and its animations
      */
     public Goose() {
-        super("sprites/goose.png", 15, 17);
+        super(gooseSpriteAsset, 15, 17);
 
         // HashMap<String, Integer[]> animationInfo:
         //      key - Name of animation
@@ -39,10 +42,7 @@ public class Goose extends SpriteAnimations {
         animationInfo.put("flyLeft", new Integer[]{12,0,10});
         animationInfo.put("sleep", new Integer[]{13,5,10});
 
-
         generateAnimation(animationInfo,0.6f);
-
-
     }
 
     /**
@@ -80,15 +80,9 @@ public class Goose extends SpriteAnimations {
         currentGooseFrame = animations.get("sleep").getKeyFrame(stateTime, true);
         if(isSleeping){return;}
 
-        System.out.println("getWidth: " + getWidth());
-        System.out.println("tileDimensions: " + tileDimensions);
-
         float distance = (float) Math.sqrt(((x-followX) * (x-followX)) + ((y-followY)*(y-followY)));
         // If target is in range, idle
 
-        System.out.println("distance = " + distance + ", idleDistance = " + idleDistance);
-        System.out.println("isPlayerMoving = " + isPlayerMoving);
-        System.out.println("isMoveAllowed = " + isMoveAllowed(tileX, tileY));
         if( distance <= idleDistance && !isPlayerMoving && isMoveAllowed(tileX, tileY) ) {
             if(isFacingLeft){
                 currentGooseFrame = animations.get("idleLeft").getKeyFrame(stateTime, true);
@@ -103,13 +97,10 @@ public class Goose extends SpriteAnimations {
 
         }
         else{
-            System.out.println("x = " + x + ", followX = " + followX);
             isFlying = false;
             if (x > followX) {
                 isFacingLeft = true;
 
-                System.out.println("isMoveAllowed(tileX,tileY): " + isMoveAllowed(tileX,tileY));
-                System.out.println("isMoveAllowed(tileX-1,tileY): " + isMoveAllowed(tileX-1,tileY));
                 if ((!isMoveAllowed(tileX-1,tileY) && Math.abs(x-followX) > 50)|| !isMoveAllowed(tileX,tileY)) {
                     isFlying = true;
                     x -= speed;
