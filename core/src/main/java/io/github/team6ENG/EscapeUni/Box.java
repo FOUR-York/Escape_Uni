@@ -1,5 +1,6 @@
 package io.github.team6ENG.EscapeUni;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import space.earlygrey.shapedrawer.ShapeDrawer;
@@ -8,8 +9,8 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
  */
 public class Box extends RoomObject {
     GridObject gridInstance;
-    public Box(GridObject gridInstance) {
-        super(NewGameScreen.boxTex, gridInstance.getGridX()*NewGameScreen.tileWidth,
+    public Box(Texture texture, GridObject gridInstance) {
+        super(texture, gridInstance.getGridX()*NewGameScreen.tileWidth,
             gridInstance.getGridY()*NewGameScreen.tileHeight);
         gridInstance.type = GridObject.TYPE.PUSH;
         this.gridInstance = gridInstance;

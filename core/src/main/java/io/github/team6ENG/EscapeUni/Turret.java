@@ -1,5 +1,6 @@
 package io.github.team6ENG.EscapeUni;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
@@ -11,8 +12,8 @@ public class Turret extends RoomObject {
     int amp;
     int dir;
     float speed;
-    public Turret(float x, float y, int dir, float speed) {
-        super(NewGameScreen.turretTex, x, y);
+    public Turret(Texture texture, float x, float y, int dir, float speed) {
+        super(texture, x, y);
         this.dir = dir;
         this.speed = speed;
         t = 0;

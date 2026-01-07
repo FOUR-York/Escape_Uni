@@ -8,8 +8,8 @@ public class Keycard extends RoomObject {
     private int gridX, gridY;
     private boolean collected = false;
 
-    public Keycard(float x, float y) {
-        super(NewGameScreen.keycardTex, x, y);
+    public Keycard(Texture texture, float x, float y) {
+        super(texture, x, y);
         gridX = (int) (x/NewGameScreen.tileWidth);
         gridY = (int) (y/NewGameScreen.tileHeight);
     }

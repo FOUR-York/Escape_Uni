@@ -29,17 +29,9 @@ public class NewGameScreen implements Screen {
 
     public AudioManager audioManager;
 
-    // textures
-    public static Texture roomTex;
-    public static Texture wallTex;
-    public static Texture boxTex;
-    public static Texture shiftTex;
-    public static Texture turretTex;
-    public static Texture keycardTex;
-    public static Texture powerupTex;
 
     NewGameScreen(final Main game) {
-        this.game = game;
+        NewGameScreen.game = game;
 
         // init shapeDrawer
         Pixmap drawerPixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
@@ -61,78 +53,44 @@ public class NewGameScreen implements Screen {
         // reset variables
         projectiles = new Projectile[100];
         projectileCount = 0;
-        projectileReception();
+//        projectileReception();
+        room = new Room("test.json");
         if (player == null) {
             errorMsg("Controller is null");
-            player = new Controller(GridObject.getAt(room.grid, room.width, room.height, 1, 1), tileWidth/4f, game);
+            player = new Controller(GridObject.getAt(room.grid, room.width, room.height, 1, 1), tileWidth/4f);
         }
     }
 
     public static void ClassRoomOne() {
-        // load textures
-        roomTex = new Texture(Gdx.files.internal("test/ClassRoom1.png"));
-
-        wallTex = new Texture(Gdx.files.internal("test/wall.png"));
-        boxTex = new Texture(Gdx.files.internal("test/box.png"));
-        shiftTex = new Texture(Gdx.files.internal("test/shift.png"));
-        turretTex = new Texture(Gdx.files.internal("test/turret.png"));
-        keycardTex = new Texture(Gdx.files.internal("items/keycard1.png"));
-        powerupTex = new Texture(Gdx.files.internal("items/star.png"));
         //ClassRoom1
-        room = new Room(width, height);
         //ClassRoom1
         loadLevelMatrix(new int[]{
-            // Row 0
             4, 4, 4 /*door*/, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 /*door*/, 4, 4,
-            // Row 1
             4, 0, 0, 0, 0, 4 /*chair*/, 4 /*table*/, 4 /*table*/, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4,
-            // Row 2
             4, 0, 0, 0, 0, 4 /*chair*/, 4 /*table*/, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4,
-            // Row 3
             4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4,
-            // Row 4
             4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4,
-            // Row 5
             4, 0, 0, 0, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/,
             4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 0, 0, 0, 4,
-            // Row 6
             4, 0, 0, 0, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/,
             4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 0, 0, 0, 4,
-            // Row 7
             4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4,
-            // Row 8
             4, 0, 0, 0, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/,
             4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 0, 0, 0, 4,
-            // Row 9
             4, 0, 0, 0, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/,
             4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 0, 0, 0, 4,
-            // Row 10
             4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4,
-            // Row 11
             4, 0, 0, 0, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/,
             4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 0, 0, 0, 4,
-            // Row 12
             4, 0, 0, 0, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/,
             4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 0, 0, 0, 4,
-            // Row 13
             4, 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4,
-            // Row 14
             4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
         });
     }
 
     public static void BoxRoomOne() {
-        // load textures
-        roomTex = new Texture(Gdx.files.internal("test/room.png"));
-
-        wallTex = new Texture(Gdx.files.internal("test/wall.png"));
-        boxTex = new Texture(Gdx.files.internal("test/box.png"));
-        shiftTex = new Texture(Gdx.files.internal("test/shift.png"));
-        turretTex = new Texture(Gdx.files.internal("test/turret.png"));
-        keycardTex = new Texture(Gdx.files.internal("items/keycard1.png"));
-        powerupTex = new Texture(Gdx.files.internal("items/star.png"));
         // BoxRoom1
-        room = new Room(width, height);
         //ClassRoom1
         loadLevelMatrix(new int[]{
             // Row 0
@@ -170,17 +128,7 @@ public class NewGameScreen implements Screen {
     }
 
     public static void directionPuzzle() {
-        // load textures
-        roomTex = new Texture(Gdx.files.internal("test/pushPuzzle.png"));
-
-        wallTex = new Texture(Gdx.files.internal("test/wall.png"));
-        boxTex = new Texture(Gdx.files.internal("test/box.png"));
-        shiftTex = new Texture(Gdx.files.internal("test/shift.png"));
-        turretTex = new Texture(Gdx.files.internal("test/turret.png"));
-        keycardTex = new Texture(Gdx.files.internal("items/keycard1.png"));
-        powerupTex = new Texture(Gdx.files.internal("items/star.png"));
         // PushPuzzle
-        room = new Room(width, height);
         //Push (up) = 12
         //Push (left) = 13
         //Push (down) = 14
@@ -220,16 +168,6 @@ public class NewGameScreen implements Screen {
     }
 
     public static void projectileReception() {
-        // load textures
-        roomTex = new Texture(Gdx.files.internal("test/projectileReception.png"));
-
-        wallTex = new Texture(Gdx.files.internal("test/wall.png"));
-        boxTex = new Texture(Gdx.files.internal("test/box.png"));
-        shiftTex = new Texture(Gdx.files.internal("test/shift.png"));
-        turretTex = new Texture(Gdx.files.internal("test/turret.png"));
-        keycardTex = new Texture(Gdx.files.internal("items/keycard1.png"));
-        powerupTex = new Texture(Gdx.files.internal("items/star.png"));
-        room = new Room(width, height);
         /*Proj (up) = 16, Proj (Left) = 17, Proj (down) = 18, Proj (right) = 19*/
         /*Keycard = 28, Powerup = 24*/
         loadLevelMatrix(new int[]{
@@ -268,45 +206,44 @@ public class NewGameScreen implements Screen {
     }
 
     public static void loadLevelMatrix(int[] levelMatrix) {
-        if (levelMatrix.length != room.width*room.height) {
-            errorMsg("Invalid level matrix");
-            return;
-        }
-        for (int i = 0; i < room.width; i++) {
-            for (int j = 0; j < room.height; j++) {
-                int matData = levelMatrix[i+(room.height-j-1)*room.width];
-                int objId = matData>>2;
-                infoMsg(String.valueOf(objId));
-                int r = matData%4;
-                switch (objId) {
-                    case 0:
-                        break;
-                    case 1:
-                        room.addObject(new Wall(GridObject.getAt(room.grid, room.width, room.height, i, j)));
-                        break;
-                    case 2:
-                        room.addObject(new Box(GridObject.getAt(room.grid, room.width, room.height, i, j)));
-                        break;
-                    case 3:
-                        room.addObject(new ShiftTile(i, j, r));
-                        break;
-                    case 4:
-                        room.addObject(new Turret(i*tileWidth, j*tileHeight, r, 4f));
-                        break;
-                    case 5:
-                        player = new Controller(GridObject.getAt(room.grid, room.width, room.height, i, j), tileWidth/4f, game);
-                        break;
-                    case 6:
-                        room.addObject(new Powerup(i*tileWidth, j*tileHeight));
-                        break;
-                    case 7:
-                        room.addObject(new Keycard(i*tileWidth, j*tileHeight));
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
+//        if (levelMatrix.length != room.width*room.height) {
+//            errorMsg("Invalid level matrix");
+//            return;
+//        }
+//        for (int i = 0; i < room.width; i++) {
+//            for (int j = 0; j < room.height; j++) {
+//                int matData = levelMatrix[i+(room.height-j-1)*room.width];
+//                int objId = matData>>2;
+//                int r = matData%4;
+//                switch (objId) {
+//                    case 0:
+//                        break;
+//                    case 1:
+//                        GridObject.getAt(room.grid, room.width, room.height, i, j).type = GridObject.TYPE.SOLID;
+//                        break;
+//                    case 2:
+//                        room.addObject(new Box(GridObject.getAt(room.grid, room.width, room.height, i, j)));
+//                        break;
+//                    case 3:
+//                        room.addObject(new ShiftTile(i, j, r));
+//                        break;
+//                    case 4:
+//                        room.addObject(new Turret(i*tileWidth, j*tileHeight, r, 4f));
+//                        break;
+//                    case 5:
+//                        player = new Controller(GridObject.getAt(room.grid, room.width, room.height, i, j), tileWidth/4f);
+//                        break;
+//                    case 6:
+//                        room.addObject(new Powerup(i*tileWidth, j*tileHeight));
+//                        break;
+//                    case 7:
+//                        room.addObject(new Keycard(i*tileWidth, j*tileHeight));
+//                        break;
+//                    default:
+//                        break;
+//                }
+//            }
+//        }
     }
 
 
@@ -387,8 +324,8 @@ public class NewGameScreen implements Screen {
 
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-//            audioManager.pauseMusic();
-//            audioManager.stopFootsteps();
+            audioManager.pauseMusic();
+            audioManager.stopFootsteps();
             game.setScreen(new PauseScreen(game, NewGameScreen.this, audioManager));
         }
     }
@@ -470,13 +407,6 @@ public class NewGameScreen implements Screen {
     public void dispose() {
         game.batch.dispose();
         drawerTexture.dispose();
-        roomTex.dispose();
-        wallTex.dispose();
-        boxTex.dispose();
-        shiftTex.dispose();
-        turretTex.dispose();
-        keycardTex.dispose();
-        powerupTex.dispose();
     }
 
     public static float dist(float x1, float y1, float x2, float y2) {

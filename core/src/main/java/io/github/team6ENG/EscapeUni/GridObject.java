@@ -4,13 +4,13 @@ package io.github.team6ENG.EscapeUni;
     * helper class written by dlb
  */
 public class GridObject {
-    enum TYPE {
+    public enum TYPE {
         NONE,
         SOLID,
         PUSH,
         PLAYER,
     }
-    TYPE type;
+    public TYPE type;
     private int gridX, gridY;
     private GridObject(int x, int y, TYPE type) {
         this.type = type;

@@ -40,7 +40,8 @@ public class Projectile {
         if (NewGameScreen.dist(x, y, NewGameScreen.player.rX, NewGameScreen.player.rY) < NewGameScreen.player.radius + radius) {
             NewGameScreen.player.hit();
         }
-        if (NewGameScreen.roomCell(cellX, cellY) == GridObject.TYPE.SOLID) {
+        if (NewGameScreen.roomCell(cellX, cellY) == GridObject.TYPE.SOLID ||
+            NewGameScreen.roomCell(cellX, cellY) == GridObject.TYPE.PUSH) {
             float dist = 1;
             switch(dir) {
                 case 0:

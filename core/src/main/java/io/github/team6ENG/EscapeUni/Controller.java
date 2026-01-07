@@ -9,10 +9,6 @@ import com.badlogic.gdx.math.MathUtils;
 import java.util.HashMap;
 
 // implement smooth transitions between tiles
-/*
-    * helper class written by dlb
-    * player grid object
- */
 public class Controller extends SpriteAnimations {
     GridObject gridInstance;
     float rX, rY;
@@ -27,8 +23,6 @@ public class Controller extends SpriteAnimations {
     public HashMap<String, Integer[]> animationInfo = new HashMap<String, Integer[]>();
     public TextureRegion currentPlayerFrame;
 
-    final Main game;
-
     public Sprite sprite;
 
     public boolean isFacingUp = false;
@@ -36,9 +30,8 @@ public class Controller extends SpriteAnimations {
     public boolean isMoving;
     public boolean isMovingHorizontally;
 
-    public Controller(GridObject gridInstance, float radius, Main game) {
-        super(game.activeSpritePath, 8, 7);
-        this.game = game;
+    public Controller(GridObject gridInstance, float radius) {
+        super(Main.activeSpritePath, 8, 7);
 
         int x = gridInstance.getGridX(), y = gridInstance.getGridY();
         gridInstance.type = GridObject.TYPE.PLAYER;

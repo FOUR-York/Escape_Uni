@@ -19,8 +19,8 @@ public class Main extends Game {
     public BitmapFont gameFont;
     public FitViewport viewport;
     public Skin buttonSkin;
-    public String activeSpritePath;
-    public String activeUniIDPath;
+    public static String activeSpritePath;
+    public static String activeUniIDPath;
 
     public float gameTimer = 300;
     public float score = 300;

@@ -1,5 +1,6 @@
 package io.github.team6ENG.EscapeUni;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import space.earlygrey.shapedrawer.ShapeDrawer;
@@ -11,8 +12,8 @@ public class ShiftTile extends RoomObject {
     int dir;
     int posX, posY;
     final float delta = NewGameScreen.tileWidth/6f;
-    public ShiftTile(int x, int y, int dir) {
-        super(NewGameScreen.shiftTex, x*NewGameScreen.tileWidth, y*NewGameScreen.tileHeight);
+    public ShiftTile(Texture texture, int x, int y, int dir) {
+        super(texture, x*NewGameScreen.tileWidth, y*NewGameScreen.tileHeight);
         this.dir = dir;
         this.posX = x;
         this.posY = y;
