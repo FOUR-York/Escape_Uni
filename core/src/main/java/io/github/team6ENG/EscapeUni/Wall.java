@@ -16,7 +16,7 @@ public class Wall extends RoomObject {
     }
 
     @Override
-    public void step(float delta) {
+    public void update(float delta) {
     }
 
     @Override

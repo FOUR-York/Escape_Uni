@@ -15,7 +15,7 @@ public class Keycard extends RoomObject {
     }
 
     @Override
-    public void step(float delta) {
+    public void update(float delta) {
         if (!collected) {
             if (NewGameScreen.player.gridInstance.getGridX() == gridX && NewGameScreen.player.gridInstance.getGridY() == gridY) {
                 NewGameScreen.infoMsg("Keycard collected.");

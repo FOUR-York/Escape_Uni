@@ -16,7 +16,7 @@ public class Box extends RoomObject {
     }
 
     @Override
-    public void step(float delta) {
+    public void update(float delta) {
         x = MathUtils.lerp(x, gridInstance.getGridX()*NewGameScreen.tileWidth, 0.3f);
         y = MathUtils.lerp(y, gridInstance.getGridY()*NewGameScreen.tileHeight, 0.3f);
     }

@@ -4,14 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.ScreenUtils;
 import space.earlygrey.shapedrawer.ShapeDrawer;
-
-import java.util.ArrayList;
 /*
     * helper class written by dlb, modified to fit existing team6 codebase.
     * TODO: fix projectiles, improve wall loading, create room loading helper class and format, collisions
@@ -33,6 +27,8 @@ public class NewGameScreen implements Screen {
 
     public static boolean keycard = false;
 
+    public AudioManager audioManager;
+
     // textures
     public static Texture roomTex;
     public static Texture wallTex;
@@ -53,6 +49,8 @@ public class NewGameScreen implements Screen {
         drawerPixmap.dispose();
         TextureRegion drawerRegion = new TextureRegion(drawerTexture, 0, 0, 1, 1);
         shapeDrawer = new ShapeDrawer(game.batch, drawerRegion);
+
+        initialiseAudio();
 
         start();
     }
@@ -326,7 +324,7 @@ public class NewGameScreen implements Screen {
 
         for (RoomObject roomObject : room.objects) {
             if (roomObject != null) {
-                roomObject.step(delta);
+                roomObject.update(delta);
             }
         }
     }
@@ -334,7 +332,7 @@ public class NewGameScreen implements Screen {
     @Override
     public void render(float delta) {
         // input
-        input();
+        handleInput();
         update(delta);
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -381,6 +379,13 @@ public class NewGameScreen implements Screen {
         }
 
         game.batch.end();
+
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+//            audioManager.pauseMusic();
+//            audioManager.stopFootsteps();
+            game.setScreen(new PauseScreen(game, NewGameScreen.this, audioManager));
+        }
     }
 
     public static GridObject.TYPE roomCell(int x, int y) {
@@ -410,7 +415,7 @@ public class NewGameScreen implements Screen {
         projectileCount--;
     }
 
-    public void input() {
+    public void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
             player.hop(1);
         }
@@ -427,6 +432,11 @@ public class NewGameScreen implements Screen {
             start();
         }
     }
+
+    private  void initialiseAudio() {
+        audioManager = new AudioManager(game);
+    }
+
     @Override
     public void show() {
     }

@@ -16,7 +16,7 @@ public class Door extends RoomObject {
     }
 
     @Override
-    public void step(float delta) {
+    public void update(float delta) {
         if (NewGameScreen.keycard) {
             gridInstance.type = GridObject.TYPE.NONE;
         }

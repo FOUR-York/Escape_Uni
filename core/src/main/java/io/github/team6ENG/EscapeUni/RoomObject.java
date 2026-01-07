@@ -16,11 +16,10 @@ public abstract class RoomObject {
         this.texture = texture;
     }
 
-    public abstract void step(float delta);
+    public abstract void update(float delta);
     public void draw(ShapeDrawer drawer, SpriteBatch batch) {
         batch.draw(texture, x, y);
     }
-
 
     public void delete() {
     }
