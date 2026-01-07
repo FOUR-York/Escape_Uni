@@ -19,6 +19,7 @@ public class Powerup extends RoomObject {
             if (NewGameScreen.player.gridInstance.getGridX() == gridX && NewGameScreen.player.gridInstance.getGridY() == gridY) {
                 NewGameScreen.infoMsg("Powerup collected.");
                 collected = true;
+                NewGameScreen.player.invinciblePowerup(10f);
             }
         }
     }
