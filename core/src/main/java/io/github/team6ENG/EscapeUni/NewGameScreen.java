@@ -40,6 +40,7 @@ public class NewGameScreen implements Screen {
     public static Texture shiftTex;
     public static Texture turretTex;
     public static Texture keycardTex;
+    public static Texture powerupTex;
 
     NewGameScreen(final Main game) {
         this.game = game;
@@ -77,6 +78,8 @@ public class NewGameScreen implements Screen {
         boxTex = new Texture(Gdx.files.internal("test/box.png"));
         shiftTex = new Texture(Gdx.files.internal("test/shift.png"));
         turretTex = new Texture(Gdx.files.internal("test/turret.png"));
+        keycardTex = new Texture(Gdx.files.internal("items/keycard1.png"));
+        powerupTex = new Texture(Gdx.files.internal("items/star.png"));
         //ClassRoom1
         room = new Room(width, height);
         //ClassRoom1
@@ -128,6 +131,8 @@ public class NewGameScreen implements Screen {
         boxTex = new Texture(Gdx.files.internal("test/box.png"));
         shiftTex = new Texture(Gdx.files.internal("test/shift.png"));
         turretTex = new Texture(Gdx.files.internal("test/turret.png"));
+        keycardTex = new Texture(Gdx.files.internal("items/keycard1.png"));
+        powerupTex = new Texture(Gdx.files.internal("items/star.png"));
         // BoxRoom1
         room = new Room(width, height);
         //ClassRoom1
@@ -174,6 +179,8 @@ public class NewGameScreen implements Screen {
         boxTex = new Texture(Gdx.files.internal("test/box.png"));
         shiftTex = new Texture(Gdx.files.internal("test/shift.png"));
         turretTex = new Texture(Gdx.files.internal("test/turret.png"));
+        keycardTex = new Texture(Gdx.files.internal("items/keycard1.png"));
+        powerupTex = new Texture(Gdx.files.internal("items/star.png"));
         // PushPuzzle
         room = new Room(width, height);
         //Push (up) = 12
@@ -223,9 +230,10 @@ public class NewGameScreen implements Screen {
         shiftTex = new Texture(Gdx.files.internal("test/shift.png"));
         turretTex = new Texture(Gdx.files.internal("test/turret.png"));
         keycardTex = new Texture(Gdx.files.internal("items/keycard1.png"));
+        powerupTex = new Texture(Gdx.files.internal("items/star.png"));
         room = new Room(width, height);
         /*Proj (up) = 16, Proj (Left) = 17, Proj (down) = 18, Proj (right) = 19*/
-        /*Keycard = 31*/
+        /*Keycard = 28, Powerup = 24*/
         loadLevelMatrix(new int[]{
             // Row 0
             4, 4, 4, 4 /*door*/, 4 /*door*/, 18, 4, 4, 4, 4, 18, 4, 4, 4, 4, 4, 4, 4, 4, 4,
@@ -248,14 +256,14 @@ public class NewGameScreen implements Screen {
             // Row 9
             4, 0, 16, 4 /*chair*/, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 4 /*chair*/, 4 /*chair*/, 0, 4,
             // Row 10
-            4, 4 /*chair*/, 4 /*table*/, 4 /*table*/, 0, 0, 4, 4, 0, 31, 0, 4, 4, 0, 0, 17, 4 /*table*/, 4 /*table*/, 0, 4,
+            4, 4 /*chair*/, 4 /*table*/, 4 /*table*/, 0, 0, 4, 4, 0, 24, 0, 4, 4, 0, 0, 17, 4 /*table*/, 4 /*table*/, 0, 4,
             // Row 11
             4, 4 /*chair*/, 4 /*table*/, 4 /*table*/, 0, 0, 4, 4, 0, 0, 0, 4, 4, 0, 4 /*chair*/, 4 /*table*/,
             4 /*table*/, 4 /*table*/ , 0, 4,
             // Row 12
             4, 0, 4 /*chair*/, 4 /*chair*/, 0, 0, 4, 19, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 4,
             // Row 13
-            4, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 4, 4, 0, 0, 0, 0, 4 /*door*/, 16, 4,
+            4, 0, 0, 0, 0, 0, 4, 4, 0, 28, 0, 4, 4, 0, 0, 0, 0, 4 /*door*/, 16, 4,
             // Row 14
             4, 4, 4, 4, 4, 16, 4, 4, 4, 0 /*ENTER*/, 4, 4, 4, 4, 16, 4, 4, 4, 4, 4,
         });
@@ -290,8 +298,14 @@ public class NewGameScreen implements Screen {
                     case 5:
                         player = new Controller(GridObject.getAt(room.grid, room.width, room.height, i, j), tileWidth/4f);
                         break;
+                    case 6:
+                        room.addObject(new Powerup(i*tileWidth, j*tileHeight));
+                        break;
                     case 7:
                         room.addObject(new Keycard(i*tileWidth, j*tileHeight));
+                        break;
+                    default:
+                        break;
                 }
             }
         }
@@ -447,6 +461,7 @@ public class NewGameScreen implements Screen {
         shiftTex.dispose();
         turretTex.dispose();
         keycardTex.dispose();
+        powerupTex.dispose();
     }
 
     public static float dist(float x1, float y1, float x2, float y2) {
