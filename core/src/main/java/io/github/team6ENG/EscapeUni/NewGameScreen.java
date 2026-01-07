@@ -39,6 +39,7 @@ public class NewGameScreen implements Screen {
     public static Texture boxTex;
     public static Texture shiftTex;
     public static Texture turretTex;
+    public static Texture keycardTex;
 
     NewGameScreen(final Main game) {
         this.game = game;
@@ -221,11 +222,13 @@ public class NewGameScreen implements Screen {
         boxTex = new Texture(Gdx.files.internal("test/box.png"));
         shiftTex = new Texture(Gdx.files.internal("test/shift.png"));
         turretTex = new Texture(Gdx.files.internal("test/turret.png"));
+        keycardTex = new Texture(Gdx.files.internal("items/keycard1.png"));
         room = new Room(width, height);
         /*Proj (up) = 16, Proj (Left) = 17, Proj (down) = 18, Proj (right) = 19*/
+        /*Keycard = 31*/
         loadLevelMatrix(new int[]{
             // Row 0
-            4, 4, 4, 4 /*door*/, 4 /*door*/, 18, 4, 4, 4, 4, 18, 4, 18, 4, 4, 4, 4, 4, 4, 4,
+            4, 4, 4, 4 /*door*/, 4 /*door*/, 18, 4, 4, 4, 4, 18, 4, 4, 4, 4, 4, 4, 4, 4, 4,
             // Row 1
             4, 4 /*chair*/, 0, 0, 0, 0, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 0, 0, 0, 4 /*chair*/, 4, 4, 4, 4, 4, 4,
             // Row 2
@@ -243,9 +246,9 @@ public class NewGameScreen implements Screen {
             // Row 8
             4, 0 /*ITEM?*/, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4,
             // Row 9
-            4, 0, 16, 4 /*chair*/, 0, 0, 0, 0, 0, 0, 0, 17, 4, 0, 0, 0, 4 /*chair*/, 4 /*chair*/, 0, 4,
+            4, 0, 16, 4 /*chair*/, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 4 /*chair*/, 4 /*chair*/, 0, 4,
             // Row 10
-            4, 4 /*chair*/, 4 /*table*/, 4 /*table*/, 0, 0, 4, 4, 0, 0, 0, 4, 4, 0, 0, 17, 4 /*table*/, 4 /*table*/, 0, 4,
+            4, 4 /*chair*/, 4 /*table*/, 4 /*table*/, 0, 0, 4, 4, 0, 31, 0, 4, 4, 0, 0, 17, 4 /*table*/, 4 /*table*/, 0, 4,
             // Row 11
             4, 4 /*chair*/, 4 /*table*/, 4 /*table*/, 0, 0, 4, 4, 0, 0, 0, 4, 4, 0, 4 /*chair*/, 4 /*table*/,
             4 /*table*/, 4 /*table*/ , 0, 4,
@@ -287,6 +290,8 @@ public class NewGameScreen implements Screen {
                     case 5:
                         player = new Controller(GridObject.getAt(room.grid, room.width, room.height, i, j), tileWidth/4f);
                         break;
+                    case 7:
+                        room.addObject(new Keycard(i*tileWidth, j*tileHeight));
                 }
             }
         }
@@ -436,6 +441,12 @@ public class NewGameScreen implements Screen {
     public void dispose() {
         game.batch.dispose();
         drawerTexture.dispose();
+        roomTex.dispose();
+        wallTex.dispose();
+        boxTex.dispose();
+        shiftTex.dispose();
+        turretTex.dispose();
+        keycardTex.dispose();
     }
 
     public static float dist(float x1, float y1, float x2, float y2) {
