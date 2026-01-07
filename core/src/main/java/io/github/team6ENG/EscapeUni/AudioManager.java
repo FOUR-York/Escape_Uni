@@ -56,7 +56,7 @@ public class AudioManager {
         music.setLooping(true);
     }
     public void setMusicVolume(){
-        music.setVolume(0.01f * game.musicVolume);
+        music.setVolume(0.1f * game.musicVolume);
     }
     public void stopMusic(){
         music.stop();

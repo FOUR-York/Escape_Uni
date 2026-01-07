@@ -14,7 +14,7 @@ import java.util.HashMap;
  * Represents and controls the main player character
  */
 public class Player extends SpriteAnimations{
-    private HashMap<String, Integer[]> animationInfo = new HashMap<String, Integer[]>();
+    public HashMap<String, Integer[]> animationInfo = new HashMap<String, Integer[]>();
     public TextureRegion currentPlayerFrame;
     public float speed = 1.25f;
     final Main game;

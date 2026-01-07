@@ -1,14 +1,19 @@
 package io.github.team6ENG.EscapeUni;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+
+import java.util.HashMap;
 
 // implement smooth transitions between tiles
 /*
     * helper class written by dlb
     * player grid object
  */
-public class Controller {
+public class Controller extends SpriteAnimations {
     GridObject gridInstance;
     float rX, rY;
     float radius;
@@ -16,13 +21,47 @@ public class Controller {
     public boolean invincible = false;
     public float powerupTimer = 0f;
 
-    public Controller(GridObject gridInstance, float radius) {
+    private float stateTime;
+    private float moveTime;
+
+    public HashMap<String, Integer[]> animationInfo = new HashMap<String, Integer[]>();
+    public TextureRegion currentPlayerFrame;
+
+    final Main game;
+
+    public Sprite sprite;
+
+    public boolean isFacingUp = false;
+    public boolean isFacingLeft = false;
+    public boolean isMoving;
+    public boolean isMovingHorizontally;
+
+    public Controller(GridObject gridInstance, float radius, Main game) {
+        super(game.activeSpritePath, 8, 7);
+        this.game = game;
+
         int x = gridInstance.getGridX(), y = gridInstance.getGridY();
         gridInstance.type = GridObject.TYPE.PLAYER;
         this.gridInstance = gridInstance;
         rX = x*NewGameScreen.tileWidth + NewGameScreen.tileWidth/2f;
         rY = y*NewGameScreen.tileHeight + NewGameScreen.tileHeight/2f;
         this.radius = radius;
+
+        // HashMap<String, Integer[]> animationInfo:
+        //      key - Name of animation
+        //      Value - Array representing row of animation on sprite sheet and index of start and end frames
+        animationInfo.put("idle", new Integer[]{0,0,8});
+        animationInfo.put("walkForwards", new Integer[]{1,0,8});
+        animationInfo.put("walkLeftForwards", new Integer[]{2,0,8});
+        animationInfo.put("walkRightForwards", new Integer[]{6,0,8});
+        animationInfo.put("walkRightBackwards", new Integer[]{5,0,8});
+        animationInfo.put("walkLeftBackwards", new Integer[]{3,0,8});
+        animationInfo.put("walkBackwards", new Integer[]{4,0,8});
+
+        generateAnimation(animationInfo, 0.3f);
+
+        sprite = new Sprite(animations.get("walkLeftForwards").getKeyFrame(0, true));
+        sprite.setBounds(sprite.getX(), sprite.getY(), 48, 64);
     }
 
     public void step() {
@@ -43,6 +82,28 @@ public class Controller {
     }
 
     public void hop(int dir) {
+        isMoving = true;
+        moveTime = 0.25f;
+
+        switch (dir) {
+            case 0:
+                isFacingUp = true;
+                isMovingHorizontally = false;
+                break;
+            case 1:
+                isFacingLeft = true;
+                isMovingHorizontally = true;
+                break;
+            case 2:
+                isFacingUp = false;
+                isMovingHorizontally = false;
+                break;
+            case 3:
+                isFacingLeft = false;
+                isMovingHorizontally = true;
+                break;
+        }
+
         int nX = gridInstance.getGridX(), nY = gridInstance.getGridY();
         GridObject.push(NewGameScreen.room.grid, NewGameScreen.room.width, NewGameScreen.room.height, nX, nY, dir, 3);
     }
@@ -58,5 +119,66 @@ public class Controller {
     public void invinciblePowerup(float time) {
         invincible = true;
         powerupTimer += time;
+    }
+
+    public void updateSprite() {
+        float delta = Gdx.graphics.getDeltaTime();
+        stateTime += delta;
+        moveTime -= delta;
+
+        if (moveTime < 0f) {
+            isMoving = false;
+            moveTime = 0f;
+        }
+
+        sprite.setPosition(rX-25f, rY-30f);
+
+        if (isMoving){
+            if(isFacingUp){
+                if(isMovingHorizontally) {
+                    if (isFacingLeft) {
+                        currentPlayerFrame = animations.get("walkLeftBackwards").getKeyFrame(stateTime, true);
+//                        torch.setRotation(150);
+//                        torch.setPosition(sprite.getX() + 22, sprite.getY() + 30);
+                    } else {
+                        currentPlayerFrame = animations.get("walkRightBackwards").getKeyFrame(stateTime, true);
+//                        torch.setRotation(30);
+//                        torch.setPosition(sprite.getX() + 26, sprite.getY() + 25);
+                    }
+                }
+                else{
+
+                    currentPlayerFrame = animations.get("walkBackwards").getKeyFrame(stateTime, true);
+//                    torch.setRotation(120);
+//                    torch.setPosition(sprite.getX() + 22, sprite.getY() + 30);
+                }
+            }
+            else{
+                if(isMovingHorizontally) {
+                    if (isFacingLeft) {
+                        currentPlayerFrame = animations.get("walkLeftForwards").getKeyFrame(stateTime, true);
+//                        torch.setRotation(180);
+//                        torch.setPosition(sprite.getX() + 24, sprite.getY() + 30);
+                    } else {
+                        currentPlayerFrame = animations.get("walkRightForwards").getKeyFrame(stateTime, true);
+//                        torch.setRotation(0);
+//                        torch.setPosition(sprite.getX() + 26, sprite.getY() + 25);
+                    }
+                }
+                else{
+                    currentPlayerFrame = animations.get("walkForwards").getKeyFrame(stateTime, true);
+//                    torch.setRotation(-90);
+//                    torch.setPosition(sprite.getX() + 20, sprite.getY() + 25);
+                }
+            }
+
+        }
+        else{
+
+            currentPlayerFrame = animations.get("idle").getKeyFrame(stateTime, true);
+//            torch.setRotation(-60);
+//            torch.setPosition(sprite.getX() + 22, sprite.getY() + 26);
+        }
+        sprite.setRegion(currentPlayerFrame);
     }
 }

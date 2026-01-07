@@ -13,7 +13,7 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class NewGameScreen implements Screen {
 
-    private final Main game;
+    private static Main game;
 
     private Texture drawerTexture;
     private ShapeDrawer shapeDrawer;
@@ -64,7 +64,7 @@ public class NewGameScreen implements Screen {
         projectileReception();
         if (player == null) {
             errorMsg("Controller is null");
-            player = new Controller(GridObject.getAt(room.grid, room.width, room.height, 1, 1), tileWidth/4f);
+            player = new Controller(GridObject.getAt(room.grid, room.width, room.height, 1, 1), tileWidth/4f, game);
         }
     }
 
@@ -254,14 +254,14 @@ public class NewGameScreen implements Screen {
             // Row 9
             4, 0, 16, 4 /*chair*/, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 4 /*chair*/, 4 /*chair*/, 0, 4,
             // Row 10
-            4, 4 /*chair*/, 4 /*table*/, 4 /*table*/, 0, 0, 4, 4, 0, 24, 0, 4, 4, 0, 0, 17, 4 /*table*/, 4 /*table*/, 0, 4,
+            4, 4 /*chair*/, 4 /*table*/, 4 /*table*/, 0, 0, 4, 4, 0, 0, 0, 4, 4, 0, 0, 17, 4 /*table*/, 4 /*table*/, 0, 4,
             // Row 11
             4, 4 /*chair*/, 4 /*table*/, 4 /*table*/, 0, 0, 4, 4, 0, 0, 0, 4, 4, 0, 4 /*chair*/, 4 /*table*/,
             4 /*table*/, 4 /*table*/ , 0, 4,
             // Row 12
             4, 0, 4 /*chair*/, 4 /*chair*/, 0, 0, 4, 19, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 4,
             // Row 13
-            4, 0, 0, 0, 0, 0, 4, 4, 0, 28, 0, 4, 4, 0, 0, 0, 0, 4 /*door*/, 16, 4,
+            4, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 4, 4, 0, 0, 0, 0, 4 /*door*/, 16, 4,
             // Row 14
             4, 4, 4, 4, 4, 16, 4, 4, 4, 0 /*ENTER*/, 4, 4, 4, 4, 16, 4, 4, 4, 4, 4,
         });
@@ -294,7 +294,7 @@ public class NewGameScreen implements Screen {
                         room.addObject(new Turret(i*tileWidth, j*tileHeight, r, 4f));
                         break;
                     case 5:
-                        player = new Controller(GridObject.getAt(room.grid, room.width, room.height, i, j), tileWidth/4f);
+                        player = new Controller(GridObject.getAt(room.grid, room.width, room.height, i, j), tileWidth/4f, game);
                         break;
                     case 6:
                         room.addObject(new Powerup(i*tileWidth, j*tileHeight));
@@ -363,6 +363,11 @@ public class NewGameScreen implements Screen {
 
         shapeDrawer.setColor(0.5f, 0.5f, 0.5f, 1.0f);
         shapeDrawer.circle(player.rX,player.rY,player.radius);
+
+        player.updateSprite();
+        if (player.sprite.getTexture() != null) {
+            player.sprite.draw(game.batch);
+        }
 
         for (Projectile projectile : projectiles) {
             if (projectile != null) {
