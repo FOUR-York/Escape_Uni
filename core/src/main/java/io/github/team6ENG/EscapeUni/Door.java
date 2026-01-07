@@ -21,7 +21,7 @@ public class Door extends RoomObject {
         float pX = NewGameScreen.player.rX, pY = NewGameScreen.player.rY;
         if (NewGameScreen.dist(pX, pY, x, y) < 5) {
             // next room
-            NewGameScreen.infoMsg("Next room");
+            NewGameScreen.transition = true;
         };
     }
 

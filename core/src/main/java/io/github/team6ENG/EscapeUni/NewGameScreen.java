@@ -29,6 +29,9 @@ public class NewGameScreen implements Screen {
 
     public AudioManager audioManager;
 
+    public static String nextRoom = "boxRoom.json";
+    public static boolean transition = false;
+
 
     NewGameScreen(final Main game) {
         NewGameScreen.game = game;
@@ -49,12 +52,13 @@ public class NewGameScreen implements Screen {
 
 
     public static void start() {
+        keycard = false;
         player = null;
         // reset variables
         projectiles = new Projectile[100];
         projectileCount = 0;
 //        projectileReception();
-        room = new Room("test.json");
+        room = new Room(nextRoom);
         if (player == null) {
             errorMsg("Controller is null");
             player = new Controller(GridObject.getAt(room.grid, room.width, room.height, 1, 1), tileWidth/4f);
@@ -327,6 +331,12 @@ public class NewGameScreen implements Screen {
             audioManager.pauseMusic();
             audioManager.stopFootsteps();
             game.setScreen(new PauseScreen(game, NewGameScreen.this, audioManager));
+        }
+
+        if (transition) {
+            transition = false;
+            nextRoom = room.nextRoom;
+            start();
         }
     }
 
