@@ -28,6 +28,7 @@ public class Powerup extends RoomObject {
 
                 NewGameScreen.player.invinciblePowerup(10f);
                 Main.score += 250;
+                NewGameScreen.player.scoreEarnedThisRoom += 250;
             }
         }
     }

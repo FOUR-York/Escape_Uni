@@ -32,6 +32,8 @@ public class Controller extends SpriteAnimations {
     public boolean isMoving;
     public boolean isMovingHorizontally;
 
+    public float scoreEarnedThisRoom = 0;
+
     public Controller(GridObject gridInstance, float radius) {
         super(Main.activeSpritePath, 8, 7);
 
@@ -41,6 +43,7 @@ public class Controller extends SpriteAnimations {
         rX = x*NewGameScreen.tileWidth + NewGameScreen.tileWidth/2f;
         rY = y*NewGameScreen.tileHeight + NewGameScreen.tileHeight/2f;
         this.radius = radius;
+        scoreEarnedThisRoom = 0;
 
         // HashMap<String, Integer[]> animationInfo:
         //      key - Name of animation
@@ -111,6 +114,12 @@ public class Controller extends SpriteAnimations {
                 Main.playerShotOnce = true;
                 Main.foundNegativeEvents++;
             }
+            Main.score -= 25;
+            if (Main.score < 0) {Main.score = 0;}
+
+            Main.score -= scoreEarnedThisRoom;
+            scoreEarnedThisRoom = 0;
+
             NewGameScreen.start();
         }
     }

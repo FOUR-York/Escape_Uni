@@ -22,6 +22,7 @@ public class Keycard extends RoomObject {
                 collected = true;
                 NewGameScreen.keycard = true;
                 Main.score += 100;
+                NewGameScreen.player.scoreEarnedThisRoom += 100;
                 if (!Main.playerFoundKeycardOnce) {
                     Main.playerFoundKeycardOnce = true;
                     Main.foundPositiveEvents++;
