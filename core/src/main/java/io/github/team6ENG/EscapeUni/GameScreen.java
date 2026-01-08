@@ -682,7 +682,6 @@ public class GameScreen implements Screen {
         Gdx.app.postRunnable(() -> game.setScreen(
             new GameOverScreen(game, "Sorry you missed the bus, better luck next time")
         ));
-
     }
 
     /**

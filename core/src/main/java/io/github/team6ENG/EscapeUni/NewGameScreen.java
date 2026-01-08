@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 /*
@@ -86,6 +88,12 @@ public class NewGameScreen implements Screen {
                 roomObject.update(delta);
             }
         }
+
+        game.gameTimer -= delta;
+
+        if (game.gameTimer <= 0) {
+            gameOver();
+        }
     }
 
     @Override
@@ -155,6 +163,8 @@ public class NewGameScreen implements Screen {
             transition = false;
             start();
         }
+
+        renderUI();
     }
 
     public static GridObject.TYPE roomCell(int x, int y) {
@@ -265,6 +275,46 @@ public class NewGameScreen implements Screen {
     }
     public static void errorMsg(String msg) {
         System.out.println("[ERROR]: "+msg);
+    }
+
+    private void drawText(BitmapFont font, String text, Color colour, float x, float y) {
+        font.setColor(colour);
+        font.draw(game.batch, text, x, y);
+    }
+
+    private void renderUI() {
+        BitmapFont smallFont = game.gameFont;
+        BitmapFont bigFont = game.menuFont;
+        float worldHeight = game.viewport.getWorldHeight();
+        float worldWidth = game.viewport.getWorldWidth();
+
+        game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
+        game.batch.begin();
+
+        float y = worldHeight - 20f;
+        float lineSpacing = 15f;
+
+        // Requirements: Events tracker and game timer
+        drawText(smallFont, ("Negative Events: " + game.foundNegativeEvents +"/" + game.totalNegativeEvents), Color.WHITE, 20, y);
+        y -= lineSpacing;
+        drawText(smallFont, ("Positive Events: "+ game.foundPositiveEvents +"/"+ game.totalPositiveEvents), Color.WHITE, 20, y);
+        y -= lineSpacing;
+        drawText(smallFont, ("Hidden Events:   "+ game.foundHiddenEvents+"/"+ game.totalHiddenEvents), Color.WHITE, 20, y);
+        y -= lineSpacing;
+        //Display time with 2 digits for seconds
+        drawText(bigFont, ((int)game.gameTimer/60 + ":" +((int)game.gameTimer % 60 <10?"0" :"" ) +(int)game.gameTimer % 60), Color.WHITE, worldWidth - 80f, worldHeight-20f);
+        GlyphLayout layout = new GlyphLayout(game.menuFont, ("Score: " + (int)game.score));
+        drawText(bigFont, ("Score: " +(int)game.score), Color.WHITE, (worldWidth - layout.width)/2, worldHeight-20f);
+
+        game.batch.end();
+
+    }
+
+    public void gameOver(){
+        audioManager.stopMusic();
+        Gdx.app.postRunnable(() -> game.setScreen(
+            new GameOverScreen(game, "Sorry you missed the bus,\nbetter luck next time...")
+        ));
     }
 }
 

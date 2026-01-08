@@ -23,7 +23,7 @@ public class Main extends Game {
     public static String activeUniIDPath;
 
     public float gameTimer = 300;
-    public float score = 300;
+    public static float score = 0;
 
     public float gameVolume = .5f;
     public float musicVolume = .5f;
