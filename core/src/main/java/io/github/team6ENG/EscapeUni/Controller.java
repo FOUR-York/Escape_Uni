@@ -127,6 +127,7 @@ public class Controller extends SpriteAnimations {
 
         if (moveTime < 0f) {
             isMoving = false;
+            isFacingUp = false;
             moveTime = 0f;
         }
 
