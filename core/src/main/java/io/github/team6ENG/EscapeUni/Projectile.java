@@ -1,8 +1,5 @@
 package io.github.team6ENG.EscapeUni;
 
-/*
-    * helper class written by dlb
- */
 public class Projectile {
     float x, y;
     float speed;

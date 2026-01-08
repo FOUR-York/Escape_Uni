@@ -98,7 +98,7 @@ public class Controller extends SpriteAnimations {
         }
 
         int nX = gridInstance.getGridX(), nY = gridInstance.getGridY();
-        GridObject.push(NewGameScreen.room.grid, NewGameScreen.room.width, NewGameScreen.room.height, nX, nY, dir, 3);
+        GridObject.push(NewGameScreen.room.grid, NewGameScreen.room.width, NewGameScreen.room.height, nX, nY, dir, 2);
     }
 
     public void hit() {

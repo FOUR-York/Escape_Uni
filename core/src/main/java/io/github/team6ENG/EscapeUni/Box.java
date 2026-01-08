@@ -23,9 +23,10 @@ public class Box extends RoomObject {
     }
 
     public void draw(ShapeDrawer drawer, SpriteBatch batch) {
-        float delta = NewGameScreen.tileWidth/6f;
-        drawer.setColor(0.9f, 0.5f, 0.2f, 1.0f);
-        drawer.rectangle(x+delta, y+delta, NewGameScreen.tileWidth-delta*2, NewGameScreen.tileHeight-delta*2);
-        drawer.line(x+delta, y+delta, x+NewGameScreen.tileWidth-delta, y+NewGameScreen.tileHeight-delta);
+//        float delta = NewGameScreen.tileWidth/6f;
+//        drawer.setColor(0.9f, 0.5f, 0.2f, 1.0f);
+//        drawer.rectangle(x+delta, y+delta, NewGameScreen.tileWidth-delta*2, NewGameScreen.tileHeight-delta*2);
+//        drawer.line(x+delta, y+delta, x+NewGameScreen.tileWidth-delta, y+NewGameScreen.tileHeight-delta);
+        batch.draw(texture, x, y);
     }
 }

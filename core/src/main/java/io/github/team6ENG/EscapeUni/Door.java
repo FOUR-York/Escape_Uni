@@ -6,9 +6,11 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class Door extends RoomObject {
     GridObject gridInstance;
-    public Door(Texture texture, GridObject gridInstance) {
+    String nextRoom;
+    public Door(String nextRoom, Texture texture, GridObject gridInstance) {
         super(texture, gridInstance.getGridX()*NewGameScreen.tileWidth+NewGameScreen.tileWidth/2f,
             gridInstance.getGridY()*NewGameScreen.tileHeight+NewGameScreen.tileHeight/2f);
+        this.nextRoom = nextRoom;
         gridInstance.type = GridObject.TYPE.SOLID;
         this.gridInstance = gridInstance;
     }
@@ -22,6 +24,7 @@ public class Door extends RoomObject {
         if (NewGameScreen.dist(pX, pY, x, y) < 5) {
             // next room
             NewGameScreen.transition = true;
+            NewGameScreen.nextRoom = nextRoom;
         };
     }
 

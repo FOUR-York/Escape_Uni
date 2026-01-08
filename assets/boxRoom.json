@@ -2,13 +2,12 @@
   "dimensions": [20, 15],
   "roomTex": "test/room.png",
   "doorTex": "test/ClassRoom1.png",
-  "boxTex": "test/ClassRoom1.png",
-  "shiftTex": "test/ClassRoom1.png",
+  "boxTex": "sprites/box.png",
+  "shiftTex": "sprites/shifttile-overlay.png",
   "keycardTex": "items/keycard1.png",
-  "turretTex": "test/ClassRoom1.png",
+  "turretTex": "sprites/turret.png",
   "powerupTex": "items/star.png",
   "projectileTex": "items/pizza.png",
-  "nextRoom": "storageRoom.json",
   "objects": [
     {
       "none" : {}
@@ -17,13 +16,20 @@
       "playerSpawn" : {}
     },
     {
-      "door": {}
+      "door": {
+        "nextRoom": "storageRoom.json"
+      }
     },
     {
       "keycard": {}
     },
     {
       "box" : {}
+    },
+    {
+      "door": {
+        "nextRoom": "classRoom.json"
+      }
     }
   ],
   "gridData": [
@@ -58,6 +64,6 @@
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0,
     0, 0, 0, 0, 0, 4, 0, 0, 4, 0, 0, 0, 0, 0, 0, 4, 0, 1, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0
   ]
 }

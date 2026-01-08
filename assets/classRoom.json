@@ -2,13 +2,12 @@
   "dimensions": [20, 15],
   "roomTex": "test/ClassRoom1.png",
   "doorTex": "test/ClassRoom1.png",
-  "boxTex": "test/ClassRoom1.png",
-  "shiftTex": "test/ClassRoom1.png",
+  "boxTex": "sprites/box.png",
+  "shiftTex": "sprites/shifttile-overlay.png",
   "keycardTex": "items/keycard1.png",
-  "turretTex": "test/ClassRoom1.png",
+  "turretTex": "sprites/turret.png",
   "powerupTex": "items/star.png",
   "projectileTex": "items/pizza.png",
-  "nextRoom": "boxRoom.json",
   "objects": [
     {
      "none" : {}
@@ -17,7 +16,9 @@
       "box" : {}
     },
     {
-      "door" : {}
+      "door" : {
+        "nextRoom": "boxRoom.json"
+      }
     },
     {
       "keycard": {}

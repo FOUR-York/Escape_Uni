@@ -23,8 +23,6 @@ public class Room {
     public Texture powerupTex;
     public Texture projectileTex;
 
-    public String nextRoom;
-
     public Room(String path) {
         this.width = 20;
         this.height = 15;
@@ -62,8 +60,6 @@ public class Room {
         keycardTex = new Texture(Gdx.files.internal(mapJson.get("keycardTex").asString()));
         powerupTex = new Texture(Gdx.files.internal(mapJson.get("powerupTex").asString()));
         projectileTex = new Texture(Gdx.files.internal(mapJson.get("projectileTex").asString()));
-        // transitions
-        nextRoom = mapJson.get("nextRoom").asString();
         // start loading in objects
         int[] gridData = mapJson.get("gridData").asIntArray();
         for (int i = 0; i < width; i ++) {
@@ -83,7 +79,7 @@ public class Room {
                 JsonValue jsonObject = mapJson.get("objects").get(objectId).child;
                 switch (jsonObject.name) {
                     case "door": {
-                        addObject(new Door(doorTex, GridObject.getAt(grid, width, height, i, j)));
+                        addObject(new Door(jsonObject.get("nextRoom").asString(), doorTex, GridObject.getAt(grid, width, height, i, j)));
                     }
                     break;
                     case "box": {

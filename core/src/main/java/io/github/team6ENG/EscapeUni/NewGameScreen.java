@@ -29,13 +29,21 @@ public class NewGameScreen implements Screen {
 
     public AudioManager audioManager;
 
-    public static String nextRoom = "boxRoom.json";
+    public static String nextRoom = "classRoom.json";
     public static boolean transition = false;
 
 
     NewGameScreen(final Main game) {
         NewGameScreen.game = game;
 
+        // initialise components
+        initialiseShapeDrawer();
+        initialiseAudio();
+
+        start();
+    }
+
+    private void initialiseShapeDrawer() {
         // init shapeDrawer
         Pixmap drawerPixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         drawerPixmap.setColor(Color.WHITE);
@@ -44,10 +52,6 @@ public class NewGameScreen implements Screen {
         drawerPixmap.dispose();
         TextureRegion drawerRegion = new TextureRegion(drawerTexture, 0, 0, 1, 1);
         shapeDrawer = new ShapeDrawer(game.batch, drawerRegion);
-
-        initialiseAudio();
-
-        start();
     }
 
 
@@ -57,199 +61,13 @@ public class NewGameScreen implements Screen {
         // reset variables
         projectiles = new Projectile[100];
         projectileCount = 0;
-//        projectileReception();
+        // create room
         room = new Room(nextRoom);
         if (player == null) {
             errorMsg("Controller is null");
             player = new Controller(GridObject.getAt(room.grid, room.width, room.height, 1, 1), tileWidth/4f);
         }
     }
-
-    public static void ClassRoomOne() {
-        //ClassRoom1
-        //ClassRoom1
-        loadLevelMatrix(new int[]{
-            4, 4, 4 /*door*/, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 /*door*/, 4, 4,
-            4, 0, 0, 0, 0, 4 /*chair*/, 4 /*table*/, 4 /*table*/, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4,
-            4, 0, 0, 0, 0, 4 /*chair*/, 4 /*table*/, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4,
-            4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4,
-            4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4,
-            4, 0, 0, 0, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/,
-            4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 0, 0, 0, 4,
-            4, 0, 0, 0, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/,
-            4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 0, 0, 0, 4,
-            4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4,
-            4, 0, 0, 0, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/,
-            4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 0, 0, 0, 4,
-            4, 0, 0, 0, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/,
-            4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 0, 0, 0, 4,
-            4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4,
-            4, 0, 0, 0, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/,
-            4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 4 /*door*/, 0, 0, 0, 4,
-            4, 0, 0, 0, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/,
-            4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 0, 0, 0, 4,
-            4, 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4,
-            4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
-        });
-    }
-
-    public static void BoxRoomOne() {
-        // BoxRoom1
-        //ClassRoom1
-        loadLevelMatrix(new int[]{
-            // Row 0
-            4, 4, 4 /*door*/, 4, 4, 4, 4, 4, 4, 4, 4 /*door*/, 4, 4, 4, 4, 4, 4, 4, 4, 4,
-            // Row 1
-            4, 0, 0, 11, 0, 0, 4 /*bgbox*/, 4 /*bgbox*/, 4,  4 /*bgbox*/, 0, 0, 4 /*bgbox*/, 0, 4, 0,
-            4 /*bgbox*/, 4 /*bgbox*/, 4 /*bgbox*/, 4,
-            // Row 2
-            4, 4, 4, 0, 0, 11, 0, 4 /*bgbox*/, 4, 4 /*bgbox*/, 0, 11, 4 /*bgbox*/, 4, 0, 0, 11, 0, 0, 4,
-            // Row 3
-            4, 0, 4, 4, 4, 4, 0, 4 /*bgbox*/, 4, 4 /*bgbox*/, 11, 0, 0, 4, 11, 4 /*bgbox*/, 4, 0, 4 /*bgbox*/, 4,
-            // Row 4
-            4, 11, 4, 4 /*bgbox*/, 4 /*bgbox*/, 4, 0, 0, 4, 4 /*bgbox*/, 0, 0, 0, 4, 0, 0, 4, 0, 4 /*bgbox*/, 4,
-            // Row 5
-            4, 0, 0, 0, 4 /*bgbox*/, 4, 0, 0, 4, 4 /*bgbox*/, 0, 0, 0, 4, 0, 11, 4, 0, 4 /*bgbox*/, 4,
-            // Row 6
-            4, 0, 4, 0, 0, 4, 0, 0, 4, 4, 4, 4, 0, 4, 4 /*bgbox*/, 0, 4, 11, 0, 4,
-            // Row 7
-            4, 0, 4, 0, 0, 4, 0, 0, 4 /*bgbox*/, 4 /*bgbox*/, 0, 4, 11, 4, 4 /*bgbox*/, 0, 4, 0, 0, 4,
-            // Row 8
-            4, 0, 4, 11, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4 /*bgbox*/, 0, 4,
-            // Row 9
-            4, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 4,  4 /*bgbox*/, 0, 4,
-            // Row 10
-            4, 4 /*bgbox*/, 4 /*bgbox*/, 0, 0, 0, 4 /*bgbox*/, 4 /*bgbox*/, 4, 0, 0, 11, 0, 4, 0, 0, 4, 4, 4, 4,
-            // Row 11
-            4, 0, 4, 4 /*bgbox*/, 0, 0, 0, 0, 4, 0, 0, 4 /*bgbox*/, 4, 4, 0, 0, 11, 0, 4 /*bgbox*/, 4,
-            // Row 12
-            4, 0, 4, 4, 4, 4, 4, 0, 0, 11, 4 /*bgbox*/, 4 /*bgbox*/, 4, 0, 0, 0, 11, 0, 0, 4,
-            // Row 13
-            4, 0, 0, 0, 0, 11, 0, 0, 11, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 4,
-            // Row 14
-            4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 /*door*/, 4, 4,
-        });
-    }
-
-    public static void directionPuzzle() {
-        // PushPuzzle
-        //Push (up) = 12
-        //Push (left) = 13
-        //Push (down) = 14
-        //Push (right) = 15
-        loadLevelMatrix(new int[]{
-            // Row 0
-            4, 4, 4, 4 /*door*/, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 /*door*/, 4, 4, 4,
-            // Row 1
-            4, 14, 13, 0, 0, 0, 13, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 15, 14, 4,
-            // Row 2
-            4, 14, 12, 0, 0, 0, 15, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 12, 14, 4,
-            // Row 3
-            4, 14, 12, 0, 0, 15, 15, 0, 4, 4, 4, 4, 0, 0, 12, 12, 13, 0, 14, 4,
-            // Row 4
-            4, 15, 0, 15, 15, 12, 0, 14, 4, 4, 4, 4, 0, 0, 0, 0, 0, 12, 13, 4,
-            // Row 5
-            4, 12, 0, 0, 14, 12, 15, 14, 4, 4, 4, 4, 14, 13, 13, 13, 0, 12, 13, 4,
-            // Row 6
-            4, 15, 12, 12, 15, 12, 12, 14, 4, 4, 4, 4, 14, 15, 0, 15, 15, 14, 12, 4,
-            // Row 7
-            4, 12, 13, 13, 13, 13, 0, 13, 4, 4, 4, 4, 14, 12, 0, 12, 0, 0, 12, 4,
-            // Row 8
-            4, 4, 4, 4, 4, 4, 4, 12, 13, 13, 4, 4, 14, 12, 0, 12, 0, 0, 12, 4,
-            // Row 9
-            4, 4, 4, 4, 4, 4, 4, 14, 15, 12, 4, 4, 15, 0, 15, 12, 0, 0, 12, 4,
-            // Row 10
-            4, 4, 4, 4, 4, 4, 4, 15, 0, 15, 15, 14, 12, 14, 0, 0, 14, 15, 12, 4,
-            // Row 11
-            4, 4, 4, 4, 4, 4, 4, 12, 14, 12, 14, 13, 13, 14, 0, 0, 15, 15, 12, 4,
-            // Row 12
-            4, 4, 4, 4, 4, 4, 4, 12, 13, 0, 14, 4, 4, 4, 4, 4, 4, 4, 4, 4,
-            // Row 13
-            4, 4, 4, 4, 4, 4, 4, 4, 4, 12, 13, 4, 4, 4, 4, 4, 4, 4, 4, 4,
-            // Row 14
-            4, 4, 4, 4, 4, 4, 4, 4, 4, 4 /*door*/, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
-        });
-    }
-
-    public static void projectileReception() {
-        /*Proj (up) = 16, Proj (Left) = 17, Proj (down) = 18, Proj (right) = 19*/
-        /*Keycard = 28, Powerup = 24*/
-        loadLevelMatrix(new int[]{
-            // Row 0
-            4, 4, 4, 4 /*door*/, 4 /*door*/, 18, 4, 4, 4, 4, 18, 4, 4, 4, 4, 4, 4, 4, 4, 4,
-            // Row 1
-            4, 4 /*chair*/, 0, 0, 0, 0, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 0, 0, 0, 4 /*chair*/, 4, 4, 4, 4, 4, 4,
-            // Row 2
-            19, 0, 0, 0, 0, 0, 4 /*chair*/, 0, 0, 4 /*chair*/, 0, 0, 0, 0, 4 /*chair*/, 0, 4, 4, 4, 4,
-            // Row 3
-            19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4 /*chair*/, 4 /*chair*/, 0, 0, 0, 0,
-            // Row 4
-            4, 0, 0, 0, 0, 0, 0, 4 /*chair*/, 0, 0, 0, 0, 0, 0, 4 /*chair*/, 0, 4, 4, 4, 4,
-            // Row 5
-            4, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4 /*chair*/, 4, 4, 4, 4, 0, 0, 4, 4, 4, 4, 4, 4,
-            // Row 6
-            4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 4,
-            // Row 7
-            4, 4, 4, 4, 4, 4, 4, 19, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4,
-            // Row 8
-            4, 0 /*ITEM?*/, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4,
-            // Row 9
-            4, 0, 16, 4 /*chair*/, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 4 /*chair*/, 4 /*chair*/, 0, 4,
-            // Row 10
-            4, 4 /*chair*/, 4 /*table*/, 4 /*table*/, 0, 0, 4, 4, 0, 0, 0, 4, 4, 0, 0, 17, 4 /*table*/, 4 /*table*/, 0, 4,
-            // Row 11
-            4, 4 /*chair*/, 4 /*table*/, 4 /*table*/, 0, 0, 4, 4, 0, 0, 0, 4, 4, 0, 4 /*chair*/, 4 /*table*/,
-            4 /*table*/, 4 /*table*/ , 0, 4,
-            // Row 12
-            4, 0, 4 /*chair*/, 4 /*chair*/, 0, 0, 4, 19, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 4,
-            // Row 13
-            4, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 4, 4, 0, 0, 0, 0, 4 /*door*/, 16, 4,
-            // Row 14
-            4, 4, 4, 4, 4, 16, 4, 4, 4, 0 /*ENTER*/, 4, 4, 4, 4, 16, 4, 4, 4, 4, 4,
-        });
-    }
-
-    public static void loadLevelMatrix(int[] levelMatrix) {
-//        if (levelMatrix.length != room.width*room.height) {
-//            errorMsg("Invalid level matrix");
-//            return;
-//        }
-//        for (int i = 0; i < room.width; i++) {
-//            for (int j = 0; j < room.height; j++) {
-//                int matData = levelMatrix[i+(room.height-j-1)*room.width];
-//                int objId = matData>>2;
-//                int r = matData%4;
-//                switch (objId) {
-//                    case 0:
-//                        break;
-//                    case 1:
-//                        GridObject.getAt(room.grid, room.width, room.height, i, j).type = GridObject.TYPE.SOLID;
-//                        break;
-//                    case 2:
-//                        room.addObject(new Box(GridObject.getAt(room.grid, room.width, room.height, i, j)));
-//                        break;
-//                    case 3:
-//                        room.addObject(new ShiftTile(i, j, r));
-//                        break;
-//                    case 4:
-//                        room.addObject(new Turret(i*tileWidth, j*tileHeight, r, 4f));
-//                        break;
-//                    case 5:
-//                        player = new Controller(GridObject.getAt(room.grid, room.width, room.height, i, j), tileWidth/4f);
-//                        break;
-//                    case 6:
-//                        room.addObject(new Powerup(i*tileWidth, j*tileHeight));
-//                        break;
-//                    case 7:
-//                        room.addObject(new Keycard(i*tileWidth, j*tileHeight));
-//                        break;
-//                    default:
-//                        break;
-//                }
-//            }
-//        }
-    }
-
 
     /**
      * Call every frame to update game state
@@ -335,7 +153,6 @@ public class NewGameScreen implements Screen {
 
         if (transition) {
             transition = false;
-            nextRoom = room.nextRoom;
             start();
         }
     }
