@@ -22,6 +22,7 @@ public class Room {
     public Texture keycardTex;
     public Texture powerupTex;
     public Texture projectileTex;
+    public Texture inverterTex;
 
     public Room(String path) {
         this.width = 20;
@@ -60,6 +61,7 @@ public class Room {
         keycardTex = new Texture(Gdx.files.internal(mapJson.get("keycardTex").asString()));
         powerupTex = new Texture(Gdx.files.internal(mapJson.get("powerupTex").asString()));
         projectileTex = new Texture(Gdx.files.internal(mapJson.get("projectileTex").asString()));
+        inverterTex = new Texture(Gdx.files.internal(mapJson.get("inverterTex").asString()));
         // start loading in objects
         int[] gridData = mapJson.get("gridData").asIntArray();
         for (int i = 0; i < width; i ++) {
@@ -108,6 +110,9 @@ public class Room {
                         addObject(new Keycard(keycardTex, i * NewGameScreen.tileWidth, j * NewGameScreen.tileHeight));
                     }
                     break;
+                    case "inverter": {
+                        addObject(new ControlInverter(inverterTex, i * NewGameScreen.tileWidth, j * NewGameScreen.tileHeight));
+                    }
                     case "null":
                     default:
                         break;

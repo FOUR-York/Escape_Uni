@@ -28,13 +28,17 @@ public class Main extends Game {
     public float gameVolume = .5f;
     public float musicVolume = .5f;
 
-    public final int totalNegativeEvents = 1;
-    public final int totalPositiveEvents = 1;
-    public final int totalHiddenEvents = 1;
+    public static final int totalNegativeEvents = 2;
+    public static final int totalPositiveEvents = 3;
+    public static final int totalHiddenEvents = 1;
 
-    public int foundNegativeEvents = 0;
-    public int foundPositiveEvents = 0;
-    public int foundHiddenEvents = 0;
+    public static int foundNegativeEvents = 0;
+    public static int foundPositiveEvents = 0;
+    public static int foundHiddenEvents = 0;
+
+    public static boolean playerShotOnce = false;
+    public static boolean playerFoundKeycardOnce = false;
+    public static boolean playerGotPowerupOnce = false;
     /**
      * Initialise global game variables
      */
@@ -69,6 +73,10 @@ public class Main extends Game {
         foundNegativeEvents = 0;
         foundPositiveEvents = 0;
         foundHiddenEvents = 0;
+
+        playerShotOnce = false;
+        playerFoundKeycardOnce = false;
+        playerGotPowerupOnce = false;
 
         activeSpritePath = null;
         activeUniIDPath = null;

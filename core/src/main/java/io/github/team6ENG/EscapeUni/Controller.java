@@ -14,6 +14,8 @@ public class Controller extends SpriteAnimations {
     float rX, rY;
     float radius;
 
+    public boolean isInverted = false;
+
     public boolean invincible = false;
     public float powerupTimer = 0f;
 
@@ -105,6 +107,10 @@ public class Controller extends SpriteAnimations {
         // restart
         // TODO: implement restarting procedure
         if (!invincible) {
+            if (!Main.playerShotOnce) {
+                Main.playerShotOnce = true;
+                Main.foundNegativeEvents++;
+            }
             NewGameScreen.start();
         }
     }

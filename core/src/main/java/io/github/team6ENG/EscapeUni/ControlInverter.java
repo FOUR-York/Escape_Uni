@@ -4,11 +4,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
-public class Powerup extends RoomObject {
+public class ControlInverter extends RoomObject {
     private int gridX, gridY;
     private boolean collected = false;
 
-    public Powerup(Texture texture, float x, float y) {
+    public ControlInverter(Texture texture, float x, float y) {
         super(texture, x, y);
         gridX = (int) (x/NewGameScreen.tileWidth);
         gridY = (int) (y/NewGameScreen.tileHeight);
@@ -18,15 +18,16 @@ public class Powerup extends RoomObject {
     public void update(float delta) {
         if (!collected) {
             if (NewGameScreen.player.gridInstance.getGridX() == gridX && NewGameScreen.player.gridInstance.getGridY() == gridY) {
-                NewGameScreen.infoMsg("Powerup collected.");
-                collected = true;
-
-                if (!Main.playerGotPowerupOnce) {
-                    Main.playerGotPowerupOnce = true;
-                    Main.foundPositiveEvents++;
+                if (NewGameScreen.player.isInverted) {
+                    NewGameScreen.infoMsg("Controls un-inverted.");
+                    NewGameScreen.player.isInverted = false;
+                    collected = true;
                 }
-
-                NewGameScreen.player.invinciblePowerup(10f);
+                else {
+                    NewGameScreen.infoMsg("Controls inverted.");
+                    NewGameScreen.player.isInverted = true;
+                    collected = true;
+                }
             }
         }
     }

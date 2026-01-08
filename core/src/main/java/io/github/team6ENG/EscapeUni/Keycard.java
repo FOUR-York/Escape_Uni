@@ -21,6 +21,10 @@ public class Keycard extends RoomObject {
                 NewGameScreen.infoMsg("Keycard collected.");
                 collected = true;
                 NewGameScreen.keycard = true;
+                if (!Main.playerFoundKeycardOnce) {
+                    Main.playerFoundKeycardOnce = true;
+                    Main.foundPositiveEvents++;
+                }
             }
         }
     }

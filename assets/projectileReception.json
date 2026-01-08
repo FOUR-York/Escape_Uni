@@ -8,6 +8,7 @@
   "turretTex": "sprites/turret.png",
   "powerupTex": "items/star.png",
   "projectileTex": "items/pizza.png",
+  "inverterTex": "items/inverter.png",
   "objects": [
     {
       "none" : {}

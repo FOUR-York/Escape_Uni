@@ -186,16 +186,36 @@ public class NewGameScreen implements Screen {
 
     public void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-            player.hop(1);
+            if (player.isInverted) {
+                player.hop(3);
+            }
+            else {
+                player.hop(1);
+            }
         }
         else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            player.hop(3);
+            if (player.isInverted) {
+                player.hop(1);
+            }
+            else {
+                player.hop(3);
+            }
         }
         else if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            player.hop(0);
+            if (player.isInverted) {
+                player.hop(2);
+            }
+            else {
+                player.hop(0);
+            }
         }
         else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            player.hop(2);
+            if (player.isInverted) {
+                player.hop(0);
+            }
+            else {
+                player.hop(2);
+            }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
             start();
