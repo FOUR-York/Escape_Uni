@@ -8,7 +8,7 @@ public class GridObject {
         NONE,
         SOLID,
         PUSH,
-        PLAYER,
+        CONTROLLER,
     }
     public TYPE type;
     private int gridX, gridY;
@@ -29,7 +29,7 @@ public class GridObject {
             return 0;
         }
         switch (grid[idx].type) {
-            case PLAYER:
+            case CONTROLLER:
             case PUSH: {
                 int nX = x, nY = y;
                 switch (dir) {

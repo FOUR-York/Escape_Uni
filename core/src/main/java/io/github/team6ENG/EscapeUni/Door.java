@@ -17,7 +17,7 @@ public class Door extends RoomObject {
 
     @Override
     public void update(float delta) {
-        if (NewGameScreen.keycard) {
+        if (NewGameScreen.room.isKeycardCollected()) {
             gridInstance.type = GridObject.TYPE.NONE;
         }
         float pX = NewGameScreen.player.rX, pY = NewGameScreen.player.rY;
@@ -30,7 +30,7 @@ public class Door extends RoomObject {
 
     @Override
     public void draw(ShapeDrawer drawer, SpriteBatch batch) {
-        if (NewGameScreen.keycard) {
+        if (NewGameScreen.room.isKeycardCollected()) {
             drawer.filledCircle(x, y, 3);
         }
     }

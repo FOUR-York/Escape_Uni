@@ -2,7 +2,6 @@ package io.github.team6ENG.EscapeUni;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 
@@ -38,7 +37,7 @@ public class Controller extends SpriteAnimations {
         super(Main.activeSpritePath, 8, 7);
 
         int x = gridInstance.getGridX(), y = gridInstance.getGridY();
-        gridInstance.type = GridObject.TYPE.PLAYER;
+        gridInstance.type = GridObject.TYPE.CONTROLLER;
         this.gridInstance = gridInstance;
         rX = x*NewGameScreen.tileWidth + NewGameScreen.tileWidth/2f;
         rY = y*NewGameScreen.tileHeight + NewGameScreen.tileHeight/2f;

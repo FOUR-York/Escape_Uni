@@ -28,7 +28,7 @@ public class Turret extends RoomObject {
     public void update(float delta) {
         t += delta;
         if ((int)Math.min(func(speed*t)+1, 1) != amp) {
-            NewGameScreen.spawnProjectile(x+NewGameScreen.tileWidth/2f, y+NewGameScreen.tileHeight/2f, 4f, dir, NewGameScreen.tileWidth/4f);
+            NewGameScreen.room.spawnProjectile(x+NewGameScreen.tileWidth/2f, y+NewGameScreen.tileHeight/2f, 4f, dir, NewGameScreen.tileWidth/4f);
             amp = (int)Math.min(func(speed*t)+1, 1) ; // 0 or 1
         }
     }

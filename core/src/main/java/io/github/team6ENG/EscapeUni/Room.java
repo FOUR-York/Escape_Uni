@@ -3,6 +3,7 @@ package io.github.team6ENG.EscapeUni;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import space.earlygrey.shapedrawer.ShapeDrawer;
@@ -12,6 +13,9 @@ public class Room {
     public GridObject[] grid;
     public ArrayList<RoomObject> objects;
     public int width, height;
+
+    private final Projectile[] projectiles;
+    private int projectileCount = 0;
 
     // textures
     public Texture roomTex;
@@ -27,6 +31,10 @@ public class Room {
     public Texture bobTex;
 
     public boolean end = false;
+    private boolean keycard = false;
+
+    private TextureRegion projectileRegion;
+
 
     public Room(String path) {
         this.width = 20;
@@ -43,11 +51,32 @@ public class Room {
             }
         }
 
+        // reset variables
+        projectiles = new Projectile[100];
+        projectileCount = 0;
         loadRoom(path);
+    }
+
+    public GridObject.TYPE roomCell(int x, int y) {
+        //bounds check
+        if (x >= 0 && x <= width - 1 && y >= 0 && y <= height - 1) {
+            // get the cell inverted, so
+            return grid[x+(height-1-y)*width].type;
+        }
+        System.out.print("[ERROR]: Invalid call to roomCell: coords out of bounds\n");
+        return GridObject.TYPE.NONE;
     }
 
     public void addObject(RoomObject object) {
         objects.add(object);
+    }
+
+    public void updateObjects(float delta) {
+        for (RoomObject roomObject : objects) {
+            if (roomObject != null) {
+                roomObject.update(delta);
+            }
+        }
     }
 
     private void loadRoom(String path) {
@@ -72,6 +101,7 @@ public class Room {
         keycardTex = new Texture(Gdx.files.internal(mapJson.get("keycardTex").asString()));
         powerupTex = new Texture(Gdx.files.internal(mapJson.get("powerupTex").asString()));
         projectileTex = new Texture(Gdx.files.internal(mapJson.get("projectileTex").asString()));
+        projectileRegion = new TextureRegion(projectileTex);
         inverterTex = new Texture(Gdx.files.internal(mapJson.get("inverterTex").asString()));
         bobTex = new Texture(Gdx.files.internal(mapJson.get("bobTex").asString()));
         // start loading in objects
@@ -140,13 +170,40 @@ public class Room {
     }
 
     public void openDoors() {
-        if (openRoomTex != null) {
-            roomTex = openRoomTex;
+        keycard = true;
+    }
+
+    public void spawnProjectile(float x, float y, float speed, int dir, float radius) {
+        if (projectileCount < projectiles.length) {
+            for (int i = 0; i < projectiles.length; i++) {
+                if (projectiles[i] == null) {
+                    projectiles[i] = new Projectile(x, y, speed, dir, radius, i);
+                    break;
+                }
+            }
+            projectileCount++;
+        }
+    }
+
+    public void removeProjectile(int id) {
+        projectiles[id] = null;
+        projectileCount--;
+    }
+
+    public void updateProjectiles(float delta) {
+        for (Projectile projectile : projectiles) {
+            if (projectile != null) {
+                projectile.update(delta);
+            }
         }
     }
 
     public void draw(ShapeDrawer drawer, SpriteBatch batch) {
-        batch.draw(roomTex, 0, 0);
+        if (!keycard || openRoomTex == null) {
+            batch.draw(roomTex, 0, 0);
+        } else {
+            batch.draw(openRoomTex, 0, 0);
+        }
     }
     public void dispose() {
         roomTex.dispose();
@@ -159,5 +216,36 @@ public class Room {
         projectileTex.dispose();
         inverterTex.dispose();
         bobTex.dispose();
+    }
+
+    public void drawProjectiles(SpriteBatch batch) {
+        for (Projectile projectile : projectiles) {
+            if (projectile != null) {
+//                shapeDrawer.setColor(1.0f, 0.0f, 0.0f, 1.0f);
+//                shapeDrawer.circle(projectile.x,projectile.y,projectile.radius);
+                batch.draw(
+                    projectileRegion,
+                    projectile.x-projectileRegion.getRegionWidth()/2f, projectile.y-projectileRegion.getRegionHeight()/2f,
+                    projectileRegion.getRegionWidth() / 2f,
+                    projectileRegion.getRegionHeight() / 2f,
+                    projectileRegion.getRegionWidth(),
+                    projectileRegion.getRegionHeight(),
+                    1f, 1f,
+                    90f*projectile.dir+90f
+                );
+            }
+        }
+    }
+
+    public void drawObjects(ShapeDrawer shapeDrawer, SpriteBatch batch) {
+        for (RoomObject roomObject : objects) {
+            if (roomObject != null) {
+                roomObject.draw(shapeDrawer, batch);
+            }
+        }
+    }
+
+    public boolean isKeycardCollected() {
+        return keycard;
     }
 }

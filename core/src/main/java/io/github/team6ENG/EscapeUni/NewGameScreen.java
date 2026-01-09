@@ -15,7 +15,7 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class NewGameScreen implements Screen {
 
-    private static Main game;
+    private final Main game;
 
     private Texture drawerTexture;
     private ShapeDrawer shapeDrawer;
@@ -24,19 +24,20 @@ public class NewGameScreen implements Screen {
     static int tileWidth = 640/width;
     static int tileHeight = 480/height;
     static Room room;
-    private static Projectile[] projectiles;
-    private static int projectileCount = 0;
-
-    public static boolean keycard = false;
 
     public static AudioManager audioManager;
 
-    public static String nextRoom = "classRoom.json";
+    // level transition
+    public static String nextRoom;
     public static boolean transition = false;
 
 
     NewGameScreen(final Main game) {
-        NewGameScreen.game = game;
+        this.game = game;
+
+        room = null;
+        nextRoom = "classRoom.json";
+
 
         // initialise components
         initialiseShapeDrawer();
@@ -58,11 +59,7 @@ public class NewGameScreen implements Screen {
 
 
     public static void start() {
-        keycard = false;
         player = null;
-        // reset variables
-        projectiles = new Projectile[100];
-        projectileCount = 0;
         // create room
         room = new Room(nextRoom);
         if (player == null) {
@@ -77,17 +74,9 @@ public class NewGameScreen implements Screen {
      */
     private void update(float delta) {
         player.step();
-        for (Projectile projectile : projectiles) {
-            if (projectile != null) {
-                projectile.step();
-            }
-        }
+        room.updateProjectiles(delta);
+        room.updateObjects(delta);
 
-        for (RoomObject roomObject : room.objects) {
-            if (roomObject != null) {
-                roomObject.update(delta);
-            }
-        }
 
         game.gameTimer -= delta;
 
@@ -117,11 +106,11 @@ public class NewGameScreen implements Screen {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 float theta = tileWidth / 8f;
-                if (roomCell(i, j) == GridObject.TYPE.NONE) {
+                if (room.roomCell(i, j) == GridObject.TYPE.NONE) {
                     shapeDrawer.setColor(1.0f, 1.0f, 1.0f, 0.2f);
                     shapeDrawer.rectangle(i * tileWidth + theta, j * tileHeight + theta,
                         tileWidth - theta * 2, tileHeight - theta * 2);
-                } else if (roomCell(i, j) == GridObject.TYPE.PLAYER) {
+                } else if (room.roomCell(i, j) == GridObject.TYPE.CONTROLLER) {
                     shapeDrawer.setColor(Color.CYAN.r, Color.CYAN.g, Color.CYAN.b, 0.2f);
                     shapeDrawer.rectangle(i * tileWidth + theta, j * tileHeight + theta,
                         tileWidth - theta * 2, tileHeight - theta * 2);
@@ -138,29 +127,11 @@ public class NewGameScreen implements Screen {
         }
 
         TextureRegion region = new TextureRegion(room.projectileTex);
-        for (Projectile projectile : projectiles) {
-            if (projectile != null) {
-//                shapeDrawer.setColor(1.0f, 0.0f, 0.0f, 1.0f);
-//                shapeDrawer.circle(projectile.x,projectile.y,projectile.radius);
-                game.batch.draw(
-                    region,
-                    projectile.x-region.getRegionWidth()/2f, projectile.y-region.getRegionHeight()/2f,
-                    region.getRegionWidth() / 2f,
-                    region.getRegionHeight() / 2f,
-                    region.getRegionWidth(),
-                    region.getRegionHeight(),
-                    1f, 1f,
-                    90f*projectile.dir+90f
-                );
-            }
-        }
 
+        room.drawProjectiles(game.batch);
 
-        for (RoomObject roomObject : room.objects) {
-            if (roomObject != null) {
-                roomObject.draw(shapeDrawer, game.batch);
-            }
-        }
+        room.drawObjects(shapeDrawer, game.batch);
+
 
         game.batch.end();
 
@@ -184,32 +155,6 @@ public class NewGameScreen implements Screen {
         renderUI();
     }
 
-    public static GridObject.TYPE roomCell(int x, int y) {
-        //bounds check
-        if (x >= 0 && x <= room.width - 1 && y >= 0 && y <= room.height - 1) {
-            // get the cell inverted, so
-            return room.grid[x+(room.height-1-y)*room.width].type;
-        }
-        System.out.print("[ERROR]: Invalid call to roomCell: coords out of bounds\n");
-        return GridObject.TYPE.NONE;
-    }
-
-    public static void spawnProjectile(float x, float y, float speed, int dir, float radius) {
-        if (projectileCount < projectiles.length) {
-            for (int i = 0; i < projectiles.length; i++) {
-                if (projectiles[i] == null) {
-                    projectiles[i] = new Projectile(x, y, speed, dir, radius, i);
-                    break;
-                }
-            }
-            projectileCount++;
-        }
-    }
-
-    public static void removeProjectile(int id) {
-        projectiles[id] = null;
-        projectileCount--;
-    }
 
     public void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
@@ -308,20 +253,22 @@ public class NewGameScreen implements Screen {
         game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
         game.batch.begin();
 
-        float y = worldHeight - 20f;
+        float y = worldHeight - 5f;
         float lineSpacing = 15f;
 
         // Requirements: Events tracker and game timer
-        drawText(smallFont, ("Negative Events: " + game.foundNegativeEvents +"/" + game.totalNegativeEvents), Color.WHITE, 20, y);
+        drawText(smallFont, ("score: " +(int)game.score), Color.WHITE, 5f, y);
         y -= lineSpacing;
-        drawText(smallFont, ("Positive Events: "+ game.foundPositiveEvents +"/"+ game.totalPositiveEvents), Color.WHITE, 20, y);
+        drawText(smallFont, ("Negative Events: " + game.foundNegativeEvents +"/" + game.totalNegativeEvents), Color.WHITE, 5, y);
         y -= lineSpacing;
-        drawText(smallFont, ("Hidden Events:   "+ game.foundHiddenEvents+"/"+ game.totalHiddenEvents), Color.WHITE, 20, y);
+        drawText(smallFont, ("Positive Events: "+ game.foundPositiveEvents +"/"+ game.totalPositiveEvents), Color.WHITE, 5, y);
+        y -= lineSpacing;
+        drawText(smallFont, ("Hidden Events:   "+ game.foundHiddenEvents+"/"+ game.totalHiddenEvents), Color.WHITE, 5, y);
         y -= lineSpacing;
         //Display time with 2 digits for seconds
-        drawText(bigFont, ((int)game.gameTimer/60 + ":" +((int)game.gameTimer % 60 <10?"0" :"" ) +(int)game.gameTimer % 60), Color.WHITE, worldWidth - 80f, worldHeight-20f);
+        drawText(smallFont, ((int)game.gameTimer/60 + ":" +((int)game.gameTimer % 60 <10?"0" :"" ) +(int)game.gameTimer % 60), Color.WHITE, worldWidth - 40f, worldHeight-10f);
         GlyphLayout layout = new GlyphLayout(game.menuFont, ("Score: " + (int)game.score));
-        drawText(bigFont, ("Score: " +(int)game.score), Color.WHITE, (worldWidth - layout.width)/2, worldHeight-20f);
+        drawText(smallFont, ("score: " +(int)game.score), Color.WHITE, worldWidth-40f, worldHeight-30f);
 
         game.batch.end();
 

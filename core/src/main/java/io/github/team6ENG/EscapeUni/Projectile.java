@@ -14,8 +14,8 @@ public class Projectile {
         this.radius = radius;
         this.id = id;
     }
-    public void step() {
-        int cellX = (int)x/NewGameScreen.tileWidth, cellY = (int)y/NewGameScreen.tileHeight;
+    public void update(float delta) {
+        int cellX = (int) x / NewGameScreen.tileWidth, cellY = (int) y / NewGameScreen.tileHeight;
         switch (dir) {
             case 0:
                 y += speed;
@@ -37,25 +37,27 @@ public class Projectile {
         if (NewGameScreen.dist(x, y, NewGameScreen.player.rX, NewGameScreen.player.rY) < NewGameScreen.player.radius + radius) {
             NewGameScreen.player.hit();
         }
-        if (NewGameScreen.roomCell(cellX, cellY) == GridObject.TYPE.SOLID ||
-            NewGameScreen.roomCell(cellX, cellY) == GridObject.TYPE.PUSH) {
+        if (cellX < 0 || cellX > NewGameScreen.room.width - 1 ||
+            cellY < 0 || cellY > NewGameScreen.room.height - 1 ||
+            NewGameScreen.room.roomCell(cellX, cellY) == GridObject.TYPE.SOLID ||
+            NewGameScreen.room.roomCell(cellX, cellY) == GridObject.TYPE.PUSH) {
             float dist = 1;
-            switch(dir) {
+            switch (dir) {
                 case 0:
-                    dist = cellY*NewGameScreen.tileHeight-y;
+                    dist = cellY * NewGameScreen.tileHeight - y;
                     break;
                 case 1:
-                    dist = x-(cellX+1)*NewGameScreen.tileWidth;
+                    dist = x - (cellX + 1) * NewGameScreen.tileWidth;
                     break;
                 case 2:
-                    dist = y-(cellY+1)*NewGameScreen.tileHeight;
+                    dist = y - (cellY + 1) * NewGameScreen.tileHeight;
                     break;
                 case 3:
-                    dist = cellX*NewGameScreen.tileWidth-x;
+                    dist = cellX * NewGameScreen.tileWidth - x;
                     break;
             }
             if (Math.abs(dist) < radius) {
-                NewGameScreen.removeProjectile(id);
+                NewGameScreen.room.removeProjectile(id);
             }
         }
     }
