@@ -70,12 +70,10 @@ public class GameScreenBase implements Screen {
         Color clickColor = new Color(0.4f, 1f, 1f, 1f);
 
         TextButton[] ScreenButtons = getTextButtons(exitButton, mainMenuButton, playButton);
-        for (TextButton screenButton : ScreenButtons) {
-            System.out.println(screenButton);
-        }
+
+
 
         for (TextButton button : ScreenButtons) {
-            System.out.println("button: " + button);
             button.addListener(new ClickListener() {
                 private boolean clicked = false;
                 @Override
@@ -91,7 +89,7 @@ public class GameScreenBase implements Screen {
                         clicked = true;
                         Gdx.app.postRunnable(() -> game.setScreen(new CharacterSelectScreen(game)));
                     }  else {
-                        game.setScreen(new GameScreen(game));
+                        game.setScreen(new NewGameScreen(game));
                     }
                 }
 
@@ -109,11 +107,10 @@ public class GameScreenBase implements Screen {
     }
 
     private TextButton[] getTextButtons(TextButton exitButton, TextButton mainMenuButton, TextButton playButton) {
-        TextButton[] ScreenButtons = new TextButton[0];
-        System.out.println("titleText: " + titleText);
+        TextButton[] ScreenButtons;
         if (Objects.equals(titleText, "Sorry you missed the bus, better luck next time")) {
             ScreenButtons = new TextButton[]{exitButton, mainMenuButton};
-        } else if (Objects.equals(titleText, "It's time to meet your friends in town\nand the bus leaves in 5 minutes, better\ngrab your phone from your room in\nLangwith college before you board.")) {
+        } else if (Objects.equals(titleText, "It's time to meet your friends in town\nand the bus leaves in 5 minutes, you'll\nneed to be quick to make it in time!")) {
             ScreenButtons = new TextButton[]{playButton};
         } else if (Objects.equals(titleText, "Escape University Of York")) {
             ScreenButtons = new TextButton[]{playButton, exitButton};
@@ -132,7 +129,6 @@ public class GameScreenBase implements Screen {
     public void render(float delta) {
         ScreenUtils.clear(Color.BLACK);
 
-        System.out.println("stage != null: " + (stage != null));
         // update stage
         if (stage != null) {
             stage.act(delta);

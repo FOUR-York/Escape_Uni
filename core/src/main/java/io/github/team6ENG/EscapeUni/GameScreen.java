@@ -184,14 +184,15 @@ public class GameScreen implements Screen {
         items.put("pizza", new Collectable(game, "items/pizza.png", 600, 100, 0.4f, true, "LangwithScreen", audioManager));
         items.put("phone", new Collectable(game, "items/phone.png", 100, 100, 0.05f, true, "LangwithScreen", audioManager));
     }
+
     private void initialiseBus() {
         busTexture = new Texture(Gdx.files.internal("images/bus.png"));
         busX = 1100;
         busY = 1545;
     }
+
     private  void initialiseAudio() {
         audioManager = new AudioManager(game);
-
     }
 
     /**

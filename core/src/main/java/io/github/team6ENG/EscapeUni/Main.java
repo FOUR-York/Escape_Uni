@@ -19,25 +19,32 @@ public class Main extends Game{
     public BitmapFont gameFont;
     public FitViewport viewport;
     public Skin buttonSkin;
-    public String activeSpritePath;
+    public static String activeSpritePath;
     public String activeUniIDPath;
 
     public static final String menuFontAsset = "fonts/menuScreenFont.fnt";
     public static final String buttonSkinAsset = "skins/uiskin.json";
 
-    public float gameTimer = 300;
-    public float score = 300;
+    public static float gameTimer = 300;
+    public static float score = 0;
 
     public float gameVolume = .5f;
     public float musicVolume = .5f;
 
-    public final int totalNegativeEvents = 1;
-    public final int totalPositiveEvents = 1;
-    public final int totalHiddenEvents = 1;
+    public static final int totalNegativeEvents = 2;
+    public static final int totalPositiveEvents = 2;
+    public static final int totalHiddenEvents = 2;
 
-    public int foundNegativeEvents = 0;
-    public int foundPositiveEvents = 0;
-    public int foundHiddenEvents = 0;
+    public static int foundNegativeEvents = 0;
+    public static int foundPositiveEvents = 0;
+    public static int foundHiddenEvents = 0;
+
+    public static boolean playerShotOnce = false;
+    public static boolean playerFoundKeycardOnce = false;
+    public static boolean playerGotPowerupOnce = false;
+    public static boolean playerInvertedOnce = false;
+    public static boolean bob = false;
+    public static boolean hiddenEnding = false;
     /**
      * Initialise global game variables
      */
@@ -45,7 +52,7 @@ public class Main extends Game{
         batch = new SpriteBatch();
 
         menuFont = new BitmapFont(Gdx.files.internal(menuFontAsset));
-        viewport = new FitViewport(800, 450);
+        viewport = new FitViewport(640, 480);
 
         //Scale font to our viewport by ratio of viewport height to screen height
         menuFont.setUseIntegerPositions(false);
@@ -72,6 +79,10 @@ public class Main extends Game{
         foundPositiveEvents = 0;
         foundHiddenEvents = 0;
 
+        playerShotOnce = false;
+        playerFoundKeycardOnce = false;
+        playerGotPowerupOnce = false;
+
         activeSpritePath = null;
         activeUniIDPath = null;
 
@@ -83,6 +94,10 @@ public class Main extends Game{
     public void resize(int width, int height) {
         viewport.update(width, height);
         super.resize(width, height);
+    }
+
+    public void setInputProcessor(com.badlogic.gdx.InputProcessor processor) {
+        Gdx.input.setInputProcessor(processor);
     }
 
     public void render() {

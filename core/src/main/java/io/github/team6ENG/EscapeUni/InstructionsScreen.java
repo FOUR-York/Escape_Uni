@@ -20,7 +20,7 @@ public class InstructionsScreen extends GameScreenBase {
 
     private com.badlogic.gdx.InputProcessor previousInputProcessor; // used to restore on hide()
 
-    private static final String TITLE_TEXT = "It's time to meet your friends in town\nand the bus leaves in 5 minutes, better\ngrab your phone from your room in\nLangwith college before you board.";
+    private static final String TITLE_TEXT = "It's time to meet your friends in town\nand the bus leaves in 5 minutes, you'll\nneed to be quick to make it in time!";
 
     /**
      * Initialise the instructions screen

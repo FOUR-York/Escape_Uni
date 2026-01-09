@@ -109,11 +109,9 @@ public class RonCookeScreenTest extends AbstractHeadlessGdxTest {
         main.gameTimer = 300;
         testRonCookeScreen.render(1/60f);
 
-        System.out.println("Collected KeyCard.");
         gameScreen.items.get("keyCard").Collect();
         testRonCookeScreen.render(1/60f);
 
-        System.out.println("Collected Torch.");
         gameScreen.items.get("torch").Collect();
         testRonCookeScreen.render(1/60f);
 

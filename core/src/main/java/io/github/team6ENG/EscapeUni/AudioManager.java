@@ -71,7 +71,7 @@ public class AudioManager {
     }
 
     public void setMusicVolume(){
-        music.setVolume(0.01f * game.musicVolume);
+        music.setVolume(0.1f * game.musicVolume);
     }
 
     public void stopMusic(){

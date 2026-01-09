@@ -5,6 +5,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
+import static io.github.team6ENG.EscapeUni.NewGameScreen.audioManager;
+
 /**
  * screen displayed when player wins
  */
