@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 public class Main extends Game {
 
     public SpriteBatch batch;
+    public SpriteBatch uiBatch;
     public BitmapFont menuFont;
     public BitmapFont gameFont;
     public FitViewport viewport;
@@ -39,6 +40,7 @@ public class Main extends Game {
     public static boolean playerShotOnce = false;
     public static boolean playerFoundKeycardOnce = false;
     public static boolean playerGotPowerupOnce = false;
+    public static boolean playerGotLightSwtichOnce = false;
     public static boolean playerInvertedOnce = false;
     public static boolean bob = false;
     public static boolean hiddenEnding = false;
@@ -47,7 +49,7 @@ public class Main extends Game {
      */
     public void create() {
         batch = new SpriteBatch();
-
+        uiBatch = new SpriteBatch();
 
         menuFont = new BitmapFont(Gdx.files.internal("fonts/menuScreenFont.fnt"));
         viewport = new FitViewport(640, 480);
@@ -80,6 +82,8 @@ public class Main extends Game {
 
         playerShotOnce = false;
         playerFoundKeycardOnce = false;
+        playerInvertedOnce = false;
+        playerGotLightSwtichOnce = false;
         playerGotPowerupOnce = false;
 
         activeSpritePath = null;
@@ -105,6 +109,7 @@ public class Main extends Game {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         viewport.apply();
         batch.setProjectionMatrix(viewport.getCamera().combined);
+        uiBatch.setProjectionMatrix(viewport.getCamera().combined);
         super.render();
     }
 

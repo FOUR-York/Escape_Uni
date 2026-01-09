@@ -241,7 +241,7 @@ public class NewGameScreen implements Screen {
 
     private void drawText(BitmapFont font, String text, Color colour, float x, float y) {
         font.setColor(colour);
-        font.draw(game.batch, text, x, y);
+        font.draw(game.uiBatch, text, x, y);
     }
 
     private void renderUI() {
@@ -250,14 +250,14 @@ public class NewGameScreen implements Screen {
         float worldHeight = game.viewport.getWorldHeight();
         float worldWidth = game.viewport.getWorldWidth();
 
-        game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
-        game.batch.begin();
+        game.uiBatch.setProjectionMatrix(game.viewport.getCamera().combined);
+        game.uiBatch.begin();
 
         float y = worldHeight - 5f;
         float lineSpacing = 15f;
 
         // Requirements: Events tracker and game timer
-        drawText(smallFont, ("score: " +(int)game.score), Color.WHITE, 5f, y);
+        drawText(smallFont, ("score: " +(int)game.score), Color.BLUE, 5f, y);
         y -= lineSpacing;
         drawText(smallFont, ("Negative Events: " + game.foundNegativeEvents +"/" + game.totalNegativeEvents), Color.WHITE, 5, y);
         y -= lineSpacing;
@@ -266,11 +266,9 @@ public class NewGameScreen implements Screen {
         drawText(smallFont, ("Hidden Events:   "+ game.foundHiddenEvents+"/"+ game.totalHiddenEvents), Color.WHITE, 5, y);
         y -= lineSpacing;
         //Display time with 2 digits for seconds
-        drawText(smallFont, ((int)game.gameTimer/60 + ":" +((int)game.gameTimer % 60 <10?"0" :"" ) +(int)game.gameTimer % 60), Color.WHITE, worldWidth - 40f, worldHeight-10f);
-        GlyphLayout layout = new GlyphLayout(game.menuFont, ("Score: " + (int)game.score));
-        drawText(smallFont, ("score: " +(int)game.score), Color.WHITE, worldWidth-40f, worldHeight-30f);
+        drawText(smallFont, ((int)game.gameTimer/60 + ":" +((int)game.gameTimer % 60 <10?"0" :"" ) +(int)game.gameTimer % 60), Color.BLUE, worldWidth - 40f, worldHeight-5f);
 
-        game.batch.end();
+        game.uiBatch.end();
 
     }
 
