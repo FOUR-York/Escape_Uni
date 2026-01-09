@@ -29,7 +29,7 @@ public class NewGameScreen implements Screen {
 
     public static boolean keycard = false;
 
-    public AudioManager audioManager;
+    public static AudioManager audioManager;
 
     public static String nextRoom = "classRoom.json";
     public static boolean transition = false;
@@ -108,6 +108,7 @@ public class NewGameScreen implements Screen {
         game.viewport.apply();
         Gdx.gl.glFlush();
 
+        game.batch.enableBlending();
         game.batch.begin();
 
         room.draw(shapeDrawer, game.batch);
@@ -163,7 +164,7 @@ public class NewGameScreen implements Screen {
 
         game.batch.end();
 
-
+        //Pausing
         if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
             audioManager.pauseMusic();
             audioManager.stopFootsteps();
@@ -175,10 +176,9 @@ public class NewGameScreen implements Screen {
             start();
         }
 
+        //Winning the game
         if (room.end && player.gridInstance.getGridX() == 19) {
-            Gdx.app.postRunnable(() -> game.setScreen(
-                new WinScreen(game)
-            ));
+            gameWin();
         }
 
         renderUI();
@@ -332,6 +332,25 @@ public class NewGameScreen implements Screen {
         Gdx.app.postRunnable(() -> game.setScreen(
             new GameOverScreen(game, "Sorry you missed the bus,\nbetter luck next time...")
         ));
+    }
+
+    public void gameWin() {
+        Main.score += Main.gameTimer;
+
+        if (Main.score >= 1400) {
+            if (!Main.hiddenEnding) {
+                Main.hiddenEnding = true;
+                Main.foundHiddenEvents++;
+            }
+            Gdx.app.postRunnable(() -> game.setScreen(
+                new HiddenEndingScreen(game)
+            ));
+        }
+        else {
+            Gdx.app.postRunnable(() -> game.setScreen(
+                new WinScreen(game)
+            ));
+        }
     }
 }
 

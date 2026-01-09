@@ -22,11 +22,18 @@ public class ControlInverter extends RoomObject {
                     NewGameScreen.infoMsg("Controls un-inverted.");
                     NewGameScreen.player.isInverted = false;
                     collected = true;
+
+
                 }
                 else {
                     NewGameScreen.infoMsg("Controls inverted.");
                     NewGameScreen.player.isInverted = true;
                     collected = true;
+
+                    if (!Main.playerInvertedOnce) {
+                        Main.playerInvertedOnce = true;
+                        Main.foundNegativeEvents++;
+                    }
                 }
             }
         }

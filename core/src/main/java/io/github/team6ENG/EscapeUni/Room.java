@@ -24,6 +24,7 @@ public class Room {
     public Texture powerupTex;
     public Texture projectileTex;
     public Texture inverterTex;
+    public Texture bobTex;
 
     public boolean end = false;
 
@@ -72,6 +73,7 @@ public class Room {
         powerupTex = new Texture(Gdx.files.internal(mapJson.get("powerupTex").asString()));
         projectileTex = new Texture(Gdx.files.internal(mapJson.get("projectileTex").asString()));
         inverterTex = new Texture(Gdx.files.internal(mapJson.get("inverterTex").asString()));
+        bobTex = new Texture(Gdx.files.internal(mapJson.get("bobTex").asString()));
         // start loading in objects
         int[] gridData = mapJson.get("gridData").asIntArray();
         for (int i = 0; i < width; i ++) {
@@ -92,38 +94,44 @@ public class Room {
                 switch (jsonObject.name) {
                     case "door": {
                         addObject(new Door(jsonObject.get("nextRoom").asString(), doorTex, GridObject.getAt(grid, width, height, i, j)));
+                        break;
                     }
-                    break;
                     case "box": {
                         addObject(new Box(boxTex, GridObject.getAt(grid, width, height, i, j)));
+                        break;
                     }
-                    break;
                     case "shift": {
                         int r = jsonObject.get("direction").asInt();
                         addObject(new ShiftTile(shiftTex, i, j, r));
+                        break;
                     }
-                    break;
                     case "turret": {
                         int r = jsonObject.get("direction").asInt();
                         addObject(new Turret(turretTex, i * NewGameScreen.tileWidth, j * NewGameScreen.tileHeight, r, 4f));
+                        break;
                     }
-                    break;
                     case "playerSpawn": {
                         NewGameScreen.player = new Controller(GridObject.getAt(grid, width, height, i, j), NewGameScreen.tileWidth / 4f);
+                        break;
                     }
-                    break;
                     case "powerup": {
                         addObject(new Powerup(powerupTex, i * NewGameScreen.tileWidth, j * NewGameScreen.tileHeight));
+                        break;
                     }
-                    break;
                     case "keycard": {
                         addObject(new Keycard(keycardTex, i * NewGameScreen.tileWidth, j * NewGameScreen.tileHeight));
+                        break;
                     }
-                    break;
                     case "inverter": {
                         addObject(new ControlInverter(inverterTex, i * NewGameScreen.tileWidth, j * NewGameScreen.tileHeight));
+                        break;
+                    }
+                    case "bob": {
+                        addObject(new HiddenBob(bobTex, i * NewGameScreen.tileWidth, j * NewGameScreen.tileHeight));
+                        break;
                     }
                     case "null":
+                        break;
                     default:
                         break;
                 }
@@ -148,5 +156,8 @@ public class Room {
         turretTex.dispose();
         keycardTex.dispose();
         powerupTex.dispose();
+        projectileTex.dispose();
+        inverterTex.dispose();
+        bobTex.dispose();
     }
 }

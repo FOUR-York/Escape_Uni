@@ -22,15 +22,15 @@ public class Main extends Game {
     public static String activeSpritePath;
     public static String activeUniIDPath;
 
-    public float gameTimer = 300;
+    public static float gameTimer = 300;
     public static float score = 0;
 
     public float gameVolume = .5f;
     public float musicVolume = .5f;
 
     public static final int totalNegativeEvents = 2;
-    public static final int totalPositiveEvents = 3;
-    public static final int totalHiddenEvents = 1;
+    public static final int totalPositiveEvents = 2;
+    public static final int totalHiddenEvents = 2;
 
     public static int foundNegativeEvents = 0;
     public static int foundPositiveEvents = 0;
@@ -39,6 +39,9 @@ public class Main extends Game {
     public static boolean playerShotOnce = false;
     public static boolean playerFoundKeycardOnce = false;
     public static boolean playerGotPowerupOnce = false;
+    public static boolean playerInvertedOnce = false;
+    public static boolean bob = false;
+    public static boolean hiddenEnding = false;
     /**
      * Initialise global game variables
      */
@@ -67,6 +70,7 @@ public class Main extends Game {
      * Reset game and return to the main menu
      */
     public void resetGame() {
+
         gameTimer = 300;
         score = 300;
 

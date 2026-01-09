@@ -9,6 +9,7 @@
   "powerupTex": "items/star.png",
   "projectileTex": "sprites/projectile1.png",
   "inverterTex": "items/inverter.png",
+  "bobTex": "sprites/pixelbob.png",
   "objects": [
     {
      "none" : {}

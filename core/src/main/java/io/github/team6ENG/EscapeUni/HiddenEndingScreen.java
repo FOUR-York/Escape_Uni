@@ -5,7 +5,10 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -14,13 +17,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
+import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import static io.github.team6ENG.EscapeUni.NewGameScreen.audioManager;
 
 /**
  * screen displayed when player wins
  */
-public class WinScreen implements Screen {
+public class HiddenEndingScreen implements Screen {
 
     private final Main game;
 
@@ -34,15 +38,39 @@ public class WinScreen implements Screen {
 
     private com.badlogic.gdx.InputProcessor previousInputProcessor; // used to restore on hide()
 
-    private static final String TITLE_TEXT = "Congratulations, you escaped university!";
+    private static final String TITLE_TEXT = "Congratulations, you escaped university!\nAnd with an outstanding score!";
+
+    private float frameTimer;
+    Texture animSheet;
+    Animation<TextureRegion> anim;
+
+    private ShapeRenderer shapeRenderer;
 
     /**
      * initialise win screen
      * @param game current Instance of Main
      */
-    public WinScreen(final Main game) {
+    public HiddenEndingScreen(final Main game) {
         this.game = game;
         // DO NOT initialize stage/input here — do it in show()
+
+        animSheet = new Texture(Gdx.files.internal("sprites/bobhallsheet.png"));
+
+        TextureRegion[][] tmp = TextureRegion.split(animSheet,
+            animSheet.getWidth() / 39,
+            animSheet.getHeight());
+
+        TextureRegion[] animFrames = new TextureRegion[39];
+        int index = 0;
+        for (int i = 0; i < 1; i++) {
+            for (int j = 0; j < 39; j++) {
+                animFrames[index++] = tmp[i][j];
+            }
+        }
+
+        anim = new Animation<TextureRegion>(0.025f, animFrames);
+
+        shapeRenderer = new ShapeRenderer();
     }
 
     @Override
@@ -131,7 +159,11 @@ public class WinScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        frameTimer += delta;
+
         ScreenUtils.clear(Color.BLACK);
+
+        TextureRegion currentFrame = anim.getKeyFrame(frameTimer, true);
 
         // update stage
         if (stage != null) {
@@ -144,12 +176,20 @@ public class WinScreen implements Screen {
         } else {
             game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
         }
-
-        game.batch.begin();
         float w = (stage != null) ? stage.getViewport().getWorldWidth() : game.viewport.getWorldWidth();
         float h = (stage != null) ? stage.getViewport().getWorldHeight() : game.viewport.getWorldHeight();
 
+        game.batch.begin();
+        game.batch.draw(currentFrame, 0, 0, w, h);
+        game.batch.end();
 
+        shapeRenderer.setProjectionMatrix(game.batch.getProjectionMatrix());
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(0, 0, 0, 1);
+        shapeRenderer.rect(0, 305, w, 100);
+        shapeRenderer.end();
+
+        game.batch.begin();
         float brightness = 0.85f + 0.15f * (float) Math.sin(TimeUtils.millis() / 500f);
         if (game.menuFont != null) {
             game.menuFont.setColor(brightness, brightness, brightness, 1f);
@@ -206,5 +246,7 @@ public class WinScreen implements Screen {
 
 
         // DO NOT dispose game.menuFont or game.buttonSkin or game.batch here
+
+        animSheet.dispose();
     }
 }
