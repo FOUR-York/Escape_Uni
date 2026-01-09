@@ -15,6 +15,7 @@ public class Room {
 
     // textures
     public Texture roomTex;
+    public Texture openRoomTex;
     public Texture doorTex;
     public Texture boxTex;
     public Texture shiftTex;
@@ -23,6 +24,8 @@ public class Room {
     public Texture powerupTex;
     public Texture projectileTex;
     public Texture inverterTex;
+
+    public boolean end = false;
 
     public Room(String path) {
         this.width = 20;
@@ -53,7 +56,14 @@ public class Room {
         int width = dimensions[0];
         int height = dimensions[1];
         // textures
+        if (path.equals("outside.json")) {
+            end = true;
+        }
         roomTex = new Texture(Gdx.files.internal(mapJson.get("roomTex").asString()));
+        if (mapJson.get("openRoomTex") != null) {
+            openRoomTex = new Texture(Gdx.files.internal(mapJson.get("openRoomTex").asString()));
+        }
+
         doorTex = new Texture(Gdx.files.internal(mapJson.get("doorTex").asString()));
         boxTex = new Texture(Gdx.files.internal(mapJson.get("boxTex").asString()));
         shiftTex = new Texture(Gdx.files.internal(mapJson.get("shiftTex").asString()));
@@ -118,6 +128,12 @@ public class Room {
                         break;
                 }
             }
+        }
+    }
+
+    public void openDoors() {
+        if (openRoomTex != null) {
+            roomTex = openRoomTex;
         }
     }
 

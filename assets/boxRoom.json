@@ -7,7 +7,7 @@
   "keycardTex": "items/keycard1.png",
   "turretTex": "sprites/turret.png",
   "powerupTex": "items/star.png",
-  "projectileTex": "items/pizza.png",
+  "projectileTex": "sprites/projectile1.png",
   "inverterTex": "items/inverter.png",
   "objects": [
     {

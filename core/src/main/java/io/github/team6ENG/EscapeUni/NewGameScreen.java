@@ -136,10 +136,21 @@ public class NewGameScreen implements Screen {
             player.sprite.draw(game.batch);
         }
 
+        TextureRegion region = new TextureRegion(room.projectileTex);
         for (Projectile projectile : projectiles) {
             if (projectile != null) {
-                shapeDrawer.setColor(1.0f, 0.0f, 0.0f, 1.0f);
-                shapeDrawer.circle(projectile.x,projectile.y,projectile.radius);
+//                shapeDrawer.setColor(1.0f, 0.0f, 0.0f, 1.0f);
+//                shapeDrawer.circle(projectile.x,projectile.y,projectile.radius);
+                game.batch.draw(
+                    region,
+                    projectile.x-region.getRegionWidth()/2f, projectile.y-region.getRegionHeight()/2f,
+                    region.getRegionWidth() / 2f,
+                    region.getRegionHeight() / 2f,
+                    region.getRegionWidth(),
+                    region.getRegionHeight(),
+                    1f, 1f,
+                    90f*projectile.dir+90f
+                );
             }
         }
 
@@ -162,6 +173,12 @@ public class NewGameScreen implements Screen {
         if (transition) {
             transition = false;
             start();
+        }
+
+        if (room.end && player.gridInstance.getGridX() == 19) {
+            Gdx.app.postRunnable(() -> game.setScreen(
+                new WinScreen(game)
+            ));
         }
 
         renderUI();

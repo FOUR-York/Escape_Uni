@@ -19,6 +19,7 @@ public class Keycard extends RoomObject {
         if (!collected) {
             if (NewGameScreen.player.gridInstance.getGridX() == gridX && NewGameScreen.player.gridInstance.getGridY() == gridY) {
                 NewGameScreen.infoMsg("Keycard collected.");
+                NewGameScreen.room.openDoors();
                 collected = true;
                 NewGameScreen.keycard = true;
                 Main.score += 100;
