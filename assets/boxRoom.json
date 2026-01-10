@@ -1,6 +1,7 @@
 {
   "dimensions": [20, 15],
   "roomTex": "test/room.png",
+  "openRoomTex": "test/boxRoomOpen.png",
   "doorTex": "test/ClassRoom1.png",
   "boxTex": "sprites/box.png",
   "shiftTex": "sprites/shifttile-overlay.png",
@@ -19,7 +20,7 @@
     },
     {
       "door": {
-        "nextRoom": "storageRoom.json"
+        "nextRoom": "shiftPuzzle.json"
       }
     },
     {
@@ -31,6 +32,11 @@
     {
       "door": {
         "nextRoom": "classRoom.json"
+      }
+    },
+    {
+      "door": {
+        "nextRoom": "corridorRoom.json"
       }
     }
   ],
@@ -52,7 +58,7 @@
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
   ],
   "roomObjectData": [
-    0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 0, 0,

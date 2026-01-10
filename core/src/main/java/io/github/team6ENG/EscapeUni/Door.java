@@ -1,5 +1,6 @@
 package io.github.team6ENG.EscapeUni;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import space.earlygrey.shapedrawer.ShapeDrawer;
@@ -31,7 +32,10 @@ public class Door extends RoomObject {
     @Override
     public void draw(ShapeDrawer drawer, SpriteBatch batch) {
         if (NewGameScreen.room.isKeycardCollected()) {
-            drawer.filledCircle(x, y, 3);
+            float w = NewGameScreen.tileWidth;
+            float h = NewGameScreen.tileHeight;
+            float theta = NewGameScreen.tileWidth/8f;
+            drawer.filledRectangle(x-w/2f+theta, y-h/2f+theta, w-2*theta,  h-2*theta, new Color(0.0f, 1.0f, 0.0f, 0.2f));
         }
     }
 }

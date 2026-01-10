@@ -2,12 +2,12 @@
   "dimensions": [20, 15],
   "roomTex": "test/room.png",
   "doorTex": "test/ClassRoom1.png",
+  "openRoomTex": "test/boxRoomOpen.png",
   "boxTex": "sprites/box.png",
   "shiftTex": "sprites/shifttile-overlay.png",
   "keycardTex": "items/keycard1.png",
   "turretTex": "sprites/turret.png",
   "powerupTex": "items/star.png",
-  "projectileTex": "items/pizza.png",
   "projectileTex": "sprites/projectile1.png",
   "inverterTex": "items/inverter.png",
   "bobTex": "sprites/pixelbob.png",
@@ -31,7 +31,7 @@
     },
     {
       "door": {
-        "nextRoom": "boxRoom.json"
+        "nextRoom": "classRoom.json"
       }
     },
     {
@@ -59,7 +59,7 @@
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
   ],
   "roomObjectData": [
-    0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 0, 0,
