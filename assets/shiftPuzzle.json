@@ -2,7 +2,7 @@
   "dimensions": [20, 15],
   "roomTex": "test/pushPuzzle.png",
   "openRoomTex": "test/pushPuzzleOpen.png",
-  "doorTex": "test/ClassRoom1.png",
+  "doorTex": "sprites/exitsign.png",
   "boxTex": "sprites/box.png",
   "shiftTex": "sprites/shifttile-overlay.png",
   "keycardTex": "items/keycard1.png",

@@ -1,7 +1,7 @@
 {
   "dimensions": [20, 15],
   "roomTex": "test/room.png",
-  "doorTex": "test/ClassRoom1.png",
+  "doorTex": "sprites/exitsign.png",
   "openRoomTex": "test/boxRoomOpen.png",
   "boxTex": "sprites/box.png",
   "shiftTex": "sprites/shifttile-overlay.png",

@@ -305,7 +305,9 @@ public class NewGameScreen implements Screen {
         Main.score += Main.gameTimer;
 
         String userName = System.getProperty("user.name");
-        userName = userName.substring(0, 6);
+        if (userName.length() > 6) {
+            userName = userName.substring(0, 6);
+        }
 
         String[] topNames = new String[5];
         topNames[0] = leaderboardPrefs.getString("name0", "None");

@@ -2,7 +2,7 @@
   "dimensions": [20, 15],
   "roomTex": "test/LongCorridorBase.png",
   "openRoomTex": "test/corridorRoomOpen.png",
-  "doorTex": "test/LongCorridorBase.png",
+  "doorTex": "sprites/exitsign.png",
   "boxTex": "sprites/box.png",
   "shiftTex": "sprites/shifttile-overlay.png",
   "keycardTex": "items/keycard1.png",
