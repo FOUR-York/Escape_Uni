@@ -2,7 +2,6 @@ package io.github.team6ENG.EscapeUni;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class LightSwitch extends RoomObject {
     private int gridX, gridY;
@@ -21,12 +20,12 @@ public class LightSwitch extends RoomObject {
                 NewGameScreen.infoMsg("Lights toggled.");
                 collected = true;
 
-                if (!Main.playerGotLightSwtichOnce) {
-                    Main.playerGotLightSwtichOnce = true;
+                if (!Main.playerGotLightSwitchOnce) {
+                    Main.playerGotLightSwitchOnce = true;
                     Main.foundPositiveEvents++;
                 }
 
-                NewGameScreen.player.invinciblePowerup(10f);
+                LightSource.lightsOff = !LightSource.lightsOff;
                 Main.score += 250;
                 NewGameScreen.player.scoreEarnedThisRoom += 250;
             }

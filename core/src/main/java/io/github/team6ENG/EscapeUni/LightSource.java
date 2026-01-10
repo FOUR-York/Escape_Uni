@@ -27,8 +27,10 @@ import static java.lang.Math.sin;
  * Represents a single light source
  */
 public class LightSource {
-    private static LightSource[] lights;
-    private static ShaderProgram shaderProgram;
+    private static LightSource[] lightSources;
+    private static int lights;
+    public static ShaderProgram shaderProgram;
+    public static boolean lightsOff;
 
     float circleX;
     float circleY;
@@ -41,136 +43,45 @@ public class LightSource {
      * @param circleX
      * @param circleY
      */
-    protected LightSource(float circleX, float circleY){
+    protected LightSource(float circleX, float circleY, float radius) {
         this.circleX = circleX;
         this.circleY = circleY;
+        this.radius = radius;
         isVisible = true;
     }
 
-    public static void initialiseLighting(SpriteBatch batch) {
-        lights = new LightSource[1];
-//        // screen shader
-//        String vertexShader = Gdx.files.internal("shaders/sc_lighting_vert.glsl").readString();
-//        String fragmentShader = Gdx.files.internal("shaders/sc_lighting_frag.glsl").readString();
-//        shaderProgram = new ShaderProgram(vertexShader,fragmentShader);
-//        if (!shaderProgram.isCompiled()) {
-//            System.out.print(shaderProgram.getLog());
-//        }
-//        ShaderProgram.pedantic = false;
-//
-//        batch.setShader(shaderProgram);
+    public static void initialiseLighting() {
+        lightSources = new LightSource[10];
+        lights = 0;
+        lightsOff = false;
+        // screen shader
+        String vertexShader = Gdx.files.internal("shaders/sc_lighting_vert.glsl").readString();
+        String fragmentShader = Gdx.files.internal("shaders/sc_lighting_frag.glsl").readString();
+        shaderProgram = new ShaderProgram(vertexShader,fragmentShader);
+        if (!shaderProgram.isCompiled()) {
+            System.out.print(shaderProgram.getLog());
+        }
+        ShaderProgram.pedantic = false;
     }
 
     public static void update(float delta) {
-//        float[] v = new float[2*lights.length];
-//        for (int i = 0; i < lights.length; i++) {
-//            v[i*2] =  lights[i].circleX;
-//            v[i*2 + 1] = lights[i].circleY;
-//        }
+        float[] v = new float[3*lightSources.length];
+        for (int i = 0; i < lights; i++) {
+            v[i*3] =  lightSources[i].circleX;
+            v[i*3 + 1] = lightSources[i].circleY;
+            v[i*3 + 2] = lightSources[i].radius;
+        }
         shaderProgram.bind();
-        shaderProgram.setUniformf("pos", new Vector2(lights[0].circleX, lights[0].circleY));
+//        shaderProgram.setUniformf("pos", new Vector2(lightSources[0].circleX, lightSources[0].circleY));
+        shaderProgram.setUniformi("u_active", lightsOff? 1:0);
+        shaderProgram.setUniformi("u_length", lights);
+        shaderProgram.setUniform3fv("u_vecs", v, 0, 10*3);
     }
 
-    public static LightSource createLightSource(float circleX, float circleY){
-       LightSource lightSource  = new LightSource(circleX, circleY);
-       lights[0] = lightSource;
+    public static LightSource createLightSource(float circleX, float circleY, float radius){
+       LightSource lightSource  = new LightSource(circleX, circleY, radius);
+       lightSources[lights] = lightSource;
+       lights++;
        return lightSource;
     }
 }
-
-//    /**
-//     * create new light source and add to list of lights
-//     * @param lightName
-//     * @param circleX
-//     * @param circleY
-//     * @param colour
-//     * @param radius
-//     */
-//    public void addLightSource(String lightName, float circleX, float circleY, Color colour, int radius){
-//        lights.put(lightName, new LightSource(circleX, circleY, colour, radius));
-//    }
-//
-//    /**
-//     * Remove a light source from lights
-//     * @param lightName
-//     */
-//    public void removeLightSource(String lightName){
-//        lights.remove(lightName);
-//    }
-//    /**
-//     * Reset list of lights
-//     */
-//    public void clearLightSources(){
-//        lights.clear();
-//    }
-//
-//    /**
-//     * Reposition light source
-//     */
-//    public void update(String lightName, float circleX, float circleY){
-//        // send light source data to uniform
-//    }
-
-//    /**
-//     * Adjust radius of a light source
-//     * @param lightName
-//     * @param radius
-//     */
-//    public void adjustRadius(String lightName, int radius){
-//        lights.get(lightName).radius = radius;
-//    }
-//
-//    /**
-//     * Set visibility of light source
-//     * @param lightName
-//     * @param isVisible
-//     */
-//    public void isVisible(String lightName, boolean isVisible){
-//        lights.get(lightName).isVisible = isVisible;
-//    }
-//
-//    /**
-//     * Renders the lighting system:
-//     * 1. Draws a dark overlay
-//     * 2. Adds transparent circles
-//     *
-//     * @param camera The camera
-//     * @param mapWidth Dimensions of world map for drawing darkness
-//     * @param mapHeight Dimensions of world map for drawing darkness
-//     *
-//     * @return Texture representing the darkness and lights
-//     */
-//
-//    public Texture render(int mapWidth, int mapHeight) {
-//        frameBuffer.begin();
-//
-//        Pixmap pixmap = new Pixmap(mapWidth,mapHeight, Pixmap.Format.RGBA8888);
-//
-//        // Fill entire pixmap with semi-transparent black
-//        pixmap.setColor(0f, 0f, 0f, 0.9f);
-//        pixmap.fill();
-//
-//        pixmap.setBlending(Pixmap.Blending.None);
-//
-//        for(String l : lights.keySet()) {
-//            if(lights.get(l).isVisible) {
-//                pixmap.setColor(lights.get(l).colour);
-//                pixmap.fillCircle((int) (lights.get(l).circleX), mapHeight - (int) (lights.get(l).circleY), lights.get(l).radius);
-//            }
-//        }
-//        lightTexture.draw(pixmap, 0, 0);
-//
-//
-//        pixmap.dispose();
-//        frameBuffer.end();
-//
-//        return lightTexture;
-//
-//    }
-
-//    public void dispose(){
-//
-//    }
-//
-//
-//}

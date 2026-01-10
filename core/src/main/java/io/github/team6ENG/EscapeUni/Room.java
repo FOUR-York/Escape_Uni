@@ -160,8 +160,11 @@ public class Room {
                         addObject(new HiddenBob(bobTex, i * NewGameScreen.tileWidth, j * NewGameScreen.tileHeight));
                         break;
                     }
-                    case "null":
+                    case "switch": {
+                        addObject(new LightSwitch(bobTex, i * NewGameScreen.tileWidth, j * NewGameScreen.tileHeight));
                         break;
+                    }
+                    case "null":
                     default:
                         break;
                 }

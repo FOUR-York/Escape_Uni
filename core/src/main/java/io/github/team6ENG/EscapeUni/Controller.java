@@ -42,7 +42,6 @@ public class Controller extends SpriteAnimations {
     public Controller(GridObject gridInstance, float radius) {
         super(Main.activeSpritePath, 8, 7);
 
-        lightSource = LightSource.createLightSource(x, y);
 
         int x = gridInstance.getGridX(), y = gridInstance.getGridY();
         gridInstance.type = GridObject.TYPE.CONTROLLER;
@@ -76,12 +75,17 @@ public class Controller extends SpriteAnimations {
             System.out.print(shaderProgram.getLog());
         }
         ShaderProgram.pedantic = false;
+
+        lightSource = LightSource.createLightSource(rX, rY, 50f);
     }
 
     public void step() {
         int posX = gridInstance.getGridX(), posY = gridInstance.getGridY();
         rX = MathUtils.lerp(rX, posX*NewGameScreen.tileWidth+NewGameScreen.tileWidth/2f, 0.3f);
         rY = MathUtils.lerp(rY, posY*NewGameScreen.tileHeight+NewGameScreen.tileHeight/2f, 0.3f);
+
+        lightSource.circleX = rX;
+        lightSource.circleY = rY;
 
         float delta = Gdx.graphics.getDeltaTime();
         powerupTimer -= delta;

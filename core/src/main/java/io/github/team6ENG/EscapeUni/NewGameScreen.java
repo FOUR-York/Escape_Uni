@@ -8,6 +8,10 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.TimeUtils;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
@@ -36,17 +40,27 @@ public class NewGameScreen implements Screen {
     public static String nextRoom;
     public static boolean transition = false;
 
+    private FrameBuffer frameBuffer;
+    private Texture screenTexture;
+    private ShaderProgram shader;
+
     private Preferences leaderboardPrefs = Gdx.app.getPreferences("leaderboardPrefs");
 
     NewGameScreen(final Main game) {
         this.game = game;
 
         room = null;
-        nextRoom = "classRoom.json";
+        nextRoom = "corridorRoom.json";
 
 
-        // initialise components
-        LightSource.initialiseLighting(game.batch);
+
+        // initialise screen space framebuffer
+        frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 640, 480, false);
+
+        screenTexture = frameBuffer.getColorBufferTexture();
+        screenTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        //
+
 
         initialiseShapeDrawer();
         initialiseAudio();
@@ -68,6 +82,8 @@ public class NewGameScreen implements Screen {
 
     public static void start() {
         player = null;
+        // initialise components
+        LightSource.initialiseLighting();
         // create room
         room = new Room(nextRoom);
         if (player == null) {
@@ -98,12 +114,12 @@ public class NewGameScreen implements Screen {
         handleInput();
         update(delta);
 
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        game.viewport.apply();
+
+
         Gdx.gl.glFlush();
 
+        frameBuffer.begin();
         game.batch.enableBlending();
         game.batch.begin();
 
@@ -156,6 +172,23 @@ public class NewGameScreen implements Screen {
         game.batch.setShader(null);
 
         game.batch.end();
+
+        frameBuffer.end();
+
+
+        game.viewport.apply();
+        game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
+
+        game.batch.setShader(LightSource.shaderProgram);
+
+        game.batch.begin();
+
+        LightSource.update(delta);
+        game.batch.draw(screenTexture, 0, 0, screenTexture.getWidth(), screenTexture.getHeight(),
+            0, 0, screenTexture.getWidth(), screenTexture.getHeight(), false, true);
+        game.batch.end();
+
+        game.batch.setShader(null);
 
         //Pausing
         if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
@@ -226,7 +259,7 @@ public class NewGameScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        game.viewport.update(width, height);
     }
 
     @Override

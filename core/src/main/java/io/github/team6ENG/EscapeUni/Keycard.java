@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class Keycard extends RoomObject {
+    private LightSource lightSource;
     private int gridX, gridY;
     private boolean collected = false;
 
@@ -12,6 +13,8 @@ public class Keycard extends RoomObject {
         super(texture, x, y);
         gridX = (int) (x/NewGameScreen.tileWidth);
         gridY = (int) (y/NewGameScreen.tileHeight);
+
+        lightSource = LightSource.createLightSource(x, y, 80f);
     }
 
     @Override

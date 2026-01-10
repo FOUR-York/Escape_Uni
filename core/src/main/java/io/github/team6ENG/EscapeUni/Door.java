@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class Door extends RoomObject {
+    LightSource lightSource;
     GridObject gridInstance;
     String nextRoom;
     private int posX, posY;
@@ -18,6 +19,8 @@ public class Door extends RoomObject {
         this.posY = gridInstance.getGridY();
         gridInstance.type = GridObject.TYPE.SOLID;
         this.gridInstance = gridInstance;
+
+        lightSource = LightSource.createLightSource(x, y, 100f);
     }
 
     @Override
