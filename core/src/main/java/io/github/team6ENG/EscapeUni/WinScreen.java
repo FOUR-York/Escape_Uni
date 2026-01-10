@@ -63,7 +63,7 @@ public class WinScreen implements Screen {
 
     private void setupUI() {
         exitButton = createButton("Exit");
-        mainMenuButton = createButton("Main Menu");
+        mainMenuButton = createButton("Continue");
 
         stage.addActor(exitButton);
         stage.addActor(mainMenuButton);
@@ -114,9 +114,7 @@ public class WinScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 mainMenuButton.setColor(clickColor);
-                audioManager.stopMusic();
-                dispose();
-                game.resetGame();
+                Gdx.app.postRunnable(() -> game.setScreen(new LeaderboardScreen(game)));
             }
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {

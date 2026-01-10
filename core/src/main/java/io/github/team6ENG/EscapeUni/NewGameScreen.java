@@ -2,12 +2,17 @@ package io.github.team6ENG.EscapeUni;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.TimeUtils;
 import space.earlygrey.shapedrawer.ShapeDrawer;
+
+import static java.lang.Math.max;
+import static java.lang.Math.sin;
 /*
     * helper class written by dlb, modified to fit existing team6 codebase.
     * TODO: fix projectiles, improve wall loading, create room loading helper class and format, collisions
@@ -31,6 +36,7 @@ public class NewGameScreen implements Screen {
     public static String nextRoom;
     public static boolean transition = false;
 
+    private Preferences leaderboardPrefs = Gdx.app.getPreferences("leaderboardPrefs");
 
     NewGameScreen(final Main game) {
         this.game = game;
@@ -40,6 +46,8 @@ public class NewGameScreen implements Screen {
 
 
         // initialise components
+        LightSource.initialiseLighting(game.batch);
+
         initialiseShapeDrawer();
         initialiseAudio();
 
@@ -76,7 +84,6 @@ public class NewGameScreen implements Screen {
         player.step();
         room.updateProjectiles(delta);
         room.updateObjects(delta);
-
 
         game.gameTimer -= delta;
 
@@ -118,20 +125,35 @@ public class NewGameScreen implements Screen {
             }
         }
 
-        shapeDrawer.setColor(0.5f, 0.5f, 0.5f, 1.0f);
-        shapeDrawer.circle(player.rX,player.rY,player.radius);
-
-        player.updateSprite();
-        if (player.sprite.getTexture() != null) {
-            player.sprite.draw(game.batch);
+        shapeDrawer.setColor(1.0f, 1.0f, 1.0f, 0.2f);
+        if (player.invincible){
+            shapeDrawer.setColor(new Color(Color.GOLD.r, Color.GOLD.g, Color.GOLD.b, 0.2f));
         }
+        shapeDrawer.circle(player.rX,player.rY,player.radius, player.invincible? 1.7f:1f);
+
 
         TextureRegion region = new TextureRegion(room.projectileTex);
 
         room.drawProjectiles(game.batch);
 
-        room.drawObjects(shapeDrawer, game.batch);
+        room.drawObjects(game.batch);
 
+        game.batch.flush();
+        game.batch.setShader(player.shaderProgram);
+
+        player.updateSprite();
+
+        player.shaderProgram.setUniformf("u_time", (float) player.powerupTimer);
+        float inv = 1f;
+        if (player.powerupTimer < 1f) {
+            inv = (float) Math.min((int) (sin(player.powerupTimer*30f)+1f), 1);
+        }
+        player.shaderProgram.setUniformf("u_invulnerable", player.invincible?inv:0f);
+        if (player.sprite.getTexture() != null) {
+            player.sprite.draw(game.batch);
+        }
+        game.batch.flush();
+        game.batch.setShader(null);
 
         game.batch.end();
 
@@ -241,7 +263,7 @@ public class NewGameScreen implements Screen {
 
     private void drawText(BitmapFont font, String text, Color colour, float x, float y) {
         font.setColor(colour);
-        font.draw(game.batch, text, x, y);
+        font.draw(game.uiBatch, text, x, y);
     }
 
     private void renderUI() {
@@ -250,14 +272,14 @@ public class NewGameScreen implements Screen {
         float worldHeight = game.viewport.getWorldHeight();
         float worldWidth = game.viewport.getWorldWidth();
 
-        game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
-        game.batch.begin();
+        game.uiBatch.setProjectionMatrix(game.viewport.getCamera().combined);
+        game.uiBatch.begin();
 
         float y = worldHeight - 5f;
         float lineSpacing = 15f;
 
         // Requirements: Events tracker and game timer
-        drawText(smallFont, ("score: " +(int)game.score), Color.WHITE, 5f, y);
+        drawText(smallFont, ("score: " +(int)game.score), Color.BLUE, 5f, y);
         y -= lineSpacing;
         drawText(smallFont, ("Negative Events: " + game.foundNegativeEvents +"/" + game.totalNegativeEvents), Color.WHITE, 5, y);
         y -= lineSpacing;
@@ -266,11 +288,9 @@ public class NewGameScreen implements Screen {
         drawText(smallFont, ("Hidden Events:   "+ game.foundHiddenEvents+"/"+ game.totalHiddenEvents), Color.WHITE, 5, y);
         y -= lineSpacing;
         //Display time with 2 digits for seconds
-        drawText(smallFont, ((int)game.gameTimer/60 + ":" +((int)game.gameTimer % 60 <10?"0" :"" ) +(int)game.gameTimer % 60), Color.WHITE, worldWidth - 40f, worldHeight-10f);
-        GlyphLayout layout = new GlyphLayout(game.menuFont, ("Score: " + (int)game.score));
-        drawText(smallFont, ("score: " +(int)game.score), Color.WHITE, worldWidth-40f, worldHeight-30f);
+        drawText(smallFont, ((int)game.gameTimer/60 + ":" +((int)game.gameTimer % 60 <10?"0" :"" ) +(int)game.gameTimer % 60), Color.BLUE, worldWidth - 40f, worldHeight-5f);
 
-        game.batch.end();
+        game.uiBatch.end();
 
     }
 
@@ -283,6 +303,71 @@ public class NewGameScreen implements Screen {
 
     public void gameWin() {
         Main.score += Main.gameTimer;
+
+        String userName = System.getProperty("user.name");
+        if (userName.length() > 6) {
+            userName = userName.substring(0, 6);
+        }
+
+        String[] topNames = new String[5];
+        topNames[0] = leaderboardPrefs.getString("name0", "None");
+        topNames[1] = leaderboardPrefs.getString("name1", "None");
+        topNames[2] = leaderboardPrefs.getString("name2", "None");
+        topNames[3] = leaderboardPrefs.getString("name3", "None");
+        topNames[4] = leaderboardPrefs.getString("name4", "None");
+
+        String prevName1 = "None";
+        String prevName2 = "None";
+
+        int[] topScores = new int[5];
+        topScores[0] = leaderboardPrefs.getInteger("score0", 0);
+        topScores[1] = leaderboardPrefs.getInteger("score1", 0);
+        topScores[2] = leaderboardPrefs.getInteger("score2", 0);
+        topScores[3] = leaderboardPrefs.getInteger("score3", 0);
+        topScores[4] = leaderboardPrefs.getInteger("score4", 0);
+
+        int prevScore1 = 0;
+        int prevScore2 = 0;
+
+        for (int i = 0; i < topScores.length; i++) {
+            if (Main.score >= topScores[i]) {
+                prevScore1 = topScores[i];
+                topScores[i] = (int) Main.score;
+
+                prevName1 = topNames[i];
+                topNames[i] = userName;
+
+                for (int j = i+1; j < topScores.length; j++) {
+                    prevScore2 = topScores[j];
+                    topScores[j] = prevScore1;
+
+                    prevName2 = topNames[j];
+                    topNames[j] = prevName1;
+                    if (j+1 < topScores.length) {
+                        prevScore1 = topScores[j+1];
+                        topScores[j+1] = prevScore2;
+
+                        prevName1 = topNames[j+1];
+                        topNames[j+1] = prevName2;
+                    }
+                }
+                break;
+            }
+        }
+
+        leaderboardPrefs.putInteger("score0", topScores[0]);
+        leaderboardPrefs.putInteger("score1", topScores[1]);
+        leaderboardPrefs.putInteger("score2", topScores[2]);
+        leaderboardPrefs.putInteger("score3", topScores[3]);
+        leaderboardPrefs.putInteger("score4", topScores[4]);
+
+        leaderboardPrefs.putString("name0", topNames[0]);
+        leaderboardPrefs.putString("name1", topNames[1]);
+        leaderboardPrefs.putString("name2", topNames[2]);
+        leaderboardPrefs.putString("name3", topNames[3]);
+        leaderboardPrefs.putString("name4", topNames[4]);
+
+        leaderboardPrefs.flush();
 
         if (Main.score >= 1400) {
             if (!Main.hiddenEnding) {

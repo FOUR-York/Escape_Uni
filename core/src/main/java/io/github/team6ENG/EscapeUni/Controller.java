@@ -1,8 +1,10 @@
 package io.github.team6ENG.EscapeUni;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 
 import java.util.HashMap;
@@ -10,6 +12,8 @@ import java.util.HashMap;
 // implement smooth transitions between tiles
 public class Controller extends SpriteAnimations {
     GridObject gridInstance;
+    LightSource lightSource;
+
     float rX, rY;
     float radius;
 
@@ -33,8 +37,12 @@ public class Controller extends SpriteAnimations {
 
     public float scoreEarnedThisRoom = 0;
 
+    public ShaderProgram shaderProgram;
+
     public Controller(GridObject gridInstance, float radius) {
         super(Main.activeSpritePath, 8, 7);
+
+        lightSource = LightSource.createLightSource(x, y);
 
         int x = gridInstance.getGridX(), y = gridInstance.getGridY();
         gridInstance.type = GridObject.TYPE.CONTROLLER;
@@ -59,6 +67,15 @@ public class Controller extends SpriteAnimations {
 
         sprite = new Sprite(animations.get("walkLeftForwards").getKeyFrame(0, true));
         sprite.setBounds(sprite.getX(), sprite.getY(), 48, 64);
+
+        // effects shaders
+        String vertexShader = Gdx.files.internal("shaders/sp_invulnerable_vert.glsl").readString();
+        String fragmentShader = Gdx.files.internal("shaders/sp_invulnerable_frag.glsl").readString();
+        shaderProgram = new ShaderProgram(vertexShader,fragmentShader);
+        if (!shaderProgram.isCompiled()) {
+            System.out.print(shaderProgram.getLog());
+        }
+        ShaderProgram.pedantic = false;
     }
 
     public void step() {
@@ -147,37 +164,25 @@ public class Controller extends SpriteAnimations {
                 if(isMovingHorizontally) {
                     if (isFacingLeft) {
                         currentPlayerFrame = animations.get("walkLeftBackwards").getKeyFrame(stateTime, true);
-//                        torch.setRotation(150);
-//                        torch.setPosition(sprite.getX() + 22, sprite.getY() + 30);
                     } else {
                         currentPlayerFrame = animations.get("walkRightBackwards").getKeyFrame(stateTime, true);
-//                        torch.setRotation(30);
-//                        torch.setPosition(sprite.getX() + 26, sprite.getY() + 25);
                     }
                 }
                 else{
 
                     currentPlayerFrame = animations.get("walkBackwards").getKeyFrame(stateTime, true);
-//                    torch.setRotation(120);
-//                    torch.setPosition(sprite.getX() + 22, sprite.getY() + 30);
                 }
             }
             else{
                 if(isMovingHorizontally) {
                     if (isFacingLeft) {
                         currentPlayerFrame = animations.get("walkLeftForwards").getKeyFrame(stateTime, true);
-//                        torch.setRotation(180);
-//                        torch.setPosition(sprite.getX() + 24, sprite.getY() + 30);
                     } else {
                         currentPlayerFrame = animations.get("walkRightForwards").getKeyFrame(stateTime, true);
-//                        torch.setRotation(0);
-//                        torch.setPosition(sprite.getX() + 26, sprite.getY() + 25);
                     }
                 }
                 else{
                     currentPlayerFrame = animations.get("walkForwards").getKeyFrame(stateTime, true);
-//                    torch.setRotation(-90);
-//                    torch.setPosition(sprite.getX() + 20, sprite.getY() + 25);
                 }
             }
 
@@ -185,9 +190,9 @@ public class Controller extends SpriteAnimations {
         else{
 
             currentPlayerFrame = animations.get("idle").getKeyFrame(stateTime, true);
-//            torch.setRotation(-60);
-//            torch.setPosition(sprite.getX() + 22, sprite.getY() + 26);
         }
         sprite.setRegion(currentPlayerFrame);
+        shaderProgram.setUniformf("u_uvMin", currentPlayerFrame.getU(), currentPlayerFrame.getV());
+        shaderProgram.setUniformf("u_uvMax", currentPlayerFrame.getU2(), currentPlayerFrame.getV2());
     }
 }

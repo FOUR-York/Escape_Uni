@@ -17,7 +17,7 @@ public abstract class RoomObject {
     }
 
     public abstract void update(float delta);
-    public void draw(ShapeDrawer drawer, SpriteBatch batch) {
+    public void draw(SpriteBatch batch) {
         batch.draw(texture, x, y);
     }
 

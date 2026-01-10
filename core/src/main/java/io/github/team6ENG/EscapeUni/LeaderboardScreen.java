@@ -1,14 +1,12 @@
 package io.github.team6ENG.EscapeUni;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -17,16 +15,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
-import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import static io.github.team6ENG.EscapeUni.NewGameScreen.audioManager;
 
-/**
- * screen displayed when player wins
- */
-public class HiddenEndingScreen implements Screen {
+public class LeaderboardScreen implements Screen {
 
     private final Main game;
+
+    private Preferences leaderboardPrefs = Gdx.app.getPreferences("leaderboardPrefs");
+    private int[] topScores = new int[5];
+    private String[] topNames = new String[5];
 
     // stage and resources created in show() and disposed in dispose()
     private Stage stage;
@@ -38,43 +36,29 @@ public class HiddenEndingScreen implements Screen {
 
     private com.badlogic.gdx.InputProcessor previousInputProcessor; // used to restore on hide()
 
-    private static final String TITLE_TEXT = "Congratulations, you escaped university!\nAnd with an outstanding score!";
-
-    private float frameTimer;
-    Texture animSheet;
-    Animation<TextureRegion> anim;
-
-    private ShapeRenderer shapeRenderer;
-
     /**
      * initialise win screen
      * @param game current Instance of Main
      */
-    public HiddenEndingScreen(final Main game) {
+    public LeaderboardScreen(final Main game) {
         this.game = game;
         // DO NOT initialize stage/input here — do it in show()
-
-        animSheet = new Texture(Gdx.files.internal("sprites/bobhallsheet.png"));
-
-        TextureRegion[][] tmp = TextureRegion.split(animSheet,
-            animSheet.getWidth() / 39,
-            animSheet.getHeight());
-
-        TextureRegion[] animFrames = new TextureRegion[39];
-        int index = 0;
-        for (int i = 0; i < 1; i++) {
-            for (int j = 0; j < 39; j++) {
-                animFrames[index++] = tmp[i][j];
-            }
-        }
-
-        anim = new Animation<TextureRegion>(0.025f, animFrames);
-
-        shapeRenderer = new ShapeRenderer();
     }
 
     @Override
     public void show() {
+        topScores[0] = leaderboardPrefs.getInteger("score0", 0);
+        topScores[1] = leaderboardPrefs.getInteger("score1", 0);
+        topScores[2] = leaderboardPrefs.getInteger("score2", 0);
+        topScores[3] = leaderboardPrefs.getInteger("score3", 0);
+        topScores[4] = leaderboardPrefs.getInteger("score4", 0);
+
+        topNames[0] = leaderboardPrefs.getString("name0", "None");
+        topNames[1] = leaderboardPrefs.getString("name1", "None");
+        topNames[2] = leaderboardPrefs.getString("name2", "None");
+        topNames[3] = leaderboardPrefs.getString("name3", "None");
+        topNames[4] = leaderboardPrefs.getString("name4", "None");
+
         // create stage with a fixed virtual size (you used 800x450)
         stage = new Stage(game.viewport);
 
@@ -91,7 +75,7 @@ public class HiddenEndingScreen implements Screen {
 
     private void setupUI() {
         exitButton = createButton("Exit");
-        mainMenuButton = createButton("Continue");
+        mainMenuButton = createButton("Main Menu");
 
         stage.addActor(exitButton);
         stage.addActor(mainMenuButton);
@@ -104,8 +88,8 @@ public class HiddenEndingScreen implements Screen {
         // If skin is null, fallback to a simple TextButton may fail; ensure game.buttonSkin exists in assets
         TextButton button = new TextButton(text, skin);
         button.getLabel().setFontScale(1.6f);
-        button.pad(25f);
-        button.setSize(320, 100);
+        button.pad(12f);
+        button.setSize(160, 50);
         button.setColor(new Color(0.0f, 0.95f, 0.95f, 1f));
         return button;
     }
@@ -114,8 +98,8 @@ public class HiddenEndingScreen implements Screen {
         float w = stage.getViewport().getWorldWidth();
         float h = stage.getViewport().getWorldHeight();
 
-        mainMenuButton.setPosition((w - mainMenuButton.getWidth()) / 2f, h / 2f -60);
-        exitButton.setPosition((w - exitButton.getWidth()) / 2f, h / 2f -170);
+        mainMenuButton.setPosition(10f, 65f);
+        exitButton.setPosition(10f, 10f);
     }
 
     private void addListeners() {
@@ -142,7 +126,9 @@ public class HiddenEndingScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 mainMenuButton.setColor(clickColor);
-                Gdx.app.postRunnable(() -> game.setScreen(new LeaderboardScreen(game)));
+                audioManager.stopMusic();
+                dispose();
+                game.resetGame();
             }
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
@@ -157,11 +143,7 @@ public class HiddenEndingScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        frameTimer += delta;
-
         ScreenUtils.clear(Color.BLACK);
-
-        TextureRegion currentFrame = anim.getKeyFrame(frameTimer, true);
 
         // update stage
         if (stage != null) {
@@ -174,30 +156,31 @@ public class HiddenEndingScreen implements Screen {
         } else {
             game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
         }
+
+        game.batch.begin();
         float w = (stage != null) ? stage.getViewport().getWorldWidth() : game.viewport.getWorldWidth();
         float h = (stage != null) ? stage.getViewport().getWorldHeight() : game.viewport.getWorldHeight();
 
-        game.batch.begin();
-        game.batch.draw(currentFrame, 0, 0, w, h);
-        game.batch.end();
 
-        shapeRenderer.setProjectionMatrix(game.batch.getProjectionMatrix());
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(0, 0, 0, 1);
-        shapeRenderer.rect(0, 305, w, 100);
-        shapeRenderer.end();
-
-        game.batch.begin();
         float brightness = 0.85f + 0.15f * (float) Math.sin(TimeUtils.millis() / 500f);
         if (game.menuFont != null) {
             game.menuFont.setColor(brightness, brightness, brightness, 1f);
-            layout.setText(game.menuFont, TITLE_TEXT);
-            game.menuFont.draw(game.batch, TITLE_TEXT, (w - layout.width) / 2f, h * 0.82f);
             game.menuFont.setColor(Color.WHITE);
 
-            layout.setText(game.menuFont, "Score: "+ (int)game.score);
-            game.menuFont.draw(game.batch, ("Score: "+ (int)game.score), (w - layout.width) / 2f, h * 0.7f);
+            game.menuFont.draw(game.batch, topNames[0], 200f, 300f);
+            game.menuFont.draw(game.batch, ""+topScores[0], 400f, 300f);
 
+            game.menuFont.draw(game.batch, topNames[1], 200f, 262f);
+            game.menuFont.draw(game.batch, ""+topScores[1], 400f, 262f);
+
+            game.menuFont.draw(game.batch, topNames[2], 200f, 225f);
+            game.menuFont.draw(game.batch, ""+topScores[2], 400f, 225f);
+
+            game.menuFont.draw(game.batch, topNames[3], 200f, 187f);
+            game.menuFont.draw(game.batch, ""+topScores[3], 400f, 187f);
+
+            game.menuFont.draw(game.batch, topNames[4], 200f, 150f);
+            game.menuFont.draw(game.batch, ""+topScores[4], 400f, 150f);
         }
 
         game.batch.end();
@@ -244,7 +227,5 @@ public class HiddenEndingScreen implements Screen {
 
 
         // DO NOT dispose game.menuFont or game.buttonSkin or game.batch here
-
-        animSheet.dispose();
     }
 }

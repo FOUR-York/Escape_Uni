@@ -36,6 +36,7 @@ public class Projectile {
         }
         if (NewGameScreen.dist(x, y, NewGameScreen.player.rX, NewGameScreen.player.rY) < NewGameScreen.player.radius + radius) {
             NewGameScreen.player.hit();
+            NewGameScreen.room.removeProjectile(id);
         }
         if (cellX < 0 || cellX > NewGameScreen.room.width - 1 ||
             cellY < 0 || cellY > NewGameScreen.room.height - 1 ||

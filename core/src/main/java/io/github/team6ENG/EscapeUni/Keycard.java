@@ -32,7 +32,7 @@ public class Keycard extends RoomObject {
     }
 
     @Override
-    public void draw(ShapeDrawer drawer, SpriteBatch batch) {
+    public void draw(SpriteBatch batch) {
         if (!collected) {
             batch.draw(texture, x, y);
         }

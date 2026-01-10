@@ -1,7 +1,8 @@
 {
   "dimensions": [20, 15],
   "roomTex": "test/ClassRoom1.png",
-  "doorTex": "test/ClassRoom1.png",
+  "openRoomTex": "test/classRoomOpen.png",
+  "doorTex": "sprites/exitsign.png",
   "boxTex": "sprites/box.png",
   "shiftTex": "sprites/shifttile-overlay.png",
   "keycardTex": "items/keycard1.png",
@@ -42,6 +43,11 @@
     },
     {
       "playerSpawn": {}
+    },
+    {
+      "door": {
+        "nextRoom": "storageRoom.json"
+      }
     }
   ],
   "gridData": [
@@ -62,7 +68,7 @@
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
   ],
   "roomObjectData": [
-    0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 6, 0,
+    0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 6, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

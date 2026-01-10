@@ -2,7 +2,7 @@
   "dimensions": [20, 15],
   "roomTex": "test/projectileReception0.png",
   "openRoomTex": "test/projectileReception1.png",
-  "doorTex": "test/ClassRoom1.png",
+  "doorTex": "sprites/exitsign.png",
   "boxTex": "sprites/box.png",
   "shiftTex": "sprites/shifttile-overlay.png",
   "keycardTex": "items/keycard1.png",
@@ -73,7 +73,7 @@
     1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
   ],
   "roomObjectData": [
-    0, 0, 0, 9, 9, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9,
