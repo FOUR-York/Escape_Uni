@@ -36,7 +36,7 @@ public class NewGameScreen implements Screen {
         this.game = game;
 
         room = null;
-        nextRoom = "";
+        nextRoom = "classRoom.json";
 
 
         // initialise components
