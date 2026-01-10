@@ -2,6 +2,7 @@ package io.github.team6ENG.EscapeUni;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -31,6 +32,7 @@ public class NewGameScreen implements Screen {
     public static String nextRoom;
     public static boolean transition = false;
 
+    private Preferences leaderboardPrefs = Gdx.app.getPreferences("leaderboardPrefs");
 
     NewGameScreen(final Main game) {
         this.game = game;
@@ -281,6 +283,69 @@ public class NewGameScreen implements Screen {
 
     public void gameWin() {
         Main.score += Main.gameTimer;
+
+        String userName = System.getProperty("user.name");
+        userName = userName.substring(0, 6);
+
+        String[] topNames = new String[5];
+        topNames[0] = leaderboardPrefs.getString("name0", "None");
+        topNames[1] = leaderboardPrefs.getString("name1", "None");
+        topNames[2] = leaderboardPrefs.getString("name2", "None");
+        topNames[3] = leaderboardPrefs.getString("name3", "None");
+        topNames[4] = leaderboardPrefs.getString("name4", "None");
+
+        String prevName1 = "None";
+        String prevName2 = "None";
+
+        int[] topScores = new int[5];
+        topScores[0] = leaderboardPrefs.getInteger("score0", 0);
+        topScores[1] = leaderboardPrefs.getInteger("score1", 0);
+        topScores[2] = leaderboardPrefs.getInteger("score2", 0);
+        topScores[3] = leaderboardPrefs.getInteger("score3", 0);
+        topScores[4] = leaderboardPrefs.getInteger("score4", 0);
+
+        int prevScore1 = 0;
+        int prevScore2 = 0;
+
+        for (int i = 0; i < topScores.length; i++) {
+            if (Main.score >= topScores[i]) {
+                prevScore1 = topScores[i];
+                topScores[i] = (int) Main.score;
+
+                prevName1 = topNames[i];
+                topNames[i] = userName;
+
+                for (int j = i+1; j < topScores.length; j++) {
+                    prevScore2 = topScores[j];
+                    topScores[j] = prevScore1;
+
+                    prevName2 = topNames[j];
+                    topNames[j] = prevName1;
+                    if (j+1 < topScores.length) {
+                        prevScore1 = topScores[j+1];
+                        topScores[j+1] = prevScore2;
+
+                        prevName1 = topNames[j+1];
+                        topNames[j+1] = prevName2;
+                    }
+                }
+                break;
+            }
+        }
+
+        leaderboardPrefs.putInteger("score0", topScores[0]);
+        leaderboardPrefs.putInteger("score1", topScores[1]);
+        leaderboardPrefs.putInteger("score2", topScores[2]);
+        leaderboardPrefs.putInteger("score3", topScores[3]);
+        leaderboardPrefs.putInteger("score4", topScores[4]);
+
+        leaderboardPrefs.putString("name0", topNames[0]);
+        leaderboardPrefs.putString("name1", topNames[1]);
+        leaderboardPrefs.putString("name2", topNames[2]);
+        leaderboardPrefs.putString("name3", topNames[3]);
+        leaderboardPrefs.putString("name4", topNames[4]);
+
+        leaderboardPrefs.flush();
 
         if (Main.score >= 1400) {
             if (!Main.hiddenEnding) {
