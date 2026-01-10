@@ -34,9 +34,7 @@ public class Turret extends RoomObject {
     }
 
     @Override
-    public void draw(ShapeDrawer drawer, SpriteBatch batch) {
-//        drawer.setColor(1.0f, 1.0f, 0.0f, 1.0f);
-//        drawer.rectangle(x, y, NewGameScreen.tileWidth, NewGameScreen.tileHeight);
+    public void draw(SpriteBatch batch) {
         batch.draw(
             region,
             x, y,

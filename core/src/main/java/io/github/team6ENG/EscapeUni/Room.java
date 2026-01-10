@@ -237,10 +237,10 @@ public class Room {
         }
     }
 
-    public void drawObjects(ShapeDrawer shapeDrawer, SpriteBatch batch) {
+    public void drawObjects(SpriteBatch batch) {
         for (RoomObject roomObject : objects) {
             if (roomObject != null) {
-                roomObject.draw(shapeDrawer, batch);
+                roomObject.draw(batch);
             }
         }
     }

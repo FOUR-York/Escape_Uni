@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Vector2;
 
 import static java.lang.Math.sin;
 
@@ -39,34 +40,41 @@ public class LightSource {
      * Initialises single light source
      * @param circleX
      * @param circleY
-     * @param colour
-     * @param radius
      */
-    protected LightSource(float circleX, float circleY, Color colour, float radius){
+    protected LightSource(float circleX, float circleY){
         this.circleX = circleX;
         this.circleY = circleY;
-        this.colour = colour;
-        this.radius = radius;
         isVisible = true;
     }
 
-    public static void initialiseLighting(SpriteBatch batch, int mapWidth, int mapHeight) {
+    public static void initialiseLighting(SpriteBatch batch) {
         lights = new LightSource[1];
-        // screen shader
-        String vertexShader = Gdx.files.internal("shaders/vertex.glsl").readString();
-        String fragmentShader = Gdx.files.internal("shaders/fragment.glsl").readString();
-        shaderProgram = new ShaderProgram(vertexShader,fragmentShader);
-        if (!shaderProgram.isCompiled()) {
-            System.out.print(shaderProgram.getLog());
-        }
-        ShaderProgram.pedantic = false;
-
-        batch.setShader(shaderProgram);
+//        // screen shader
+//        String vertexShader = Gdx.files.internal("shaders/sc_lighting_vert.glsl").readString();
+//        String fragmentShader = Gdx.files.internal("shaders/sc_lighting_frag.glsl").readString();
+//        shaderProgram = new ShaderProgram(vertexShader,fragmentShader);
+//        if (!shaderProgram.isCompiled()) {
+//            System.out.print(shaderProgram.getLog());
+//        }
+//        ShaderProgram.pedantic = false;
+//
+//        batch.setShader(shaderProgram);
     }
 
     public static void update(float delta) {
+//        float[] v = new float[2*lights.length];
+//        for (int i = 0; i < lights.length; i++) {
+//            v[i*2] =  lights[i].circleX;
+//            v[i*2 + 1] = lights[i].circleY;
+//        }
         shaderProgram.bind();
+        shaderProgram.setUniformf("pos", new Vector2(lights[0].circleX, lights[0].circleY));
+    }
 
+    public static LightSource createLightSource(float circleX, float circleY){
+       LightSource lightSource  = new LightSource(circleX, circleY);
+       lights[0] = lightSource;
+       return lightSource;
     }
 }
 

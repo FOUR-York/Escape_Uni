@@ -8,7 +8,11 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.TimeUtils;
 import space.earlygrey.shapedrawer.ShapeDrawer;
+
+import static java.lang.Math.max;
+import static java.lang.Math.sin;
 /*
     * helper class written by dlb, modified to fit existing team6 codebase.
     * TODO: fix projectiles, improve wall loading, create room loading helper class and format, collisions
@@ -42,6 +46,8 @@ public class NewGameScreen implements Screen {
 
 
         // initialise components
+        LightSource.initialiseLighting(game.batch);
+
         initialiseShapeDrawer();
         initialiseAudio();
 
@@ -78,7 +84,6 @@ public class NewGameScreen implements Screen {
         player.step();
         room.updateProjectiles(delta);
         room.updateObjects(delta);
-
 
         game.gameTimer -= delta;
 
@@ -120,20 +125,35 @@ public class NewGameScreen implements Screen {
             }
         }
 
-        shapeDrawer.setColor(0.5f, 0.5f, 0.5f, 1.0f);
-        shapeDrawer.circle(player.rX,player.rY,player.radius);
-
-        player.updateSprite();
-        if (player.sprite.getTexture() != null) {
-            player.sprite.draw(game.batch);
+        shapeDrawer.setColor(1.0f, 1.0f, 1.0f, 0.2f);
+        if (player.invincible){
+            shapeDrawer.setColor(new Color(Color.GOLD.r, Color.GOLD.g, Color.GOLD.b, 0.2f));
         }
+        shapeDrawer.circle(player.rX,player.rY,player.radius, player.invincible? 1.7f:1f);
+
 
         TextureRegion region = new TextureRegion(room.projectileTex);
 
         room.drawProjectiles(game.batch);
 
-        room.drawObjects(shapeDrawer, game.batch);
+        room.drawObjects(game.batch);
 
+        game.batch.flush();
+        game.batch.setShader(player.shaderProgram);
+
+        player.updateSprite();
+
+        player.shaderProgram.setUniformf("u_time", (float) player.powerupTimer);
+        float inv = 1f;
+        if (player.powerupTimer < 1f) {
+            inv = (float) Math.min((int) (sin(player.powerupTimer*30f)+1f), 1);
+        }
+        player.shaderProgram.setUniformf("u_invulnerable", player.invincible?inv:0f);
+        if (player.sprite.getTexture() != null) {
+            player.sprite.draw(game.batch);
+        }
+        game.batch.flush();
+        game.batch.setShader(null);
 
         game.batch.end();
 

@@ -26,7 +26,7 @@ public class Powerup extends RoomObject {
                     Main.foundPositiveEvents++;
                 }
 
-                NewGameScreen.player.invinciblePowerup(10f);
+                NewGameScreen.player.invinciblePowerup(4f);
                 Main.score += 250;
                 NewGameScreen.player.scoreEarnedThisRoom += 250;
             }
@@ -34,7 +34,7 @@ public class Powerup extends RoomObject {
     }
 
     @Override
-    public void draw(ShapeDrawer drawer, SpriteBatch batch) {
+    public void draw(SpriteBatch batch) {
         if (!collected) {
             batch.draw(texture, x, y);
         }

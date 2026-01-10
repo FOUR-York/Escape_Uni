@@ -17,6 +17,7 @@ public class Main extends Game {
 
     public SpriteBatch batch;
     public SpriteBatch uiBatch;
+    public SpriteBatch scBatch;
     public BitmapFont menuFont;
     public BitmapFont gameFont;
     public FitViewport viewport;
@@ -51,6 +52,7 @@ public class Main extends Game {
     public void create() {
         batch = new SpriteBatch();
         uiBatch = new SpriteBatch();
+        scBatch = new SpriteBatch();
 
         menuFont = new BitmapFont(Gdx.files.internal("fonts/menuScreenFont.fnt"));
         viewport = new FitViewport(640, 480);
