@@ -6,11 +6,17 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class LightSwitch extends RoomObject {
     private int gridX, gridY;
     private boolean collected = false;
+    private final LightSource lightSource;
 
     public LightSwitch(Texture texture, float x, float y) {
         super(texture, x, y);
         gridX = (int) (x/NewGameScreen.tileWidth);
         gridY = (int) (y/NewGameScreen.tileHeight);
+
+        lightSource = LightSource.createLightSource(
+            x+NewGameScreen.tileWidth/2f,
+            y+NewGameScreen.tileHeight/2f,
+            50f);
     }
 
     @Override
@@ -26,8 +32,6 @@ public class LightSwitch extends RoomObject {
                 }
 
                 LightSource.lightsOff = !LightSource.lightsOff;
-                //Main.score += 250;
-                //NewGameScreen.player.scoreEarnedThisRoom += 250;
             }
         }
     }

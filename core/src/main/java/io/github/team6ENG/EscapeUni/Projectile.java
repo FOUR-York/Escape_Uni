@@ -16,6 +16,8 @@ public class Projectile {
     }
     public void update(float delta) {
         int cellX = (int) x / NewGameScreen.tileWidth, cellY = (int) y / NewGameScreen.tileHeight;
+        int currentX = cellX;
+        int currentY = cellY;
         switch (dir) {
             case 0:
                 y += speed;
@@ -34,11 +36,14 @@ public class Projectile {
                 cellX += 1;
                 break;
         }
+        if (NewGameScreen.room.roomCell(currentX, currentY) == GridObject.TYPE.PUSH) {
+            // ensure boxes block projectiles
+            NewGameScreen.room.removeProjectile(id);
+        }
         if (NewGameScreen.dist(x, y, NewGameScreen.player.rX, NewGameScreen.player.rY) < NewGameScreen.player.radius + radius) {
             NewGameScreen.player.hit();
             NewGameScreen.room.removeProjectile(id);
-        }
-        if (cellX < 0 || cellX > NewGameScreen.room.width - 1 ||
+        } else if (cellX < 0 || cellX > NewGameScreen.room.width - 1 ||
             cellY < 0 || cellY > NewGameScreen.room.height - 1 ||
             NewGameScreen.room.roomCell(cellX, cellY) == GridObject.TYPE.SOLID ||
             NewGameScreen.room.roomCell(cellX, cellY) == GridObject.TYPE.PUSH) {

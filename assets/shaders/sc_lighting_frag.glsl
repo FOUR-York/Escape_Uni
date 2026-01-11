@@ -8,6 +8,8 @@ uniform vec3 u_vecs[10];
 uniform int u_length;
 uniform int u_active;
 
+const vec4 BLACK = vec4(0.0, 0.0, 0.0, 1.0);
+
 void main()
 {
     vec4 tex_in = texture2D(u_texture, v_uv);
@@ -15,8 +17,7 @@ void main()
 
     if (u_active > 0)
     {
-        vec4 col = vec4(0.0, 0.0, 0.0, 1.0);
-        out_col = col;
+        out_col = BLACK;
 
         vec2 screenPos = v_uv * vec2(640.0, 480.0);
         float least_p = 1.0;
@@ -37,7 +38,7 @@ void main()
                     least_p = p;
                     out_col.rgb = mix(
                     tex_in.rgb,
-                    col.rgb,
+                    BLACK.rgb,
                     max(0.5, smoothstep(0.5, 1.0, least_p))
                     );
                 }

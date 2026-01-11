@@ -141,7 +141,8 @@ public class Controller extends SpriteAnimations {
 
             if (Main.score < 0) {Main.score = 0;}
 
-            NewGameScreen.start();
+            NewGameScreen.transition = true;
+            NewGameScreen.audioManager.playNoAccess();
         }
     }
 
