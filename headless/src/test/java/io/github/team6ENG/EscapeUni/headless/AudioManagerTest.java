@@ -11,6 +11,9 @@ import static org.mockito.Mockito.mock;
 public class AudioManagerTest extends AbstractHeadlessGdxTest {
     AudioManager audioManager;
 
+    /**
+     * Testing that all the assets are available.
+     */
     @Test
     public void testAudioManagerAssets() {
         assertTrue(Gdx.files.internal(AudioManager.honkAsset).exists(),
@@ -32,6 +35,9 @@ public class AudioManagerTest extends AbstractHeadlessGdxTest {
             "The asset for music should be available");
     }
 
+    /**
+     * Attempting to create an AudioManager object.
+     */
     @Test
     public void setUpAudioManager() {
         Main main = mock(Main.class);
@@ -39,6 +45,10 @@ public class AudioManagerTest extends AbstractHeadlessGdxTest {
         audioManager = new AudioManager(main);
     }
 
+    /**
+     * Playing all the sound functions,
+     * making sure that they all work.
+     */
     @Test
     public void playAllAudios() {
         setUpAudioManager();

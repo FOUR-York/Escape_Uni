@@ -18,6 +18,10 @@ import static org.mockito.Mockito.when;
 
 public class InstructionsScreenTest extends AbstractHeadlessGdxTest {
     InstructionsScreen instructionsScreen;
+
+    /**
+     * Creating a test InstructionScreen.
+     */
     @Test
     public void testInstructionsScreen() {
         Main game = mock(Main.class);
@@ -39,6 +43,9 @@ public class InstructionsScreenTest extends AbstractHeadlessGdxTest {
         instructionsScreen = new InstructionsScreen(game);
     }
 
+    /**
+     * Testing the show function.
+     */
     @Test
     public void testShow() {
         testInstructionsScreen();
@@ -46,6 +53,9 @@ public class InstructionsScreenTest extends AbstractHeadlessGdxTest {
         instructionsScreen.show();
     }
 
+    /**
+     * Testing the resize function.
+     */
     @Test
     public void testResize() {
         testInstructionsScreen();
@@ -58,6 +68,9 @@ public class InstructionsScreenTest extends AbstractHeadlessGdxTest {
         instructionsScreen.resize(200, 200);
     }
 
+    /**
+     * Testing the hide function.
+     */
     @Test
     public void testHide() {
         testInstructionsScreen();
@@ -67,6 +80,9 @@ public class InstructionsScreenTest extends AbstractHeadlessGdxTest {
         instructionsScreen.hide();
     }
 
+    /**
+     * Testing the render function.
+     */
     @Test
     public void testRender() {
         testInstructionsScreen();

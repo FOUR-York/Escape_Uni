@@ -19,6 +19,10 @@ import static org.mockito.Mockito.when;
 
 public class PauseScreenTest extends AbstractHeadlessGdxTest {
     PauseScreen pauseScreen;
+
+    /**
+     * Creating a test pauseScreen object.
+     */
     @Test
     public void testPauseScreen() {
         Main game = mock(Main.class);
@@ -40,6 +44,9 @@ public class PauseScreenTest extends AbstractHeadlessGdxTest {
         pauseScreen = new PauseScreen(game, playScreen, mock(AudioManager.class));
     }
 
+    /**
+     * Testing the render function.
+     */
     @Test
     public void testPauseScreenRender() {
         testPauseScreen();
@@ -47,6 +54,9 @@ public class PauseScreenTest extends AbstractHeadlessGdxTest {
         pauseScreen.render(1/60f);
     }
 
+    /**
+     * Testing the resize function.
+     */
     @Test
     public void testResize() {
         testPauseScreen();
@@ -54,6 +64,9 @@ public class PauseScreenTest extends AbstractHeadlessGdxTest {
         pauseScreen.resize(200, 200);
     }
 
+    /**
+     * Testing the dispose function.
+     */
     @Test
     public void testDispose() {
         testPauseScreen();

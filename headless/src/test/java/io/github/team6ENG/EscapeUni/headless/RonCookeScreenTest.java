@@ -28,6 +28,9 @@ public class RonCookeScreenTest extends AbstractHeadlessGdxTest {
     AudioManager audioManager;
     BuildingManager buildingManager;
 
+    /**
+     * Creating a test RonCooke object.
+     */
     public void createRonCookeScreen() {
         main = mock(Main.class);
         main.viewport = mock(FitViewport.class);
@@ -67,14 +70,14 @@ public class RonCookeScreenTest extends AbstractHeadlessGdxTest {
         testRonCookeScreen = new RonCookeScreen(main, buildingManager, gameScreen);
     }
 
-    /*
-    gameScreen.items.keySet() = returns all the keys contained in the map.
-
+    /**
+     * Testing the render function when the player
+     * has/hasn't got a keycard.
      */
     @Test
     public void testRenderForKeyCard() {
         createRonCookeScreen();
-        main.gameTimer = 300;
+        Main.gameTimer = 300;
 
         // the player has no items.
         testRonCookeScreen.render(1/60f);
@@ -99,14 +102,17 @@ public class RonCookeScreenTest extends AbstractHeadlessGdxTest {
         testRonCookeScreen.render(1/60f);
     }
 
+    /**
+     * Testing render in different gameTimer situations.
+     */
     @Test
     public void testRenderForTimer() {
         createRonCookeScreen();
 
-        main.gameTimer = -10;
+        Main.gameTimer = -10;
         testRonCookeScreen.render(1/60f);
 
-        main.gameTimer = 300;
+        Main.gameTimer = 300;
         testRonCookeScreen.render(1/60f);
 
         gameScreen.items.get("keyCard").Collect();
@@ -120,6 +126,9 @@ public class RonCookeScreenTest extends AbstractHeadlessGdxTest {
         testRonCookeScreen.render(1/60f);
     }
 
+    /**
+     * Testing the renderUi function.
+     */
     @Test
     public void testRenderUI() {
         // so playerUI should be called when item.playerHas = false.
@@ -131,6 +140,9 @@ public class RonCookeScreenTest extends AbstractHeadlessGdxTest {
         testRonCookeScreen.render(1/60f);
     }
 
+    /**
+     * Testing renderUi for SpeechTimer.
+     */
     @Test
     public void testSpeechTimerRenderUI() {
         createRonCookeScreen();
@@ -140,6 +152,9 @@ public class RonCookeScreenTest extends AbstractHeadlessGdxTest {
         testRonCookeScreen.render(1/60f);
     }
 
+    /**
+     * Testing RenderUI to get full coverage.
+     */
     @Test
     public void testRenderUIifStatement() {
         createRonCookeScreen();
@@ -153,6 +168,9 @@ public class RonCookeScreenTest extends AbstractHeadlessGdxTest {
         testRonCookeScreen.render(1/60f);
     }
 
+    /**
+     * Testing Render when the game is paused.
+     */
     @Test
     public void testRenderWithPause() {
         createRonCookeScreen();
@@ -161,6 +179,9 @@ public class RonCookeScreenTest extends AbstractHeadlessGdxTest {
         testRonCookeScreen.render(1/60f);
     }
 
+    /**
+     * Testing obsolete functions with no implemenetation.
+     */
     @Test
     public void testArbitraryFunctions() {
         createRonCookeScreen();
@@ -172,11 +193,13 @@ public class RonCookeScreenTest extends AbstractHeadlessGdxTest {
         testRonCookeScreen.dispose();
     }
 
+    /**
+     * Testing the Resize function.
+     */
     @Test
     public void testResize() {
         createRonCookeScreen();
 
         testRonCookeScreen.resize(200, 200);
     }
-
 }

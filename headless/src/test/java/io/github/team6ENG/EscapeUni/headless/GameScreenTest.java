@@ -20,6 +20,9 @@ import static org.mockito.Mockito.when;
 public class GameScreenTest extends AbstractHeadlessGdxTest {
     GameScreen gameScreen;
 
+    /**
+     * Testing that the assets for the GameScreen are available.
+     */
     @Test
     public void testGameScreenAssets() {
         assertTrue(Gdx.files.internal(GameScreen.mapTexAsset).exists(),

@@ -28,6 +28,9 @@ public class LangwithScreenTest extends AbstractHeadlessGdxTest {
     AudioManager audioManager;
     BuildingManager buildingManager;
 
+    /**
+     * Creating a test LangwithScreen object.
+     */
     public void createLangwithScreen() {
         main = mock(Main.class);
         main.viewport = mock(FitViewport.class);
@@ -68,6 +71,9 @@ public class LangwithScreenTest extends AbstractHeadlessGdxTest {
         testLangwithScreen = new LangwithScreen(main, buildingManager, gameScreen);
     }
 
+    /**
+     * Testing the render function.
+     */
     @Test
     public void testRender() {
         createLangwithScreen();
@@ -99,6 +105,9 @@ public class LangwithScreenTest extends AbstractHeadlessGdxTest {
         testLangwithScreen.render(1/60f);
     }
 
+    /**
+     * Testing the render function when pause is pressed.
+     */
     @Test
     public void testRenderPauseKey() {
         createLangwithScreen();
@@ -108,6 +117,9 @@ public class LangwithScreenTest extends AbstractHeadlessGdxTest {
         testLangwithScreen.render(1/60f);
     }
 
+    /**
+     * Testing the pause function with render.
+     */
     @Test
     public void testRenderWithPause() {
         createLangwithScreen();
@@ -116,6 +128,9 @@ public class LangwithScreenTest extends AbstractHeadlessGdxTest {
         testLangwithScreen.render(1/60f);
     }
 
+    /**
+     * Testing render when the gameScreen.items is empty.
+     */
     @Test
     public void testInstructionIsEmpty() {
         createLangwithScreen();
@@ -128,6 +143,9 @@ public class LangwithScreenTest extends AbstractHeadlessGdxTest {
         testLangwithScreen.render(1/60f);
     }
 
+    /**
+     * Testing functions that have not been fully implemented.
+     */
     @Test
     public void testArbitraryFunctions() {
         createLangwithScreen();
@@ -139,6 +157,9 @@ public class LangwithScreenTest extends AbstractHeadlessGdxTest {
         testLangwithScreen.dispose();
     }
 
+    /**
+     * Testing the resize function.
+     */
     @Test
     public void testResize() {
         createLangwithScreen();

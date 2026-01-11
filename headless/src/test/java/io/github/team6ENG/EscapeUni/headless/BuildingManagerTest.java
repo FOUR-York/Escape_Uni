@@ -29,6 +29,11 @@ public class BuildingManagerTest extends AbstractHeadlessGdxTest {
     Player player;
     AudioManager audioManager;
 
+    /**
+     * Creating a test BuildingManager object.
+     *
+     * @param Bounds: Coords needed for the sprite.
+     */
     public void createBuildingManagerTest(float... Bounds) {
         main = mock(Main.class);
         main.viewport = mock(FitViewport.class);
@@ -54,18 +59,31 @@ public class BuildingManagerTest extends AbstractHeadlessGdxTest {
         buildingManager = new BuildingManager(main, gameScreen, player, audioManager);
     }
 
+    /**
+     * When the BuildingManager is initialised, we want
+     * to check that isInLangwith is false.
+     */
     @Test
     public void testIsInLangwith() {
         createBuildingManagerTest();
         assertFalse(buildingManager.isInLangwith());
     }
 
+    /**
+     * When the BuildingManager is initialised, we want
+     * to check that isInRonCooke is false.
+     */
     @Test
     public void testisInRonCooke() {
         createBuildingManagerTest();
         assertFalse(buildingManager.isInRonCooke());
     }
 
+    /**
+     * Checking that if the player is in the coordinates of
+     * Ron Cooke, it registers. Additionally checking that the
+     * Player can enter the building.
+     */
     @Test
     public void updateTestRonCooke() {
         createBuildingManagerTest(350, 455, 50, 50);
@@ -89,6 +107,11 @@ public class BuildingManagerTest extends AbstractHeadlessGdxTest {
         assertFalse(buildingManager.isInRonCooke());
     }
 
+    /**
+     * Checking that if the player is in the coordinates of
+     * Langwith, it registers. Additionally checking that the
+     * Player can enter the building.
+     */
     @Test
     public void updateTestLangwith() {
         createBuildingManagerTest(1078, 1215, 50, 50);
@@ -118,12 +141,19 @@ public class BuildingManagerTest extends AbstractHeadlessGdxTest {
 
     }
 
+    /**
+     * Testing the update() function when the Player is not in either
+     * building, and not able to enter either.
+     */
     @Test
     public void testFalseBuildingTrigger() {
         createBuildingManagerTest();
         buildingManager.update(1/60f);
     }
 
+    /**
+     * Checking that the render function works.
+     */
     @Test
     public void testRender() {
         createBuildingManagerTest();
@@ -147,6 +177,9 @@ public class BuildingManagerTest extends AbstractHeadlessGdxTest {
         buildingManager.renderUI(mockSpriteBatch, mockSmallBitmapFont, mockBitmapFont, 1600, 1600);
     }
 
+    /**
+     * Testing functions that do not have any purpose yet.
+     */
     @Test
     public void testArbitraryFunctions() {
         createBuildingManagerTest();

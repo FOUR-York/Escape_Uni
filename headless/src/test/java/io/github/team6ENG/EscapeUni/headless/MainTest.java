@@ -18,6 +18,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class MainTest extends AbstractHeadlessGdxTest {
+    /**
+     * Testing the assets exist for Main.
+     */
     @Test
     public void testMainAssets() {
         assertTrue(Gdx.files.internal(Main.menuFontAsset).exists(),
@@ -27,6 +30,9 @@ public class MainTest extends AbstractHeadlessGdxTest {
             "The asset for the button skin should be available");
     }
 
+    /**
+     * Testing that dispose works when all the items are null.
+     */
     @Test
     public void testAllNullDispose () {
         Main main = new Main();
@@ -38,6 +44,10 @@ public class MainTest extends AbstractHeadlessGdxTest {
         main.dispose();
     }
 
+    /**
+     * Checking that dispose works when all the items
+     * are not null.
+     */
     @Test
     public void testAllNotNullDispose () {
         Main main = new Main();
@@ -56,6 +66,9 @@ public class MainTest extends AbstractHeadlessGdxTest {
         main.dispose();
     }
 
+    /**
+     * Checking the render function.
+     */
     @Test
     public void testRender() {
         Main main = new Main();
@@ -69,12 +82,18 @@ public class MainTest extends AbstractHeadlessGdxTest {
         main.render();
     }
 
+    /**
+     * Checking the dispose function with nothing.
+     */
     @Test
     public void testDispose() {
         Main main = new Main();
         main.dispose();
     }
 
+    /**
+     * Testing the resize function
+     */
     @Test
     public void testResize() {
         Main main = new Main();
@@ -84,6 +103,9 @@ public class MainTest extends AbstractHeadlessGdxTest {
         main.resize(800, 450);
     }
 
+    /**
+     * Testing the resetGame function.
+     */
     @Test
     public void testResetGame() {
         Main main = new Main();
@@ -94,6 +116,9 @@ public class MainTest extends AbstractHeadlessGdxTest {
         main.resetGame();
     }
 
+    /**
+     * Testing the setInputProcessor function.
+     */
     @Test
     public void testSetInputProcessor() {
         Main main = new Main();

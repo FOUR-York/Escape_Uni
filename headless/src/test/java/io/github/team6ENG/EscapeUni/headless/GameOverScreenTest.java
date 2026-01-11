@@ -20,6 +20,9 @@ import static org.mockito.Mockito.when;
 public class GameOverScreenTest extends AbstractHeadlessGdxTest {
     GameOverScreen gameOverScreen;
 
+    /**
+     * Creating a test GameOverScreen object.
+     */
     @Test
     public void createGameOverScreenTest() {
         Main main = mock(Main.class);
@@ -38,6 +41,10 @@ public class GameOverScreenTest extends AbstractHeadlessGdxTest {
         gameOverScreen = new GameOverScreen(main, "Sorry you missed the bus, better luck next time");
     }
 
+    /**
+     * Testing obsolete functions, functions that have not
+     * been implemented yet.
+     */
     @Test
     public void testArbitraryFunctions() {
         createGameOverScreenTest();
@@ -46,6 +53,9 @@ public class GameOverScreenTest extends AbstractHeadlessGdxTest {
         gameOverScreen.resume();
     }
 
+    /**
+     * Testing the show function.
+     */
     @Test
     public void testShow() {
         createGameOverScreenTest();
@@ -53,6 +63,9 @@ public class GameOverScreenTest extends AbstractHeadlessGdxTest {
         gameOverScreen.show();
     }
 
+    /**
+     * Testing the resize function.
+     */
     @Test
     public void testResize() {
         createGameOverScreenTest();
@@ -64,6 +77,9 @@ public class GameOverScreenTest extends AbstractHeadlessGdxTest {
         gameOverScreen.resize(200, 200);
     }
 
+    /**
+     * Testing the hide function.
+     */
     @Test
     public void testHide() {
         createGameOverScreenTest();
@@ -73,6 +89,9 @@ public class GameOverScreenTest extends AbstractHeadlessGdxTest {
         gameOverScreen.hide();
     }
 
+    /**
+     * Testing the render function.
+     */
     @Test
     public void testRender() {
         createGameOverScreenTest();

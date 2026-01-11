@@ -22,6 +22,9 @@ import static org.mockito.Mockito.when;
 public class CharacterSelectScreenTest extends AbstractHeadlessGdxTest {
     CharacterSelectScreen characterSelectScreen;
 
+    /**
+     * Checking that the assets needed by Character Select Screen are available.
+     */
     @Test
     public void testCharacterSelectAssets() {
         assertTrue(Gdx.files.internal(CharacterSelectScreen.img1Asset).exists(),
@@ -31,6 +34,9 @@ public class CharacterSelectScreenTest extends AbstractHeadlessGdxTest {
             "The asset for the male sprite should be available");
     }
 
+    /**
+     * Creating a test CharacterSelectScreen object.
+     */
     @Test
     public void createCharacterSelectScreenTest() {
         Main main = mock(Main.class);
@@ -47,6 +53,9 @@ public class CharacterSelectScreenTest extends AbstractHeadlessGdxTest {
         characterSelectScreen = new CharacterSelectScreen(main);
     }
 
+    /**
+     * Testing the show() function.
+     */
     @Test
     public void testShow() {
         createCharacterSelectScreenTest();
@@ -54,24 +63,36 @@ public class CharacterSelectScreenTest extends AbstractHeadlessGdxTest {
         characterSelectScreen.show();
     }
 
+    /**
+     * Testing the pause function.
+     */
     @Test
     public void testPause() {
         createCharacterSelectScreenTest();
         characterSelectScreen.pause();
     }
 
+    /**
+     * Testing the resume function.
+     */
     @Test
     public void testResume() {
         createCharacterSelectScreenTest();
         characterSelectScreen.resume();
     }
 
+    /**
+     * Testing the hide function.
+     */
     @Test
     public void testHide() {
         createCharacterSelectScreenTest();
         characterSelectScreen.hide();
     }
 
+    /**
+     * Testing the dispose function.
+     */
     @Test
     public void testDispose() {
         createCharacterSelectScreenTest();
@@ -81,6 +102,9 @@ public class CharacterSelectScreenTest extends AbstractHeadlessGdxTest {
         characterSelectScreen.dispose();
     }
 
+    /**
+     * Testing the render function.
+     */
     @Test
     public void testRender() {
         createCharacterSelectScreenTest();
@@ -88,6 +112,9 @@ public class CharacterSelectScreenTest extends AbstractHeadlessGdxTest {
         characterSelectScreen.render(1/60f);
     }
 
+    /**
+     * Testing the resize function.
+     */
     @Test
     public void testResize() {
         createCharacterSelectScreenTest();

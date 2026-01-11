@@ -10,6 +10,9 @@ import static org.mockito.Mockito.mock;
 public class CollectableTest extends AbstractHeadlessGdxTest {
     Collectable collectable;
 
+    /**
+     * Creating a test Collectable object.
+     */
     @Test
     public void createCollectableTest() {
         Main main = mock(Main.class);
@@ -18,6 +21,10 @@ public class CollectableTest extends AbstractHeadlessGdxTest {
         collectable = new Collectable(main, "items/gooseFood.png",   0, 0, 0.03f, true, "GameScreen", audioManager);
     }
 
+    /**
+     * Checking that the collectable can be picked up when in range.
+     * And that it returns not in range when not.
+     */
     @Test
     public void checkInRangeForCollectableTest() {
         createCollectableTest();
@@ -31,6 +38,9 @@ public class CollectableTest extends AbstractHeadlessGdxTest {
         collectable.checkInRange(0, 0);
     }
 
+    /**
+     * Checking that the Collectable can play a sound.
+     */
     @Test
     public void checkPlaySound() {
         createCollectableTest();

@@ -17,11 +17,24 @@ public class GooseTest extends AbstractHeadlessGdxTest {
     Goose gooseTest;
     TiledMapTileLayer wallsLayer;
 
+    /**
+     * Creating a test Goose object.
+     */
     @Test
-    public void testGoose() {
+    public void createGoose() {
         gooseTest = new Goose();
+        gooseTest.setTileDimensions(8);
+
+        wallsLayer = mock(TiledMapTileLayer.class);
+        when(wallsLayer.getWidth()).thenReturn(200);
+        when(wallsLayer.getHeight()).thenReturn(200);
+
+        gooseTest.setWallLayer(wallsLayer);
     }
 
+    /**
+     * Checking that the getter function for width and height work.
+     */
     @Test
     public void testGetWidthAndHeight() {
         gooseTest = new Goose();
@@ -39,24 +52,20 @@ public class GooseTest extends AbstractHeadlessGdxTest {
             "Goose.getHeight() should return 64.");
     }
 
+    /**
+     * Checking the attackMode() function.
+     */
     @Test
     public void testAttackMode() {
         gooseTest = new Goose();
         gooseTest.attackMode();
     }
 
-    public void createGoose() {
-        gooseTest = new Goose();
-        gooseTest.setTileDimensions(8);
 
-
-        wallsLayer = mock(TiledMapTileLayer.class);
-        when(wallsLayer.getWidth()).thenReturn(200);
-        when(wallsLayer.getHeight()).thenReturn(200);
-
-        gooseTest.setWallLayer(wallsLayer);
-    }
-
+    /**
+     * Checking that the Goose moves when the target (Player)
+     * is in range.
+     */
     @Test
     public void testMoveGooseWhenTargetInRange() {
         createGoose();
@@ -87,6 +96,9 @@ public class GooseTest extends AbstractHeadlessGdxTest {
         gooseTest.moveGoose(1 / 60f, 0, 0, false, false);
     }
 
+    /**
+     * Checking that the Goose moves when the target is out of range.
+     */
     @Test
     public void testMoveGooseWhenTargetOutOfRange() {
         createGoose();
@@ -103,6 +115,9 @@ public class GooseTest extends AbstractHeadlessGdxTest {
 
     }
 
+    /**
+     * Checking the moveAllowed() function.
+     */
     @Test
     public void testMoveAllowed() {
         createGoose();
@@ -150,6 +165,9 @@ public class GooseTest extends AbstractHeadlessGdxTest {
 
     }
 
+    /**
+     * Checking the loadBabyGoose function.
+     */
     @Test
     public void testLoadBabyGoose() {
         createGoose();
@@ -158,10 +176,12 @@ public class GooseTest extends AbstractHeadlessGdxTest {
         gooseTest.loadBabyGoose(4);
     }
 
+    /**
+     * Checking the nextRunLocation function.
+     */
     @Test
     public void testNextRunLocation() {
         createGoose();
-        // runPath =  Arrays.asList(new int[]{700, 400}, new int[]{340, 300}, new int[]{600, 150}, new int[]{550, 50});
 
         int[] xCoords = {0, 697, 697, 345, 605, 547};
         int[] yCoords = {0, 0, 396, 295, 154, 49};

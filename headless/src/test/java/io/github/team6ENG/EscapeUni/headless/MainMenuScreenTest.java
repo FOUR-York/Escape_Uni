@@ -17,6 +17,9 @@ import static org.mockito.Mockito.when;
 public class MainMenuScreenTest extends AbstractHeadlessGdxTest {
     MainMenuScreen mainMenuScreen;
 
+    /**
+     * Creating a test MainMenuScreen object.
+     */
     @Test
     public void testMainMenuScreen() {
         Main game = mock(Main.class);
@@ -35,6 +38,9 @@ public class MainMenuScreenTest extends AbstractHeadlessGdxTest {
         mainMenuScreen = new MainMenuScreen(game);
     }
 
+    /**
+     * Testing the show function.
+     */
     @Test
     public void testMainMenuShow() {
         testMainMenuScreen();
@@ -42,6 +48,9 @@ public class MainMenuScreenTest extends AbstractHeadlessGdxTest {
         mainMenuScreen.show();
     }
 
+    /**
+     * Testing the resize function.
+     */
     @Test
     public void testResize() {
         // this sets the stage.
@@ -55,6 +64,9 @@ public class MainMenuScreenTest extends AbstractHeadlessGdxTest {
         mainMenuScreen.resize(200, 200);
     }
 
+    /**
+     * testing the hide function.
+     */
     @Test
     public void testHide() {
         testMainMenuScreen();
@@ -64,6 +76,9 @@ public class MainMenuScreenTest extends AbstractHeadlessGdxTest {
         mainMenuScreen.hide();
     }
 
+    /**
+     * Testing the render function.
+     */
     @Test
     public void testRender() {
         testMainMenuScreen();

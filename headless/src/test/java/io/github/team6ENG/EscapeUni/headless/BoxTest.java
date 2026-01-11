@@ -10,6 +10,10 @@ import org.junit.jupiter.api.Test;
 
 public class BoxTest extends AbstractHeadlessGdxTest {
     Box box;
+
+    /**
+     * Creating a test Box object.
+     */
     @Test
     public void testBox() {
         String path = "classRoom.json";

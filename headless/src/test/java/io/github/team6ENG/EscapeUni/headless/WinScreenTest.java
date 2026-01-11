@@ -19,6 +19,9 @@ import static org.mockito.Mockito.when;
 public class WinScreenTest extends AbstractHeadlessGdxTest {
     WinScreen winScreen;
 
+    /**
+     * Creating a test WinScreen object.
+     */
     @Test
     public void testWinScreen() {
         Main game = mock(Main.class);
@@ -37,6 +40,9 @@ public class WinScreenTest extends AbstractHeadlessGdxTest {
         winScreen = new WinScreen(game);
     }
 
+    /**
+     * Testing the show function.
+     */
     @Test
     public void testShow() {
         testWinScreen();
@@ -44,6 +50,9 @@ public class WinScreenTest extends AbstractHeadlessGdxTest {
         winScreen.show();
     }
 
+    /**
+     * Testing the resize function.
+     */
     @Test
     public void testResize() {
         testWinScreen();
@@ -54,6 +63,9 @@ public class WinScreenTest extends AbstractHeadlessGdxTest {
         winScreen.resize(200, 200);
     }
 
+    /**
+     * Testing the dispose function.
+     */
     @Test
     public void testDispose() {
         testWinScreen();
@@ -63,6 +75,9 @@ public class WinScreenTest extends AbstractHeadlessGdxTest {
         winScreen.dispose();
     }
 
+    /**
+     * Testing the hide function.
+     */
     @Test
     public void testHide() {
         testWinScreen();
@@ -73,8 +88,11 @@ public class WinScreenTest extends AbstractHeadlessGdxTest {
         winScreen.hide();
     }
 
+    /**
+     * Testing the render function.
+     */
     @Test
-    public void restRender() {
+    public void testRender() {
         testWinScreen();
         winScreen.render(1/60f);
     }
