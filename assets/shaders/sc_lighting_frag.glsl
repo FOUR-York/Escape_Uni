@@ -1,7 +1,6 @@
-#version 330 core
+#version 120
 
-in vec2 v_uv;
-out vec4 fragColor;
+varying vec2 v_uv;
 
 uniform sampler2D u_texture;
 
@@ -9,25 +8,32 @@ uniform vec3 u_vecs[10];
 uniform int u_length;
 uniform int u_active;
 
-void main() {
-    vec4 tex_in = texture(u_texture, v_uv);
+void main()
+{
+    vec4 tex_in = texture2D(u_texture, v_uv);
     vec4 out_col = tex_in;
 
-    if (u_active > 0) {
+    if (u_active > 0)
+    {
         vec4 col = vec4(0.0, 0.0, 0.0, 1.0);
         out_col = col;
+
         vec2 screenPos = v_uv * vec2(640.0, 480.0);
         float least_p = 1.0;
 
-        for (int i = 0; i < 10; i++) {
-            if (i >= u_length) break;
+        for (int i = 0; i < 10; i++)
+        {
+            if (i >= u_length)
+            break;
 
             float len = length(screenPos - u_vecs[i].rg);
             float radius = u_vecs[i].b;
 
-            if (len < radius) {
+            if (len < radius)
+            {
                 float p = len / radius;
-                if (p < least_p) {
+                if (p < least_p)
+                {
                     least_p = p;
                     out_col.rgb = mix(
                     tex_in.rgb,
@@ -39,5 +45,5 @@ void main() {
         }
     }
 
-    fragColor = out_col;
+    gl_FragColor = out_col;
 }

@@ -1,13 +1,14 @@
-#version 330 core
+#version 120
 
-layout(location = 0) in vec4 a_position;
-layout(location = 1) in vec2 a_texCoord0;
+attribute vec4 a_position;
+attribute vec2 a_texCoord0;
 
 uniform mat4 u_projTrans;
 
-out vec2 v_uv;
+varying vec2 v_uv;
 
-void main() {
+void main()
+{
     v_uv = a_texCoord0;
     gl_Position = u_projTrans * a_position;
 }
