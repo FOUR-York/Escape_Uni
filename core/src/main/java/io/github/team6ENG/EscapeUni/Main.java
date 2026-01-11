@@ -23,6 +23,9 @@ public class Main extends Game {
     public static String activeSpritePath;
     public static String activeUniIDPath;
 
+    public static final String menuFontAsset = "fonts/menuScreenFont.fnt";
+    public static final String buttonSkinAsset = "skins/uiskin.json";
+
     public static float gameTimer = 300;
     public static float score = 0;
 
@@ -52,7 +55,7 @@ public class Main extends Game {
         batch = new SpriteBatch();
         uiBatch = new SpriteBatch();
 
-        menuFont = new BitmapFont(Gdx.files.internal("fonts/menuScreenFont.fnt"));
+        menuFont = new BitmapFont(Gdx.files.internal(menuFontAsset));
         viewport = new FitViewport(640, 480);
 
         //Scale font to our viewport by ratio of viewport height to screen height
@@ -60,11 +63,11 @@ public class Main extends Game {
         menuFont.getData().setScale(0.8f);
         menuFont.setColor(Color.valueOf("4287f5FF"));
 
-        gameFont = new BitmapFont(Gdx.files.internal("fonts/menuScreenFont.fnt"));
+        gameFont = new BitmapFont(Gdx.files.internal(menuFontAsset));
         gameFont.getData().setScale(0.4f);
         gameFont.setColor(Color.valueOf("4287f5FF"));
 
-        buttonSkin = new Skin(Gdx.files.internal("skins/uiskin.json"));
+        buttonSkin = new Skin(Gdx.files.internal(buttonSkinAsset));
 
         this.setScreen(new MainMenuScreen(this));
     }

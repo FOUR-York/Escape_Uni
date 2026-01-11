@@ -84,8 +84,15 @@ public class SpriteAnimations  {
         if (sheet != null) {
             sheet.dispose();
         }
+     }
 
-    }
+     // Function needed for testing.
+     public void setTileDimensions(int tileDimensions) {
+        this.tileDimensions = tileDimensions;
+     }
 
+     public void setWallLayer(TiledMapTileLayer wallsLayer) {
+        this.wallsLayer = wallsLayer;
+     }
 
 }

@@ -59,7 +59,7 @@ public class GameScreen implements Screen {
 
     private final float probabilityOfHonk = 1000;
 
-    public final HashMap<String, Collectable> items = new HashMap<String, Collectable>();
+    public HashMap<String, Collectable> items = new HashMap<String, Collectable>();
     public int numOfInventoryItems = 0;
 
     private Texture busTexture;
@@ -69,6 +69,9 @@ public class GameScreen implements Screen {
     private boolean busLeaving = false;
 
     public float playerSpeedModifier = 1;
+
+    public static final String mapTexAsset = "tileMap/map.png";
+    public static final String mapTmxAsset = "tileMap/map.tmx";
 
     public AudioManager audioManager;
 
@@ -105,9 +108,9 @@ public class GameScreen implements Screen {
      * Load map and collision layer
      */
     private void initialiseMap(int wallLayer) {
-        Texture mapTex = new Texture(Gdx.files.internal("tileMap/map.png"));
+        Texture mapTex = new Texture(Gdx.files.internal(mapTexAsset));
         mapImg = new Image(mapTex);
-        map = new TmxMapLoader().load("tileMap/map.tmx");
+        map = new TmxMapLoader().load(mapTmxAsset);
         mapRenderer = new OrthogonalTiledMapRenderer(map, 1);
         collisionLayer = (TiledMapTileLayer)map.getLayers().get(wallLayer);
     }

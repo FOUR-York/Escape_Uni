@@ -45,7 +45,7 @@ public class InstructionsScreen implements Screen {
     @Override
     public void show() {
         // create stage with a fixed virtual size (you used 800x450)
-        stage = new Stage(game.viewport);
+        stage = new Stage(game.viewport, game.batch);
 
         // remember previous input processor so we can restore it later
         previousInputProcessor = Gdx.input.getInputProcessor();
@@ -162,7 +162,9 @@ public class InstructionsScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        if (stage != null) stage.getViewport().update(width, height, true);
+        if (stage == null) return;
+
+        stage.getViewport().update(width, height, true);
         positionButtons();
     }
 

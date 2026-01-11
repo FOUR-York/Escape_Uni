@@ -46,7 +46,7 @@ public class NewGameScreen implements Screen {
 
     private Preferences leaderboardPrefs = Gdx.app.getPreferences("leaderboardPrefs");
 
-    NewGameScreen(final Main game) {
+    public NewGameScreen(final Main game) {
         this.game = game;
 
         room = null;
@@ -337,7 +337,7 @@ public class NewGameScreen implements Screen {
     public void gameWin() {
         Main.score += Main.gameTimer;
 
-        String userName = System.getProperty("user.name");
+        String userName = System.getProperty("user.name", "Unknown");
         if (userName.length() > 6) {
             userName = userName.substring(0, 6);
         }

@@ -1,0 +1,33 @@
+plugins {
+  id 'java'
+}
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(17)
+  }
+}
+
+// This produces a test coverage report, useful for CI.
+apply plugin: 'jacoco'
+
+// makes sure that all the assets are available for the test.
+sourceSets.test.resources.srcDirs += [ rootProject.file('assets').path ]
+
+dependencies {
+  implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+  implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+  implementation project(':core')
+
+  testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+  // Mockito is a testing framework, allows the creation of test doubles.
+  testImplementation 'org.mockito:mockito-core:5.11.0'
+}
+
+jacocoTestReport {
+  sourceSets project(':core').sourceSets.main
+}
+
+test {
+  useJUnitPlatform()
+}
