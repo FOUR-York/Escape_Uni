@@ -50,7 +50,7 @@ public class NewGameScreen implements Screen {
         this.game = game;
 
         room = null;
-        nextRoom = "classRoom.json";
+        nextRoom = "corridorRoom.json";
 
 
 
