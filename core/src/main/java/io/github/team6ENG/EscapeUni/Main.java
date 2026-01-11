@@ -18,6 +18,7 @@ public class Main extends Game {
     public SpriteBatch uiBatch;
     public BitmapFont menuFont;
     public BitmapFont gameFont;
+    public BitmapFont gameBackFont;
     public FitViewport viewport;
     public Skin buttonSkin;
     public static String activeSpritePath;
@@ -64,7 +65,13 @@ public class Main extends Game {
         gameFont.getData().setScale(0.4f);
         gameFont.setColor(Color.valueOf("4287f5FF"));
 
+        gameBackFont = new BitmapFont(Gdx.files.internal("fonts/menuScreenFont.fnt"));
+        gameBackFont.getData().setScale(0.5f);
+        gameBackFont.setColor(Color.valueOf("4287f5FF"));
+
         buttonSkin = new Skin(Gdx.files.internal("skins/uiskin.json"));
+
+        Gdx.app.log("GLSL", Gdx.gl.glGetString(GL20.GL_SHADING_LANGUAGE_VERSION));
 
         this.setScreen(new MainMenuScreen(this));
     }

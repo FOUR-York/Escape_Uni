@@ -36,23 +36,23 @@ public class NewGameScreen implements Screen {
 
     public static AudioManager audioManager;
 
+    private TextureRegion busTex;
+
     // level transition
     public static String nextRoom;
     public static boolean transition = false;
+    public static boolean restart = false;
 
-    private FrameBuffer frameBuffer;
-    private Texture screenTexture;
-    private ShaderProgram shader;
+    private final FrameBuffer frameBuffer;
+    private final Texture screenTexture;
 
-    private Preferences leaderboardPrefs = Gdx.app.getPreferences("leaderboardPrefs");
+    private final Preferences leaderboardPrefs = Gdx.app.getPreferences("leaderboardPrefs");
 
     NewGameScreen(final Main game) {
         this.game = game;
 
         room = null;
         nextRoom = "classRoom.json";
-
-
 
         // initialise screen space framebuffer
         frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 640, 480, false);
@@ -64,6 +64,9 @@ public class NewGameScreen implements Screen {
 
         initialiseShapeDrawer();
         initialiseAudio();
+        Room.initialiseRooms();
+
+        busTex = new TextureRegion(new Texture(Gdx.files.internal("images/bus.png")));
 
         start();
     }
@@ -114,12 +117,12 @@ public class NewGameScreen implements Screen {
         handleInput();
         update(delta);
 
-
-
+        boolean winFlag = false;
 
         Gdx.gl.glFlush();
 
         frameBuffer.begin();
+
         game.batch.enableBlending();
         game.batch.begin();
 
@@ -147,12 +150,9 @@ public class NewGameScreen implements Screen {
         }
         shapeDrawer.circle(player.rX,player.rY,player.radius, player.invincible? 1.7f:1f);
 
-
-        TextureRegion region = new TextureRegion(room.projectileTex);
+        room.drawObjects(game.batch);
 
         room.drawProjectiles(game.batch);
-
-        room.drawObjects(game.batch);
 
         game.batch.flush();
         game.batch.setShader(player.shaderProgram);
@@ -171,11 +171,34 @@ public class NewGameScreen implements Screen {
         game.batch.flush();
         game.batch.setShader(null);
 
+        if (room.end) {
+            float busCoordsX = 14*tileWidth, busCoordsY = 8*tileHeight;
+           // draw bus
+            game.batch.draw(
+                busTex,
+                busCoordsX, busCoordsY,
+                4*tileWidth / 2f,
+                2.5f*tileHeight / 2f,
+                4*tileWidth,
+                2.5f*tileHeight,
+                -1f,
+                1f,
+                0f
+            );
+            if (player.rX > busCoordsX &&
+                player.rY > busCoordsY &&
+                player.rX < busCoordsX + tileWidth*4 &&
+                player.rY < busCoordsY + tileHeight*4) {
+                    winFlag = true;
+            }
+        }
+
         game.batch.end();
 
         frameBuffer.end();
 
 
+        // draw framebuffer with screen shader
         game.viewport.apply();
         game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
 
@@ -189,6 +212,7 @@ public class NewGameScreen implements Screen {
         game.batch.end();
 
         game.batch.setShader(null);
+        //
 
         //Pausing
         if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
@@ -197,13 +221,23 @@ public class NewGameScreen implements Screen {
             game.setScreen(new PauseScreen(game, NewGameScreen.this, audioManager));
         }
 
+        // room transition flag
         if (transition) {
             transition = false;
+            room.roomComplete();
+            start();
+        } else if (restart) {
+            Main.score -= player.scoreEarnedThisRoom;
+            player.scoreEarnedThisRoom = 0;
+
+            if (Main.score < 0) {Main.score = 0;}
+
+            restart = false;
             start();
         }
 
         //Winning the game
-        if (room.end && player.gridInstance.getGridX() == 19) {
+        if (winFlag) {
             gameWin();
         }
 
@@ -245,7 +279,7 @@ public class NewGameScreen implements Screen {
             }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-            start();
+            restart = true;
         }
     }
 
@@ -281,6 +315,8 @@ public class NewGameScreen implements Screen {
     public void dispose() {
         game.batch.dispose();
         drawerTexture.dispose();
+        frameBuffer.dispose();
+        screenTexture.dispose();
     }
 
     public static float dist(float x1, float y1, float x2, float y2) {
@@ -312,8 +348,8 @@ public class NewGameScreen implements Screen {
         float lineSpacing = 15f;
 
         // Requirements: Events tracker and game timer
-        drawText(smallFont, ("score: " +(int)game.score), Color.BLUE, 5f, y);
-        y -= lineSpacing;
+        drawText(bigFont, ("score: " +(int)game.score), Color.GREEN, 5f, y);
+        y -= lineSpacing+10f;
         drawText(smallFont, ("Negative Events: " + game.foundNegativeEvents +"/" + game.totalNegativeEvents), Color.WHITE, 5, y);
         y -= lineSpacing;
         drawText(smallFont, ("Positive Events: "+ game.foundPositiveEvents +"/"+ game.totalPositiveEvents), Color.WHITE, 5, y);
@@ -321,7 +357,8 @@ public class NewGameScreen implements Screen {
         drawText(smallFont, ("Hidden Events:   "+ game.foundHiddenEvents+"/"+ game.totalHiddenEvents), Color.WHITE, 5, y);
         y -= lineSpacing;
         //Display time with 2 digits for seconds
-        drawText(smallFont, ((int)game.gameTimer/60 + ":" +((int)game.gameTimer % 60 <10?"0" :"" ) +(int)game.gameTimer % 60), Color.BLUE, worldWidth - 40f, worldHeight-5f);
+        drawText(bigFont, ((int)game.gameTimer/60 + ":" +((int)game.gameTimer % 60 <10?"0" :"" ) +(int)game.gameTimer % 60), Color.RED, worldWidth - 60f, worldHeight-5f);
+        drawText(smallFont, "Press R to restart", Color.WHITE, worldWidth/2f, 15f);
 
         game.uiBatch.end();
 

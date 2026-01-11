@@ -53,13 +53,10 @@ public class GridObject {
                     return 0;
                 }
             }
-            case SOLID:
-                NewGameScreen.infoMsg("Cannot push GridObject to non-empty Grid position");
-                return 0;
             case NONE:
                 return 1;
+            case SOLID:
             default:
-                NewGameScreen.errorMsg("Cannot push GridObject to null Grid position");
                 return 0;
         }
     }

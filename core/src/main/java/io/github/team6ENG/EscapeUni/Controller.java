@@ -136,12 +136,8 @@ public class Controller extends SpriteAnimations {
             }
             Main.score -= 25;
 
-            Main.score -= scoreEarnedThisRoom;
-            scoreEarnedThisRoom = 0;
-
-            if (Main.score < 0) {Main.score = 0;}
-
-            NewGameScreen.start();
+            NewGameScreen.restart = true;
+            NewGameScreen.audioManager.playNoAccess();
         }
     }
 
