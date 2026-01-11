@@ -36,9 +36,12 @@ public class NewGameScreen implements Screen {
 
     public static AudioManager audioManager;
 
+    private TextureRegion busTex;
+
     // level transition
     public static String nextRoom;
     public static boolean transition = false;
+    public static boolean restart = false;
 
     private final FrameBuffer frameBuffer;
     private final Texture screenTexture;
@@ -61,6 +64,9 @@ public class NewGameScreen implements Screen {
 
         initialiseShapeDrawer();
         initialiseAudio();
+        Room.initialiseRooms();
+
+        busTex = new TextureRegion(new Texture(Gdx.files.internal("images/bus.png")));
 
         start();
     }
@@ -165,13 +171,34 @@ public class NewGameScreen implements Screen {
         game.batch.flush();
         game.batch.setShader(null);
 
-        
+        if (room.end) {
+            float busCoordsX = 14*tileWidth, busCoordsY = 8*tileHeight;
+           // draw bus
+            game.batch.draw(
+                busTex,
+                busCoordsX, busCoordsY,
+                4*tileWidth / 2f,
+                2.5f*tileHeight / 2f,
+                4*tileWidth,
+                2.5f*tileHeight,
+                -1f,
+                1f,
+                0f
+            );
+            if (player.rX > busCoordsX &&
+                player.rY > busCoordsY &&
+                player.rX < busCoordsX + tileWidth*4 &&
+                player.rY < busCoordsY + tileHeight*4) {
+                    winFlag = true;
+            }
+        }
 
         game.batch.end();
 
         frameBuffer.end();
 
 
+        // draw framebuffer with screen shader
         game.viewport.apply();
         game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
 
@@ -185,6 +212,7 @@ public class NewGameScreen implements Screen {
         game.batch.end();
 
         game.batch.setShader(null);
+        //
 
         //Pausing
         if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
@@ -196,6 +224,15 @@ public class NewGameScreen implements Screen {
         // room transition flag
         if (transition) {
             transition = false;
+            room.roomComplete();
+            start();
+        } else if (restart) {
+            Main.score -= player.scoreEarnedThisRoom;
+            player.scoreEarnedThisRoom = 0;
+
+            if (Main.score < 0) {Main.score = 0;}
+
+            restart = false;
             start();
         }
 
@@ -242,7 +279,7 @@ public class NewGameScreen implements Screen {
             }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-            start();
+            restart = true;
         }
     }
 
@@ -311,8 +348,8 @@ public class NewGameScreen implements Screen {
         float lineSpacing = 15f;
 
         // Requirements: Events tracker and game timer
-        drawText(smallFont, ("score: " +(int)game.score), Color.BLUE, 5f, y);
-        y -= lineSpacing;
+        drawText(bigFont, ("score: " +(int)game.score), Color.GREEN, 5f, y);
+        y -= lineSpacing+10f;
         drawText(smallFont, ("Negative Events: " + game.foundNegativeEvents +"/" + game.totalNegativeEvents), Color.WHITE, 5, y);
         y -= lineSpacing;
         drawText(smallFont, ("Positive Events: "+ game.foundPositiveEvents +"/"+ game.totalPositiveEvents), Color.WHITE, 5, y);
@@ -320,7 +357,8 @@ public class NewGameScreen implements Screen {
         drawText(smallFont, ("Hidden Events:   "+ game.foundHiddenEvents+"/"+ game.totalHiddenEvents), Color.WHITE, 5, y);
         y -= lineSpacing;
         //Display time with 2 digits for seconds
-        drawText(smallFont, ((int)game.gameTimer/60 + ":" +((int)game.gameTimer % 60 <10?"0" :"" ) +(int)game.gameTimer % 60), Color.BLUE, worldWidth - 40f, worldHeight-5f);
+        drawText(bigFont, ((int)game.gameTimer/60 + ":" +((int)game.gameTimer % 60 <10?"0" :"" ) +(int)game.gameTimer % 60), Color.RED, worldWidth - 60f, worldHeight-5f);
+        drawText(smallFont, "Press R to restart", Color.WHITE, worldWidth/2f, 15f);
 
         game.uiBatch.end();
 

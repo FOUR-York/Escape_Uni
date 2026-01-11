@@ -7,11 +7,15 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 public class ScorePickup extends RoomObject {
     private int gridX, gridY;
     private boolean collected = false;
+    private boolean countScore;
+    private int id;
 
-    public ScorePickup(Texture texture, float x, float y) {
+    public ScorePickup(Texture texture, float x, float y, boolean countScore, int id) {
         super(texture, x, y);
         gridX = (int) (x/NewGameScreen.tileWidth);
         gridY = (int) (y/NewGameScreen.tileHeight);
+        this.countScore = countScore;
+        this.id = id;
     }
 
     @Override
@@ -25,8 +29,12 @@ public class ScorePickup extends RoomObject {
                     Main.foundPositiveEvents++;
                 }
 
-                Main.score += 100;
-                NewGameScreen.player.scoreEarnedThisRoom += 100;
+                NewGameScreen.room.collectCoin(id);
+
+                if (countScore) {
+                    Main.score += 25;
+                    NewGameScreen.player.scoreEarnedThisRoom += 25;
+                }
             }
         }
     }

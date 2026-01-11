@@ -4,14 +4,24 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Dictionary;
+import java.util.HashMap;
+
 public class Room {
     public GridObject[] grid;
     public ArrayList<RoomObject> objects;
+    private static HashMap<String, Boolean[]> coinsCollected;
+    private String roomCollectedName;
+    private Boolean[] roomCollectedCoins;
     public int width, height;
 
     private final Projectile[] projectiles;
@@ -31,6 +41,8 @@ public class Room {
     public Texture bobTex;
     public Texture switchTex;
     public Texture coinTex;
+
+    public Texture coinTexGreyscale;
 
     public boolean end = false;
     private boolean keycard = false;
@@ -83,6 +95,8 @@ public class Room {
 
     private void loadRoom(String path) {
         JsonValue mapJson = new JsonReader().parse(Gdx.files.internal(path));
+        // start counting coins
+        ArrayList<Vector2> coinLocations = new ArrayList<>();
         // start by loading map dimensions: should be 20x15
         int[] dimensions = mapJson.get("dimensions").asIntArray();
         int width = dimensions[0];
@@ -108,6 +122,7 @@ public class Room {
         bobTex = new Texture(Gdx.files.internal(mapJson.get("bobTex").asString()));
         switchTex = new Texture(Gdx.files.internal(mapJson.get("switchTex").asString()));
         coinTex = new Texture(Gdx.files.internal(mapJson.get("coinTex").asString()));
+        coinTexGreyscale = new Texture(Gdx.files.internal("items/coinGreyscale.png"));
         // start loading in objects
         int[] gridData = mapJson.get("gridData").asIntArray();
         for (int i = 0; i < width; i ++) {
@@ -169,7 +184,7 @@ public class Room {
                         break;
                     }
                     case "coin": {
-                        addObject(new ScorePickup(coinTex, i * NewGameScreen.tileWidth, j * NewGameScreen.tileHeight));
+                        coinLocations.add(new Vector2(i, j));
                     }
                     case "null":
                     default:
@@ -177,6 +192,51 @@ public class Room {
                 }
             }
         }
+
+        // coins
+        if (!coinsCollected.containsKey(path) && !coinLocations.isEmpty()) {
+            coinsCollected.put(path, new Boolean[coinLocations.size()]);
+            Arrays.fill(coinsCollected.get(path), false);
+        }
+        if (!coinLocations.isEmpty()) {
+            roomCollectedName = path;
+            roomCollectedCoins = new Boolean[coinLocations.size()];
+            Arrays.fill(roomCollectedCoins, false);
+        }
+        for (int i = 0; i < coinLocations.size(); i++) {
+            if (coinsCollected.get(path)[i] == false) {
+                addObject(new ScorePickup(coinTex,
+                    coinLocations.get(i).x * NewGameScreen.tileWidth,
+                    coinLocations.get(i).y * NewGameScreen.tileHeight,
+                    true,
+                    i
+                ));
+            } else {
+                addObject(new ScorePickup(coinTexGreyscale,
+                    coinLocations.get(i).x * NewGameScreen.tileWidth,
+                    coinLocations.get(i).y * NewGameScreen.tileHeight,
+                    false,
+                    i
+                ));
+            }
+        }
+    }
+
+    public void collectCoin(int id) {
+        roomCollectedName = NewGameScreen.nextRoom;
+        roomCollectedCoins[id] = true;
+    }
+
+    public void roomComplete() {
+        if (roomCollectedName != null && roomCollectedCoins != null) {
+            for (int i = 0; i < roomCollectedCoins.length; i++) {
+                coinsCollected.get(roomCollectedName)[i] = roomCollectedCoins[i];
+            }
+        }
+    }
+
+    public static void initialiseRooms() {
+        coinsCollected = new HashMap<String, Boolean[]>();
     }
 
     public void openDoors() {
@@ -231,8 +291,6 @@ public class Room {
     public void drawProjectiles(SpriteBatch batch) {
         for (Projectile projectile : projectiles) {
             if (projectile != null) {
-//                shapeDrawer.setColor(1.0f, 0.0f, 0.0f, 1.0f);
-//                shapeDrawer.circle(projectile.x,projectile.y,projectile.radius);
                 batch.draw(
                     projectileRegion,
                     projectile.x-projectileRegion.getRegionWidth()/2f, projectile.y-projectileRegion.getRegionHeight()/2f,
