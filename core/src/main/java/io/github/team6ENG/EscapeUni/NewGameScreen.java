@@ -358,7 +358,15 @@ public class NewGameScreen implements Screen {
         y -= lineSpacing;
         //Display time with 2 digits for seconds
         drawText(bigFont, ((int)game.gameTimer/60 + ":" +((int)game.gameTimer % 60 <10?"0" :"" ) +(int)game.gameTimer % 60), Color.RED, worldWidth - 60f, worldHeight-5f);
-        drawText(smallFont, "Press R to restart", Color.WHITE, worldWidth/2f, 15f);
+        // onscreen instructions
+        if (nextRoom.equals("classRoom.json")) {
+            GlyphLayout layout = new GlyphLayout();
+            String controls = new String("Arrow keys to move\nR to restart\nP to pause");
+            layout.setText(smallFont, controls);
+            drawText(smallFont, controls, Color.WHITE, (worldWidth- layout.width)/2f, (worldHeight- layout.width)/2f);
+            drawText(smallFont, "Coins increase score!", Color.WHITE, (worldWidth/640f)*13*tileWidth, (worldHeight/480f)*2f*tileHeight);
+            drawText(smallFont, "grab the keycard and run to\nthe door to escape each room!", Color.WHITE, (worldWidth/640f)*7*tileWidth, (worldHeight/480f)*10f*tileHeight);
+        }
 
         game.uiBatch.end();
 
