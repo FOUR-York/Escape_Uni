@@ -203,11 +203,6 @@ public class HiddenEndingScreen implements Screen {
         game.batch.end();
 
         if (stage != null) stage.draw();
-
-        // allow quick keyboard start (space)
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            Gdx.app.postRunnable(() -> game.setScreen(new CharacterSelectScreen(game)));
-        }
     }
 
     @Override

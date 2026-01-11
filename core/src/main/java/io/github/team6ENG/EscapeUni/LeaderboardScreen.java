@@ -167,6 +167,38 @@ public class LeaderboardScreen implements Screen {
             game.menuFont.setColor(brightness, brightness, brightness, 1f);
             game.menuFont.setColor(Color.WHITE);
 
+            game.menuFont.draw(game.batch, "Achievements & Leaderboard", (w / 2f) - 200f, h - 15f);
+
+
+            if (Main.foundHiddenEvents >= Main.totalHiddenEvents && Main.foundNegativeEvents >= Main.totalNegativeEvents && Main.foundPositiveEvents >= Main.totalPositiveEvents) {
+                game.menuFont.draw(game.batch, "Found all events!", 100f, h - 60f);
+            }
+            else {
+                game.menuFont.draw(game.batch, "???", 100f, h - 60f);
+            }
+
+            if (Main.gameTimer >= 260) {
+                game.menuFont.draw(game.batch, "Speedrun!", 400f, h - 60f);
+            }
+            else {
+                game.menuFont.draw(game.batch, "???", 400f, h - 60f);
+            }
+
+            if (!Main.playerShotOnce) {
+                game.menuFont.draw(game.batch, "No deaths!", 100f, h - 100f);
+            }
+            else {
+                game.menuFont.draw(game.batch, "???", 100f, h - 100f);
+            }
+
+            if (Main.gameTimer <= 5) {
+                game.menuFont.draw(game.batch, "Close call!", 400f, h - 100f);
+            }
+            else {
+                game.menuFont.draw(game.batch, "???", 400f, h - 100f);
+            }
+
+
             game.menuFont.draw(game.batch, topNames[0], 200f, 300f);
             game.menuFont.draw(game.batch, ""+topScores[0], 400f, 300f);
 
@@ -186,11 +218,6 @@ public class LeaderboardScreen implements Screen {
         game.batch.end();
 
         if (stage != null) stage.draw();
-
-        // allow quick keyboard start (space)
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            Gdx.app.postRunnable(() -> game.setScreen(new CharacterSelectScreen(game)));
-        }
     }
 
     @Override
