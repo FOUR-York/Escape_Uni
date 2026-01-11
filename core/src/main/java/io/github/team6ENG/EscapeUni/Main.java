@@ -66,6 +66,8 @@ public class Main extends Game {
 
         buttonSkin = new Skin(Gdx.files.internal("skins/uiskin.json"));
 
+        Gdx.app.log("GLSL", Gdx.gl.glGetString(GL20.GL_SHADING_LANGUAGE_VERSION));
+
         this.setScreen(new MainMenuScreen(this));
     }
 
