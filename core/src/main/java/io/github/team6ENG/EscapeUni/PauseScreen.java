@@ -38,7 +38,7 @@ public class PauseScreen implements Screen {
         this.game = game;
         this.playScreen = playScreen;
         this.audioManager = audioManager;
-        this.stage = new Stage(new FitViewport(960, 540), game.batch);
+        this.stage = new Stage(new FitViewport(960, 540));
         this.skin = game.buttonSkin;
 
         audioManager.pauseMusic();

@@ -14,8 +14,7 @@ public class Controller extends SpriteAnimations {
     GridObject gridInstance;
     LightSource lightSource;
 
-    public float rX;
-    public float rY;
+    float rX, rY;
     float radius;
 
     public boolean isInverted = false;

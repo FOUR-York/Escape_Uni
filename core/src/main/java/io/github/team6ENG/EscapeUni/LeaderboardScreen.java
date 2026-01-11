@@ -252,6 +252,8 @@ public class LeaderboardScreen implements Screen {
             stage.dispose();
             stage = null;
         }
+
+
         // DO NOT dispose game.menuFont or game.buttonSkin or game.batch here
     }
 }

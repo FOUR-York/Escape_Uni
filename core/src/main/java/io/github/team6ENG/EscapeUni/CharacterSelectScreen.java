@@ -23,9 +23,6 @@ public class CharacterSelectScreen implements Screen {
     private final Main game;
     private Stage stage;
 
-    public static final String img1Asset = "images/femaleSpriteImg.png";
-    public static final String img2Asset = "images/maleSpriteImg.png";
-
     /**
      * Initialises scene
      * @param game instance of Main
@@ -41,9 +38,10 @@ public class CharacterSelectScreen implements Screen {
         table.bottom();
         table.defaults().pad(50).fillX().uniformX().padBottom(0);
 
-        Texture img1 = new Texture(Gdx.files.internal(img1Asset));
+
+        Texture img1 = new Texture(Gdx.files.internal("images/femaleSpriteImg.png"));
         TextureRegionDrawable drawable1 = new TextureRegionDrawable(img1);
-        Texture img2 = new Texture(Gdx.files.internal(img2Asset));
+        Texture img2 = new Texture(Gdx.files.internal("images/maleSpriteImg.png"));
         TextureRegionDrawable drawable2 = new TextureRegionDrawable(img2);
         drawable1.setMinSize(drawable1.getMinWidth() *10, drawable1.getMinHeight() * 10);
         drawable2.setMinSize(drawable2.getMinWidth() * 10, drawable2.getMinHeight() * 10);

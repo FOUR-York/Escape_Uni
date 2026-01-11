@@ -17,13 +17,6 @@ public class AudioManager {
     private final Sound noAccess;
     private final Sound collect;
 
-    public static final String honkAsset = "soundEffects/honk.mp3";
-    public static final String torchClickAsset = "soundEffects/click.mp3";
-    public static final String footStepsAsset = "soundEffects/footSteps.mp3";
-    public static final String noAccessAsset = "soundEffects/wrong.mp3";
-    public static final String collectAsset = "soundEffects/tap.mp3";
-    public static final String musicAsset = "soundEffects/music.mp3";
-
     /**
      * Initialised audio manager
      * @param game current instance of Main
@@ -31,12 +24,12 @@ public class AudioManager {
     public AudioManager(final Main game){
         this.game = game;
 
-        honk = Gdx.audio.newSound(Gdx.files.internal(honkAsset));
-        torchClick = Gdx.audio.newSound(Gdx.files.internal(torchClickAsset));
-        footSteps = Gdx.audio.newSound(Gdx.files.internal(footStepsAsset));
-        noAccess = Gdx.audio.newSound(Gdx.files.internal(noAccessAsset));
-        collect = Gdx.audio.newSound(Gdx.files.internal(collectAsset));
-        music = Gdx.audio.newMusic(Gdx.files.internal(musicAsset));
+        honk = Gdx.audio.newSound(Gdx.files.internal("soundEffects/honk.mp3"));
+        torchClick = Gdx.audio.newSound(Gdx.files.internal("soundEffects/click.mp3"));
+        footSteps = Gdx.audio.newSound(Gdx.files.internal("soundEffects/footsteps.mp3"));
+        noAccess = Gdx.audio.newSound(Gdx.files.internal("soundEffects/wrong.mp3"));
+        collect = Gdx.audio.newSound(Gdx.files.internal("soundEffects/tap.mp3"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("soundEffects/music.mp3"));
         playMusic();
     }
 
@@ -72,9 +65,15 @@ public class AudioManager {
         music.pause();
     }
 
-    public void dispose() {
-        // torchClick and honk can never be null.
-        torchClick.dispose();
-        honk.dispose();
+
+
+    public void dispose(){
+
+        if (torchClick != null) {
+            torchClick.dispose();
+        }
+        if (honk != null) {
+            honk.dispose();
+        }
     }
 }
