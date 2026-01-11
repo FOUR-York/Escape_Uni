@@ -10,9 +10,11 @@
   "projectileTex": "sprites/projectile1.png",
   "inverterTex": "items/inverter.png",
   "bobTex": "sprites/pixelbob.png",
+  "switchTex": "items/switch.png",
+  "coinTex": "items/coin.png",
   "objects": [
     {
-      "null": {} 
+      "null": {}
     },
     {
       "playerSpawn": {}

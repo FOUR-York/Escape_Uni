@@ -29,8 +29,8 @@ public class Main extends Game {
     public float gameVolume = .5f;
     public float musicVolume = .5f;
 
-    public static final int totalNegativeEvents = 2;
-    public static final int totalPositiveEvents = 2;
+    public static final int totalNegativeEvents = 3;
+    public static final int totalPositiveEvents = 3;
     public static final int totalHiddenEvents = 2;
 
     public static int foundNegativeEvents = 0;
@@ -41,6 +41,7 @@ public class Main extends Game {
     public static boolean playerFoundKeycardOnce = false;
     public static boolean playerGotPowerupOnce = false;
     public static boolean playerGotLightSwitchOnce = false;
+    public static boolean playerGotScorePickupOnce = false;
     public static boolean playerInvertedOnce = false;
     public static boolean bob = false;
     public static boolean hiddenEnding = false;

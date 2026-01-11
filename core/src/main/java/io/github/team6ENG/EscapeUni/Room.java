@@ -29,6 +29,8 @@ public class Room {
     public Texture projectileTex;
     public Texture inverterTex;
     public Texture bobTex;
+    public Texture switchTex;
+    public Texture coinTex;
 
     public boolean end = false;
     private boolean keycard = false;
@@ -104,6 +106,8 @@ public class Room {
         projectileRegion = new TextureRegion(projectileTex);
         inverterTex = new Texture(Gdx.files.internal(mapJson.get("inverterTex").asString()));
         bobTex = new Texture(Gdx.files.internal(mapJson.get("bobTex").asString()));
+        switchTex = new Texture(Gdx.files.internal(mapJson.get("switchTex").asString()));
+        coinTex = new Texture(Gdx.files.internal(mapJson.get("coinTex").asString()));
         // start loading in objects
         int[] gridData = mapJson.get("gridData").asIntArray();
         for (int i = 0; i < width; i ++) {
@@ -161,8 +165,11 @@ public class Room {
                         break;
                     }
                     case "switch": {
-                        addObject(new LightSwitch(bobTex, i * NewGameScreen.tileWidth, j * NewGameScreen.tileHeight));
+                        addObject(new LightSwitch(switchTex, i * NewGameScreen.tileWidth, j * NewGameScreen.tileHeight));
                         break;
+                    }
+                    case "coin": {
+                        addObject(new ScorePickup(coinTex, i * NewGameScreen.tileWidth, j * NewGameScreen.tileHeight));
                     }
                     case "null":
                     default:

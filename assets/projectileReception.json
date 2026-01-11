@@ -11,6 +11,8 @@
   "inverterTex": "items/inverter.png",
   "projectileTex": "sprites/projectile1.png",
   "bobTex": "sprites/pixelbob.png",
+  "switchTex": "items/switch.png",
+  "coinTex": "items/coin.png",
   "objects": [
     {
       "none" : {}
