@@ -47,6 +47,7 @@ public class LeaderboardScreen implements Screen {
 
     @Override
     public void show() {
+        //Retrieve scores from save file
         topScores[0] = leaderboardPrefs.getInteger("score0", 0);
         topScores[1] = leaderboardPrefs.getInteger("score1", 0);
         topScores[2] = leaderboardPrefs.getInteger("score2", 0);
@@ -169,7 +170,7 @@ public class LeaderboardScreen implements Screen {
 
             game.menuFont.draw(game.batch, "Achievements & Leaderboard", (w / 2f) - 200f, h - 15f);
 
-
+            //Achievements
             if (Main.foundHiddenEvents >= Main.totalHiddenEvents && Main.foundNegativeEvents >= Main.totalNegativeEvents && Main.foundPositiveEvents >= Main.totalPositiveEvents) {
                 game.menuFont.draw(game.batch, "Found all events!", 100f, h - 60f);
             }
@@ -198,7 +199,7 @@ public class LeaderboardScreen implements Screen {
                 game.menuFont.draw(game.batch, "???", 400f, h - 100f);
             }
 
-
+            //Leaderboard
             game.menuFont.draw(game.batch, topNames[0], 200f, 300f);
             game.menuFont.draw(game.batch, ""+topScores[0], 400f, 300f);
 
