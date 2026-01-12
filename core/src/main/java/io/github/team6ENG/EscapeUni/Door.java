@@ -42,7 +42,7 @@ public class Door extends RoomObject {
      */
     @Override
     public void update(float delta) {
-        if (NewGameScreen.room.isKeycardCollected()) {
+        if (gridInstance != null && NewGameScreen.room.isKeycardCollected()) {
             gridInstance.type = GridObject.TYPE.NONE;
             // detach from gridObject
             gridInstance = null;
