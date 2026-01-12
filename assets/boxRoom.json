@@ -22,7 +22,7 @@
     },
     {
       "door": {
-        "nextRoom": "shiftPuzzle.json"
+        "nextRoom": "inverseTurretBoxRoom.json"
       }
     },
     {

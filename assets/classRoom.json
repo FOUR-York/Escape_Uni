@@ -48,7 +48,7 @@
     },
     {
       "door": {
-        "nextRoom": "storageRoom.json"
+        "nextRoom": "shiftPuzzle.json"
       }
     },
     {

@@ -42,12 +42,12 @@
     },
     {
       "door": {
-        "nextRoom" : "shiftPuzzle.json"
+        "nextRoom" : "corridorRoom.json"
       }
     },
     {
       "door": {
-        "nextRoom" : "corridorRoom.json"
+        "nextRoom" : "boxRoom.json"
       }
     },
     {

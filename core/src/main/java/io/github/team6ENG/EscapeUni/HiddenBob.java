@@ -39,7 +39,7 @@ public class HiddenBob extends RoomObject {
         if (!collected) {
             float dist = (float) Math.sqrt(Math.pow(x+16 - NewGameScreen.player.rX, 2) + Math.pow(y+16 - NewGameScreen.player.rY, 2));
             float transparency;
-            if (dist >= 128) {
+            if (dist >= 128f) {
                 transparency = 0f;
             }
             else if (dist < 0) {
