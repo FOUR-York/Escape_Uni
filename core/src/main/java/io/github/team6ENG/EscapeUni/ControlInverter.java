@@ -4,16 +4,30 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
+/**
+ * collectable RoomObject that inverts the players controls when collected
+ */
 public class ControlInverter extends RoomObject {
     private int gridX, gridY;
     private boolean collected = false;
 
+    /**
+     * Initialise the inverter
+     * @param texture
+     * @param x
+     * @param y
+     */
     public ControlInverter(Texture texture, float x, float y) {
         super(texture, x, y);
         gridX = (int) (x/NewGameScreen.tileWidth);
         gridY = (int) (y/NewGameScreen.tileHeight);
     }
 
+    /**
+     * Update logic function to be called each active frame
+     * toggle inverting player controls when collected
+     * @param delta
+     */
     @Override
     public void update(float delta) {
         if (!collected) {
@@ -22,8 +36,6 @@ public class ControlInverter extends RoomObject {
                     NewGameScreen.infoMsg("Controls un-inverted.");
                     NewGameScreen.player.isInverted = false;
                     collected = true;
-
-
                 }
                 else {
                     NewGameScreen.infoMsg("Controls inverted.");
@@ -39,6 +51,11 @@ public class ControlInverter extends RoomObject {
         }
     }
 
+    /**
+     * Draw function to be called each active frame
+     * Draw sprite if uncollected
+     * @param batch
+     */
     @Override
     public void draw(SpriteBatch batch) {
         if (!collected) {

@@ -1,7 +1,7 @@
 package io.github.team6ENG.EscapeUni;
 
-/*
-    * helper class written by dlb
+/**
+ * GridObject returns information about the grid and valid object actions based upon their types
  */
 public class GridObject {
     public enum TYPE {
@@ -12,12 +12,31 @@ public class GridObject {
     }
     public TYPE type;
     private int gridX, gridY;
+
+    /**
+     * Create new GridObject
+     * @param x
+     * @param y
+     * @param type
+     */
     private GridObject(int x, int y, TYPE type) {
         this.type = type;
         gridX = x;
         gridY = y;
     }
 
+    /**
+     * Recursively pushes up to "force" consecutive objects in the grid and in the direction specified
+     * GridObject.TYPE.SOLID blocks any pushes, as does a null grid entry
+     * @param grid
+     * @param gridW
+     * @param gridH
+     * @param x
+     * @param y
+     * @param dir
+     * @param force
+     * @return
+     */
     public static int push(GridObject[] grid, int gridW, int gridH, int x, int y, int dir, int force) {
         int idx = x + (gridH - y - 1) * gridW;
         if (idx < 0 || idx >= grid.length) {
@@ -60,6 +79,17 @@ public class GridObject {
         }
     }
 
+    /**
+     * Moves an instance of gridObject within a grid.
+     * The instance can only be moved to an empty grid position.
+     * @param grid
+     * @param gridW
+     * @param gridH
+     * @param sX
+     * @param sY
+     * @param dX
+     * @param dY
+     */
     public static void move(GridObject[] grid, int gridW, int gridH, int sX, int sY, int dX, int dY) {
         // swap gridobjects
         int source = sX + (gridH - sY - 1) * gridW;
@@ -78,6 +108,15 @@ public class GridObject {
         }
     }
 
+    /**
+     * Returns a GridObject within a grid according to its grid coords
+     * @param grid
+     * @param gridW
+     * @param gridH
+     * @param sX
+     * @param sY
+     * @return
+     */
     public static GridObject getAt(GridObject[] grid, int gridW, int gridH, int sX, int sY) {
         int idx = sX + (gridH - sY - 1) * gridW;
         if (idx < grid.length) {
@@ -88,6 +127,12 @@ public class GridObject {
         }
     }
 
+    /**
+     * Returns a new grid (array of GridObjects) with the specified width and height
+     * @param gridW
+     * @param gridH
+     * @return
+     */
     public static GridObject[] createGrid(int gridW, int gridH) {
         GridObject[] grid = new GridObject[gridW*gridH];
         for (int i = 0; i < gridW; i++) {

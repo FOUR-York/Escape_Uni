@@ -6,29 +6,45 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
-/*
-    * helper class written by dlb
+/**
+ * RoomObject that pushes GridObjects at its position in the grid with unlimited force
  */
 public class ShiftTile extends RoomObject {
     int dir;
     int posX, posY;
     TextureRegion region;
     final float delta = NewGameScreen.tileWidth/6f;
-    public ShiftTile(Texture texture, int x, int y, int dir) {
-        super(texture, x*NewGameScreen.tileWidth, y*NewGameScreen.tileHeight);
+
+    /**
+     * Create and initialise the ShiftTile
+     * @param texture
+     * @param gridX
+     * @param gridY
+     * @param dir
+     */
+    public ShiftTile(Texture texture, int gridX, int gridY, int dir) {
+        super(texture, gridX*NewGameScreen.tileWidth, gridY*NewGameScreen.tileHeight);
         region = new TextureRegion(texture);
         this.dir = dir;
-        this.posX = x;
-        this.posY = y;
-        x = x*NewGameScreen.tileWidth;
-        y = y*NewGameScreen.tileHeight;
+        this.posX = gridX;
+        this.posY = gridY;
+        this.x = gridX*NewGameScreen.tileWidth;
+        this.y = gridY*NewGameScreen.tileHeight;
     }
 
+    /**
+     * Push GridObjects at posX, posY every frame
+     * @param delta
+     */
     @Override
     public void update(float delta) {
         GridObject.push(NewGameScreen.room.grid, NewGameScreen.room.width, NewGameScreen.room.height, posX, posY, dir, 99);
     }
 
+    /**
+     * Draw the ShiftTile every frame with its texture rotated in its direction
+     * @param batch
+     */
     @Override
     public void draw(SpriteBatch batch) {
         batch.draw(

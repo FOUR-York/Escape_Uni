@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+/**
+ * Handles room based data and processing
+ */
 public class Room {
     public GridObject[] grid;
     public ArrayList<RoomObject> objects;
@@ -48,11 +51,17 @@ public class Room {
     private TextureRegion projectileRegion;
 
 
+    /**
+     * Create and initialise a new Room
+     * @param path
+     */
     public Room(String path) {
         this.width = 20;
         this.height = 15;
         objects = new ArrayList<>();
         grid = GridObject.createGrid(width, height);
+
+        // add edge walls by default
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 if (x == 0 || x == width-1 ||  y == 0 || y == height-1) {
@@ -64,11 +73,20 @@ public class Room {
         }
 
         // reset variables
-        projectiles = new Projectile[100];
+        projectiles = new Projectile[100]; // max 100 projectiles allowed in each room at a time
         projectileCount = 0;
+
+        // load in room data from file
         loadRoom(path);
     }
 
+
+    /**
+     * Returns the type of the GridObject at the specified coords in the room grid
+     * @param x
+     * @param y
+     * @return
+     */
     public GridObject.TYPE roomCell(int x, int y) {
         //bounds check
         if (x >= 0 && x <= width - 1 && y >= 0 && y <= height - 1) {
@@ -79,10 +97,19 @@ public class Room {
         return GridObject.TYPE.NONE;
     }
 
+    /**
+     * Adds a room object to the list of active RoomObjects
+     * @param object
+     */
     public void addObject(RoomObject object) {
         objects.add(object);
     }
 
+    /**
+     * Updates each RoomObjects logic
+     * Called each frame
+     * @param delta
+     */
     public void updateObjects(float delta) {
         for (RoomObject roomObject : objects) {
             if (roomObject != null) {
@@ -91,9 +118,14 @@ public class Room {
         }
     }
 
+    /**
+     * Load a room json file
+     * @param path
+     */
     private void loadRoom(String path) {
         // save name
         name = path;
+        // parse the room json
         JsonValue mapJson = new JsonReader().parse(Gdx.files.internal(path));
         // start counting coins
         ArrayList<Vector2> coinLocations = new ArrayList<>();
@@ -101,15 +133,15 @@ public class Room {
         int[] dimensions = mapJson.get("dimensions").asIntArray();
         int width = dimensions[0];
         int height = dimensions[1];
-        // textures
+        // check if the room is the final ending room
         if (path.equals("outside.json")) {
             end = true;
         }
+        // textures
         roomTex = new Texture(Gdx.files.internal(mapJson.get("roomTex").asString()));
         if (mapJson.get("openRoomTex") != null) {
             openRoomTex = new Texture(Gdx.files.internal(mapJson.get("openRoomTex").asString()));
         }
-
         doorTex = new Texture(Gdx.files.internal(mapJson.get("doorTex").asString()));
         boxTex = new Texture(Gdx.files.internal(mapJson.get("boxTex").asString()));
         shiftTex = new Texture(Gdx.files.internal(mapJson.get("shiftTex").asString()));
@@ -123,7 +155,8 @@ public class Room {
         switchTex = new Texture(Gdx.files.internal(mapJson.get("switchTex").asString()));
         coinTex = new Texture(Gdx.files.internal(mapJson.get("coinTex").asString()));
         coinTexGreyscale = new Texture(Gdx.files.internal("items/coinGreyscale.png"));
-        // start loading in objects
+
+        // load in the Grid data
         int[] gridData = mapJson.get("gridData").asIntArray();
         for (int i = 0; i < width; i ++) {
             for (int j = 0; j < height; j ++) {
@@ -135,11 +168,14 @@ public class Room {
                 }
             }
         }
+
+        // load RoomObject data
         int[] roomData = mapJson.get("roomObjectData").asIntArray();
         for (int i = 0; i < width; i ++) {
             for (int j = 0; j < height; j ++) {
                 int objectId = roomData[i + (height - 1 - j) * width];
                 JsonValue jsonObject = mapJson.get("objects").get(objectId).child;
+                // place object
                 switch (jsonObject.name) {
                     case "door": {
                         addObject(new Door(jsonObject.get("nextRoom").asString(), doorTex, GridObject.getAt(grid, width, height, i, j)));
@@ -184,6 +220,7 @@ public class Room {
                         break;
                     }
                     case "coin": {
+                        // add to list of coin locations
                         coinLocations.add(new Vector2(i, j));
                     }
                     case "null":
@@ -193,7 +230,7 @@ public class Room {
             }
         }
 
-        // only collect coins if there is not already an entry for this room
+        // initialise coin collection array
         if (!coinLocations.isEmpty()) {
             collectedCoins = new Boolean[coinLocations.size()];
             Arrays.fill(collectedCoins, false);
@@ -201,16 +238,20 @@ public class Room {
             collectedCoins = null;
         }
 
+        // place coins
         boolean hasKey = roomProgress.containsKey(path);
         for (int i = 0; i < coinLocations.size(); i++) {
             if (!hasKey || roomProgress.get(path)[i] == false) {
                 addObject(new ScorePickup(coinTex,
+                    // place a scored coin if the room is not already completed
+                    // or if the room has been completed but this coin has been left uncollected
                     coinLocations.get(i).x * NewGameScreen.tileWidth,
                     coinLocations.get(i).y * NewGameScreen.tileHeight,
                     true,
                     i
                 ));
             } else {
+                // otherwise place an unscored placeholder coin
                 addObject(new ScorePickup(coinTexGreyscale,
                     coinLocations.get(i).x * NewGameScreen.tileWidth,
                     coinLocations.get(i).y * NewGameScreen.tileHeight,
@@ -221,15 +262,27 @@ public class Room {
         }
     }
 
+    /**
+     * Mark a coin as collected given its coin id
+     * @param id
+     */
     public void collectCoin(int id) {
         name = NewGameScreen.nextRoom;
         collectedCoins[id] = true;
     }
 
+    /**
+     * Returns true if the room has been completed
+     * @return
+     */
     public boolean isVisited() {
        return roomProgress.containsKey(name);
     }
 
+    /**
+     * Runs when a room has been completed
+     * update roomProgress with new data
+     */
     public void roomComplete() {
         // create entry if it does not already exist
         if (!roomProgress.containsKey(name)) {
@@ -251,17 +304,32 @@ public class Room {
         }
     }
 
+    /**
+     * resets static Room variables
+     */
     public static void initialiseRooms() {
         roomProgress = new HashMap<String, Boolean[]>();
     }
 
+    /**
+     * Opens the doors in the room
+     */
     public void openDoors() {
         keycard = true;
     }
 
+    /**
+     * Attempts to create a new projectile at the given coords and with the given properties
+     * @param x
+     * @param y
+     * @param speed
+     * @param dir
+     * @param radius
+     */
     public void spawnProjectile(float x, float y, float speed, int dir, float radius) {
         if (projectileCount < projectiles.length) {
             for (int i = 0; i < projectiles.length; i++) {
+                // inserts a new projectile at an empty slot in the projectile array
                 if (projectiles[i] == null) {
                     projectiles[i] = new Projectile(x, y, speed, dir, radius, i);
                     break;
@@ -271,11 +339,20 @@ public class Room {
         }
     }
 
+    /**
+     * Delete a projectile in the projectile array at the given location
+     * @param id
+     */
     public void removeProjectile(int id) {
         projectiles[id] = null;
         projectileCount--;
     }
 
+    /**
+     * Update projectile logic
+     * Called every frame
+     * @param delta
+     */
     public void updateProjectiles(float delta) {
         for (Projectile projectile : projectiles) {
             if (projectile != null) {
@@ -284,6 +361,11 @@ public class Room {
         }
     }
 
+    /**
+     * Draw room texture background
+     * @param drawer
+     * @param batch
+     */
     public void draw(ShapeDrawer drawer, SpriteBatch batch) {
         if (!keycard || openRoomTex == null) {
             batch.draw(roomTex, 0, 0);
@@ -291,6 +373,7 @@ public class Room {
             batch.draw(openRoomTex, 0, 0);
         }
     }
+
     public void dispose() {
         roomTex.dispose();
         doorTex.dispose();
@@ -304,6 +387,10 @@ public class Room {
         bobTex.dispose();
     }
 
+    /**
+     * Draw projectiles in the projectile array with the given rotation
+     * @param batch
+     */
     public void drawProjectiles(SpriteBatch batch) {
         for (Projectile projectile : projectiles) {
             if (projectile != null) {
@@ -321,6 +408,10 @@ public class Room {
         }
     }
 
+    /**
+     * Draws the active RoomObjects
+     * @param batch
+     */
     public void drawObjects(SpriteBatch batch) {
         for (RoomObject roomObject : objects) {
             if (roomObject != null) {
@@ -329,6 +420,10 @@ public class Room {
         }
     }
 
+    /**
+     * Returns true if the keycard has been collected
+     * @return
+     */
     public boolean isKeycardCollected() {
         return keycard;
     }

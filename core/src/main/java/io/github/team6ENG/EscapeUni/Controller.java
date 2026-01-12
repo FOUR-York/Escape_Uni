@@ -9,7 +9,9 @@ import com.badlogic.gdx.math.MathUtils;
 
 import java.util.HashMap;
 
-// implement smooth transitions between tiles
+/**
+ * Main player class
+ */
 public class Controller extends SpriteAnimations {
     GridObject gridInstance;
     LightSource lightSource;
@@ -39,6 +41,11 @@ public class Controller extends SpriteAnimations {
 
     public ShaderProgram shaderProgram;
 
+    /**
+     * Initialise the player object
+     * @param gridInstance
+     * @param radius
+     */
     public Controller(GridObject gridInstance, float radius) {
         super(Main.activeSpritePath, 8, 7);
 
@@ -76,17 +83,24 @@ public class Controller extends SpriteAnimations {
         }
         ShaderProgram.pedantic = false;
 
+        // add light source
         lightSource = LightSource.createLightSource(rX, rY, 50f);
     }
 
+    /**
+     * logic function to be called each active frame
+     */
     public void step() {
         int posX = gridInstance.getGridX(), posY = gridInstance.getGridY();
+        // smoothly lerp to the active grid tile
         rX = MathUtils.lerp(rX, posX*NewGameScreen.tileWidth+NewGameScreen.tileWidth/2f, 0.3f);
         rY = MathUtils.lerp(rY, posY*NewGameScreen.tileHeight+NewGameScreen.tileHeight/2f, 0.3f);
 
+        // update light source position
         lightSource.circleX = rX;
         lightSource.circleY = rY;
 
+        // decrease powerup timer
         float delta = Gdx.graphics.getDeltaTime();
         powerupTimer -= delta;
 
@@ -99,6 +113,12 @@ public class Controller extends SpriteAnimations {
         }
     }
 
+    /**
+     * moves the player in one of the four cardinal directions:
+     * 0 - up, 1 - left, 2 - down, 3 - right
+     * pushes gridObjects in its path with force 2
+     * @param dir
+     */
     public void hop(int dir) {
         isMoving = true;
         moveTime = 0.25f;
@@ -126,9 +146,11 @@ public class Controller extends SpriteAnimations {
         GridObject.push(NewGameScreen.room.grid, NewGameScreen.room.width, NewGameScreen.room.height, nX, nY, dir, 2);
     }
 
+    /**
+     * player was hit, force restart
+     */
     public void hit() {
         // restart
-        // TODO: implement restarting procedure
         if (!invincible) {
             if (!Main.playerShotOnce) {
                 Main.playerShotOnce = true;
@@ -141,11 +163,18 @@ public class Controller extends SpriteAnimations {
         }
     }
 
+    /**
+     * become invulnerable for length time
+     * @param time
+     */
     public void invinciblePowerup(float time) {
         invincible = true;
         powerupTimer += time;
     }
 
+    /**
+     * updates sprite animation frames
+     */
     public void updateSprite() {
         float delta = Gdx.graphics.getDeltaTime();
         stateTime += delta;
@@ -191,6 +220,8 @@ public class Controller extends SpriteAnimations {
 
             currentPlayerFrame = animations.get("idle").getKeyFrame(stateTime, true);
         }
+        // update shader uniforms based on active sprite frames
+        // pass in the uv coords of the entire sprite region in order to calculate local uv
         sprite.setRegion(currentPlayerFrame);
         shaderProgram.setUniformf("u_uvMin", currentPlayerFrame.getU(), currentPlayerFrame.getV());
         shaderProgram.setUniformf("u_uvMax", currentPlayerFrame.getU2(), currentPlayerFrame.getV2());

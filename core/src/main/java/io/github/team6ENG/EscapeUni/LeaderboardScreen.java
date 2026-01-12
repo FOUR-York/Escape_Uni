@@ -178,7 +178,7 @@ public class LeaderboardScreen implements Screen {
                 game.menuFont.draw(game.batch, "???", 100f, h - 60f);
             }
 
-            if (Main.gameTimer >= 260) {
+            if (Main.gameTimer >= 240) {
                 game.menuFont.draw(game.batch, "Speedrun!", 400f, h - 60f);
             }
             else {

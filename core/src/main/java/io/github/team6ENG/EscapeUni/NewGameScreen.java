@@ -17,10 +17,11 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import static java.lang.Math.max;
 import static java.lang.Math.sin;
-/*
-    * helper class written by dlb, modified to fit existing team6 codebase.
-    * TODO: fix projectiles, improve wall loading, create room loading helper class and format, collisions
+
+/**
+ * Main game screen class
  */
+
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class NewGameScreen implements Screen {
 
@@ -43,34 +44,49 @@ public class NewGameScreen implements Screen {
     public static boolean transition = false;
     public static boolean restart = false;
 
-    private final FrameBuffer frameBuffer;
-    private final Texture screenTexture;
+    // screen shader resources
+    private FrameBuffer frameBuffer;
+    private Texture screenTexture;
 
+    // leaderboard
     private final Preferences leaderboardPrefs = Gdx.app.getPreferences("leaderboardPrefs");
 
+    /**
+     * Initialise a new game
+     * @param game
+     */
     NewGameScreen(final Main game) {
         this.game = game;
 
+        // set first room load path
         room = null;
         nextRoom = "classRoom.json";
 
-        // initialise screen space framebuffer
-        frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 640, 480, false);
-
-        screenTexture = frameBuffer.getColorBufferTexture();
-        screenTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        //
-
-
+        initialiseFramebuffer();
         initialiseShapeDrawer();
         initialiseAudio();
         Room.initialiseRooms();
 
+        // load bus texture
         busTex = new TextureRegion(new Texture(Gdx.files.internal("images/bus.png")));
 
+        // start room
         start();
     }
 
+    /**
+     * Initialise framebuffer for screen space shaders
+     */
+    private void initialiseFramebuffer() {
+        frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 640, 480, false);
+
+        screenTexture = frameBuffer.getColorBufferTexture();
+        screenTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+    }
+
+    /**
+     * Initialise ShapeDrawer module for additional custom drawing
+     */
     private void initialiseShapeDrawer() {
         // init shapeDrawer
         Pixmap drawerPixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
@@ -83,16 +99,15 @@ public class NewGameScreen implements Screen {
     }
 
 
+    /**
+     * start and attach new Room
+     */
     public static void start() {
         player = null;
-        // initialise components
+        // reset and initialise lighting components
         LightSource.initialiseLighting();
-        // create room
+        // create new room from specified path
         room = new Room(nextRoom);
-        if (player == null) {
-            errorMsg("Controller is null");
-            player = new Controller(GridObject.getAt(room.grid, room.width, room.height, 1, 1), tileWidth/4f);
-        }
     }
 
     /**
@@ -111,16 +126,22 @@ public class NewGameScreen implements Screen {
         }
     }
 
+    /**
+     * Main game render function
+     * @param delta The time in seconds since the last render.
+     */
     @Override
     public void render(float delta) {
         // input
         handleInput();
+        // update state
         update(delta);
 
         boolean winFlag = false;
 
         Gdx.gl.glFlush();
 
+        // start framebuffer around batch drawing
         frameBuffer.begin();
 
         game.batch.enableBlending();
@@ -128,7 +149,7 @@ public class NewGameScreen implements Screen {
 
         room.draw(shapeDrawer, game.batch);
 
-        // render grid
+        // draw grid
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 float theta = tileWidth / 8f;
@@ -145,6 +166,7 @@ public class NewGameScreen implements Screen {
         }
 
         shapeDrawer.setColor(1.0f, 1.0f, 1.0f, 0.2f);
+        // extra effect if the player is invulnerable
         if (player.invincible){
             shapeDrawer.setColor(new Color(Color.GOLD.r, Color.GOLD.g, Color.GOLD.b, 0.2f));
         }
@@ -154,6 +176,7 @@ public class NewGameScreen implements Screen {
 
         room.drawProjectiles(game.batch);
 
+        // flush batch to draw player with shader
         game.batch.flush();
         game.batch.setShader(player.shaderProgram);
 
@@ -161,6 +184,7 @@ public class NewGameScreen implements Screen {
 
         player.shaderProgram.setUniformf("u_time", (float) player.powerupTimer);
         float inv = 1f;
+        // flash when invulnerability timer is low
         if (player.powerupTimer < 1f) {
             inv = (float) Math.min((int) (sin(player.powerupTimer*30f)+1f), 1);
         }
@@ -171,6 +195,7 @@ public class NewGameScreen implements Screen {
         game.batch.flush();
         game.batch.setShader(null);
 
+        // game ending logic if the room is the ending room
         if (room.end) {
             float busCoordsX = 14*tileWidth, busCoordsY = 8*tileHeight;
            // draw bus
@@ -185,6 +210,7 @@ public class NewGameScreen implements Screen {
                 1f,
                 0f
             );
+            // bus win region
             if (player.rX > busCoordsX &&
                 player.rY > busCoordsY &&
                 player.rX < busCoordsX + tileWidth*4 &&
@@ -212,7 +238,6 @@ public class NewGameScreen implements Screen {
         game.batch.end();
 
         game.batch.setShader(null);
-        //
 
         //Pausing
         if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
@@ -227,6 +252,7 @@ public class NewGameScreen implements Screen {
             room.roomComplete();
             start();
         } else if (restart) {
+            // room was not completed, reset scoring
             Main.score -= player.scoreEarnedThisRoom;
             player.scoreEarnedThisRoom = 0;
 
@@ -241,10 +267,14 @@ public class NewGameScreen implements Screen {
             gameWin();
         }
 
+        // draw UI on top
         renderUI();
     }
 
 
+    /**
+     * Input function
+     */
     public void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
             if (player.isInverted) {
@@ -283,6 +313,9 @@ public class NewGameScreen implements Screen {
         }
     }
 
+    /**
+     * Initialise the audioManager
+     */
     private  void initialiseAudio() {
         audioManager = new AudioManager(game);
     }
@@ -319,22 +352,50 @@ public class NewGameScreen implements Screen {
         screenTexture.dispose();
     }
 
+    /**
+     * Distance helper function
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @return
+     */
     public static float dist(float x1, float y1, float x2, float y2) {
         return (float) Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
     }
 
+    /**
+     * Log info helper function
+     * @param msg
+     */
     public static void infoMsg(String msg) {
         System.out.println("[INFO]: "+msg);
     }
+
+    /**
+     * Log error helper function
+     * @param msg
+     */
     public static void errorMsg(String msg) {
         System.out.println("[ERROR]: "+msg);
     }
 
+    /**
+     * Font rendering helper function
+     * @param font
+     * @param text
+     * @param colour
+     * @param x
+     * @param y
+     */
     private void drawText(BitmapFont font, String text, Color colour, float x, float y) {
         font.setColor(colour);
         font.draw(game.uiBatch, text, x, y);
     }
 
+    /**
+     * Draw the UI on the game screen
+     */
     private void renderUI() {
         BitmapFont smallFont = game.gameFont;
         BitmapFont bigFont = game.menuFont;
@@ -358,7 +419,8 @@ public class NewGameScreen implements Screen {
         y -= lineSpacing;
         //Display time with 2 digits for seconds
         drawText(bigFont, ((int)game.gameTimer/60 + ":" +((int)game.gameTimer % 60 <10?"0" :"" ) +(int)game.gameTimer % 60), Color.RED, worldWidth - 60f, worldHeight-5f);
-        // onscreen instructions
+
+        // draw onscreen instructions for first room
         if (nextRoom.equals("classRoom.json")) {
             GlyphLayout layout = new GlyphLayout();
             String controls = new String("Arrow keys to move\nR to restart\nP to pause");
@@ -372,6 +434,9 @@ public class NewGameScreen implements Screen {
 
     }
 
+    /**
+     * Called when the game is failed to transition to the Game Over screen
+     */
     public void gameOver(){
         audioManager.stopMusic();
         Gdx.app.postRunnable(() -> game.setScreen(
@@ -379,6 +444,10 @@ public class NewGameScreen implements Screen {
         ));
     }
 
+    /**
+     * Called when the game is won to transition to the Win screen
+     * Find and load data for leaderboard
+     */
     public void gameWin() {
         Main.score += Main.gameTimer;
 
@@ -447,6 +516,7 @@ public class NewGameScreen implements Screen {
 
         leaderboardPrefs.flush();
 
+        // unlocks the hidden ending if a high score is achieved
         if (Main.score >= 1400) {
             if (!Main.hiddenEnding) {
                 Main.hiddenEnding = true;
