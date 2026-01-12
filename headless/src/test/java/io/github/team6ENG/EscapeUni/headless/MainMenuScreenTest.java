@@ -1,7 +1,9 @@
 package io.github.team6ENG.EscapeUni.headless;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -16,13 +18,14 @@ import static org.mockito.Mockito.when;
 
 public class MainMenuScreenTest extends AbstractHeadlessGdxTest {
     MainMenuScreen mainMenuScreen;
+    Main game;
 
     /**
      * Creating a test MainMenuScreen object.
      */
     @Test
     public void testMainMenuScreen() {
-        Main game = mock(Main.class);
+        game = mock(Main.class);
         game.menuFont = new BitmapFont();
 
         game.viewport = new FitViewport(800, 600);
@@ -32,6 +35,7 @@ public class MainMenuScreenTest extends AbstractHeadlessGdxTest {
         game.batch = mock(SpriteBatch.class);
         when(game.batch.getProjectionMatrix()).thenReturn(new Matrix4());
         when(game.batch.getTransformMatrix()).thenReturn(new Matrix4());
+        when(game.batch.getColor()).thenReturn(Color.BLACK);
 
         game.buttonSkin = new Skin(Gdx.files.internal(Main.buttonSkinAsset));
 
@@ -83,6 +87,25 @@ public class MainMenuScreenTest extends AbstractHeadlessGdxTest {
     public void testRender() {
         testMainMenuScreen();
 
+        mainMenuScreen.show();
         mainMenuScreen.render(1/60f);
+
+        mainMenuScreen.dispose();
+        game.menuFont = null;
+        Input mockInput = mock(Input.class);
+        Gdx.input = mockInput;
+        when(mockInput.isKeyJustPressed(Input.Keys.SPACE)).thenReturn(true);
+        mainMenuScreen.render(1/60f);
+    }
+
+    /**
+     * Testing arbitrary functions.
+     */
+    @Test
+    public void testArbitraryFunctions() {
+        testMainMenuScreen();
+
+        mainMenuScreen.pause();
+        mainMenuScreen.resume();
     }
 }

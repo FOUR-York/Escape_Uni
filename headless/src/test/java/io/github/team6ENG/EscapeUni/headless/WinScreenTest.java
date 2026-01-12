@@ -2,6 +2,7 @@ package io.github.team6ENG.EscapeUni.headless;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,13 +19,14 @@ import static org.mockito.Mockito.when;
 
 public class WinScreenTest extends AbstractHeadlessGdxTest {
     WinScreen winScreen;
+    Main game;
 
     /**
      * Creating a test WinScreen object.
      */
     @Test
     public void testWinScreen() {
-        Main game = mock(Main.class);
+        game = mock(Main.class);
         game.menuFont = new BitmapFont();
 
         game.viewport = new FitViewport(800, 600);
@@ -34,6 +36,7 @@ public class WinScreenTest extends AbstractHeadlessGdxTest {
         game.batch = mock(SpriteBatch.class);
         when(game.batch.getProjectionMatrix()).thenReturn(new Matrix4());
         when(game.batch.getTransformMatrix()).thenReturn(new Matrix4());
+        when(game.batch.getColor()).thenReturn(Color.BLACK);
 
         game.buttonSkin = new Skin(Gdx.files.internal(Main.buttonSkinAsset));
 
@@ -94,6 +97,21 @@ public class WinScreenTest extends AbstractHeadlessGdxTest {
     @Test
     public void testRender() {
         testWinScreen();
+        winScreen.show();
         winScreen.render(1/60f);
+
+        winScreen.dispose();
+        game.menuFont = null;
+        winScreen.render(1/60f);
+    }
+
+    /**
+     * Testing the arbitrary functions.
+     */
+    @Test
+    public void testArbitraryFunctions() {
+        testWinScreen();
+        winScreen.pause();
+        winScreen.resume();
     }
 }

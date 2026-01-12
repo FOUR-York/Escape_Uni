@@ -80,7 +80,7 @@ public class LangwithScreenTest extends AbstractHeadlessGdxTest {
 
         // dx = x - 8 - 60 + 32 -> x = 36
         // dy = y - 16 - 800 + 32 -> y = 784
-        main.gameTimer = 300;
+        Main.gameTimer = 300;
 
         gameScreen.items.remove("pizza");
         gameScreen.items.put("pizza", new Collectable(main, "items/pizza.png", 36, 784, 0.4f, true, "LangwithScreen", audioManager));
@@ -103,6 +103,9 @@ public class LangwithScreenTest extends AbstractHeadlessGdxTest {
         when(Gdx.input.isKeyJustPressed(Input.Keys.E)).thenReturn(true);
         testLangwithScreen.render(1/60f);
         testLangwithScreen.render(1/60f);
+
+        Main.gameTimer = -10;
+        testLangwithScreen.render(1/60f);
     }
 
     /**
@@ -111,7 +114,7 @@ public class LangwithScreenTest extends AbstractHeadlessGdxTest {
     @Test
     public void testRenderPauseKey() {
         createLangwithScreen();
-        main.gameTimer = 300;
+        Main.gameTimer = 300;
 
         when(Gdx.input.isKeyJustPressed(Input.Keys.P)).thenReturn(true);
         testLangwithScreen.render(1/60f);

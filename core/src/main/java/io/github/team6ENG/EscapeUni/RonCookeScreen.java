@@ -212,7 +212,7 @@ public class RonCookeScreen implements Screen {
 
     @Override public void show() {}
     @Override public void resize(int width, int height) { game.viewport.update(width, height); }
-    @Override public void pause() {}
+    @Override public void pause() { isPaused = true; }
     @Override public void resume() {
         isPaused = false;
     }

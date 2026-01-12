@@ -91,18 +91,49 @@ public class RoomTest extends AbstractHeadlessGdxTest {
 
     /**
      * Testing the loadRoom() function.
+     * Loading the storageRoom.
      */
-    /*@Test
-    public void testLoadRoom() {
+    @Test
+    public void testLoadStorageRoom() {
+        Main.activeSpritePath = "sprites/femaleSprite.png";
+        new Room("storageRoom.json");
+    }
+
+    /**
+     * Loading the TurretBoxRoom.
+     */
+    @Test
+    public void testLoadTurretBoxRoom() {
+        Main.activeSpritePath = "sprites/femaleSprite.png";
+        new Room("turretBoxRoom.json");
+    }
+
+    /**
+     * Loading the Outside.
+     */
+    @Test
+    public void testLoadOutside() {
         Main.activeSpritePath = "sprites/femaleSprite.png";
         new Room("outside.json");
-        new Room("boxRoom.json");
-        new Room("classRoom.json");
+    }
+
+    /**
+     * Loading the CorridorRoom.
+     */
+    @Test
+    public void testLoadCorridorRoom() {
+        Main.activeSpritePath = "sprites/femaleSprite.png";
         new Room("corridorRoom.json");
-        new Room("outside.json");
-        new Room("shiftPuzzle.json");
-        new Room("storageRoom.json");
-    }*/
+    }
+
+    /**
+     * Loading the boxRoom.
+     */
+    @Test
+    public void testLoadBoxRoom() {
+        Main.activeSpritePath = "sprites/femaleSprite.png";
+        new Room("boxRoom.json");
+    }
 
     /**
      * Testing the openDoors() function.
@@ -117,18 +148,15 @@ public class RoomTest extends AbstractHeadlessGdxTest {
     }
 
     /**
-     * Testing the spawnProjectiles function.
-     */
-    @Test
-    public void testSpawnProjectiles() {
-        testCreateRoom();
-    }
-
-    /**
-     * Testing the removeProjectile function.
+     * Testing the spawnProjectiles and removeProjectiles function.
      */
     @Test
     public void testRemoveProjectiles() {
         testCreateRoom();
+        room.spawnProjectile(0, 0, 4f, 2, 8f);
+
+        room.removeProjectile(0);
+
+        room.updateObjects(1f);
     }
 }

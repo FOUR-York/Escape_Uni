@@ -28,5 +28,7 @@ public class BoxTest extends AbstractHeadlessGdxTest {
         box = new Box(boxTex, GridObject.getAt(grid, width, height, 0, 0));
 
         box.update(1/60f);
+
+        box.delete();
     }
 }

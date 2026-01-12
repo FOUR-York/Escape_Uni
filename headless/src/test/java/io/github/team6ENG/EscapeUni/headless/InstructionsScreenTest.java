@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -18,14 +19,15 @@ import static org.mockito.Mockito.when;
 
 public class InstructionsScreenTest extends AbstractHeadlessGdxTest {
     InstructionsScreen instructionsScreen;
+    Main game;
 
     /**
      * Creating a test InstructionScreen.
      */
     @Test
     public void testInstructionsScreen() {
-        Main game = mock(Main.class);
-        game.menuFont = null;
+        game = mock(Main.class);
+        game.menuFont = new BitmapFont();
 
         game.viewport = new FitViewport(800, 600);
         Camera mockCamera = new OrthographicCamera(400,225);
@@ -88,9 +90,23 @@ public class InstructionsScreenTest extends AbstractHeadlessGdxTest {
         testInstructionsScreen();
 
         instructionsScreen.show();
-        when(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)).thenReturn(true);
-
         instructionsScreen.render(1/60f);
+
+        instructionsScreen.dispose();
+        game.menuFont = null;
+        when(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)).thenReturn(true);
+        instructionsScreen.render(1/60f);
+    }
+
+    /**
+     * Testing arbitrary functions.
+     */
+    @Test
+    public void testArbitraryFunctions() {
+        testInstructionsScreen();
+
+        instructionsScreen.pause();
+        instructionsScreen.resume();
     }
 
 }

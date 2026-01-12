@@ -114,9 +114,6 @@ public class NewGameScreen implements Screen {
         handleInput();
         update(delta);
 
-
-
-
         Gdx.gl.glFlush();
 
         frameBuffer.begin();

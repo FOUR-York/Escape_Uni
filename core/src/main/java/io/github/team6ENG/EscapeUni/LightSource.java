@@ -51,7 +51,7 @@ public class LightSource {
     }
 
     public static void initialiseLighting() {
-        lightSources = new LightSource[10];
+        lightSources = new LightSource[20];
         lights = 0;
         lightsOff = false;
         // screen shader

@@ -72,4 +72,17 @@ public class PauseScreenTest extends AbstractHeadlessGdxTest {
         testPauseScreen();
         pauseScreen.dispose();
     }
+
+    /**
+     * Testing arbitrary functions.
+     */
+    @Test
+    public void testArbitraryFunctions() {
+        testPauseScreen();
+
+        pauseScreen.show();
+        pauseScreen.hide();
+        pauseScreen.pause();
+        pauseScreen.resume();
+    }
 }

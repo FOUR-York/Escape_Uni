@@ -2,7 +2,9 @@ package io.github.team6ENG.EscapeUni.headless;
 
 import com.badlogic.gdx.Gdx;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -19,13 +21,14 @@ import static org.mockito.Mockito.when;
 
 public class GameOverScreenTest extends AbstractHeadlessGdxTest {
     GameOverScreen gameOverScreen;
+    Main main;
 
     /**
      * Creating a test GameOverScreen object.
      */
     @Test
     public void createGameOverScreenTest() {
-        Main main = mock(Main.class);
+        main = mock(Main.class);
         main.menuFont = new BitmapFont();
 
         main.viewport = new FitViewport(800, 600);
@@ -35,6 +38,7 @@ public class GameOverScreenTest extends AbstractHeadlessGdxTest {
         main.batch = mock(SpriteBatch.class);
         when(main.batch.getProjectionMatrix()).thenReturn(new Matrix4());
         when(main.batch.getTransformMatrix()).thenReturn(new Matrix4());
+        when(main.batch.getColor()).thenReturn(Color.BLACK);
 
         main.buttonSkin = new Skin(Gdx.files.internal(Main.buttonSkinAsset));
 
@@ -96,6 +100,15 @@ public class GameOverScreenTest extends AbstractHeadlessGdxTest {
     public void testRender() {
         createGameOverScreenTest();
 
+        gameOverScreen.show();
         gameOverScreen.render(1/60f);
+
+        gameOverScreen.dispose();
+        main.menuFont = null;
+        Input mockInput = mock(Input.class);
+        Gdx.input = mockInput;
+        when(mockInput.isKeyJustPressed(Input.Keys.SPACE)).thenReturn(true);
+        gameOverScreen.render(1/60f);
+
     }
 }
