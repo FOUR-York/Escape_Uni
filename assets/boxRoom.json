@@ -22,7 +22,7 @@
     },
     {
       "door": {
-        "nextRoom": "inverseTurretBoxRoom.json"
+        "nextRoom": "turretBoxRoom.json"
       }
     },
     {

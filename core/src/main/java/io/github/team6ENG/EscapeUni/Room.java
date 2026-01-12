@@ -5,23 +5,21 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Dictionary;
 import java.util.HashMap;
 
 public class Room {
     public GridObject[] grid;
     public ArrayList<RoomObject> objects;
-    private static HashMap<String, Boolean[]> coinsCollected;
-    private String roomCollectedName;
-    private Boolean[] roomCollectedCoins;
+    private static HashMap<String, Boolean[]> roomProgress;
+
+    private String name;
+    private Boolean[] collectedCoins;
     public int width, height;
 
     private final Projectile[] projectiles;
@@ -94,6 +92,8 @@ public class Room {
     }
 
     private void loadRoom(String path) {
+        // save name
+        name = path;
         JsonValue mapJson = new JsonReader().parse(Gdx.files.internal(path));
         // start counting coins
         ArrayList<Vector2> coinLocations = new ArrayList<>();
@@ -193,18 +193,17 @@ public class Room {
             }
         }
 
-        // coins
-        if (!coinsCollected.containsKey(path) && !coinLocations.isEmpty()) {
-            coinsCollected.put(path, new Boolean[coinLocations.size()]);
-            Arrays.fill(coinsCollected.get(path), false);
-        }
+        // only collect coins if there is not already an entry for this room
         if (!coinLocations.isEmpty()) {
-            roomCollectedName = path;
-            roomCollectedCoins = new Boolean[coinLocations.size()];
-            Arrays.fill(roomCollectedCoins, false);
+            collectedCoins = new Boolean[coinLocations.size()];
+            Arrays.fill(collectedCoins, false);
+        } else {
+            collectedCoins = null;
         }
+
+        boolean hasKey = roomProgress.containsKey(path);
         for (int i = 0; i < coinLocations.size(); i++) {
-            if (coinsCollected.get(path)[i] == false) {
+            if (!hasKey || roomProgress.get(path)[i] == false) {
                 addObject(new ScorePickup(coinTex,
                     coinLocations.get(i).x * NewGameScreen.tileWidth,
                     coinLocations.get(i).y * NewGameScreen.tileHeight,
@@ -223,20 +222,37 @@ public class Room {
     }
 
     public void collectCoin(int id) {
-        roomCollectedName = NewGameScreen.nextRoom;
-        roomCollectedCoins[id] = true;
+        name = NewGameScreen.nextRoom;
+        collectedCoins[id] = true;
+    }
+
+    public boolean isVisited() {
+       return roomProgress.containsKey(name);
     }
 
     public void roomComplete() {
-        if (roomCollectedName != null && roomCollectedCoins != null) {
-            for (int i = 0; i < roomCollectedCoins.length; i++) {
-                coinsCollected.get(roomCollectedName)[i] = roomCollectedCoins[i];
+        // create entry if it does not already exist
+        if (!roomProgress.containsKey(name)) {
+            if (collectedCoins != null) {
+                roomProgress.put(name, new Boolean[collectedCoins.length]);
+                Arrays.fill(roomProgress.get(name), false);
+            } else {
+                roomProgress.put(name, null);
+            }
+        }
+        if (name != null && collectedCoins != null) {
+            for (int i = 0; i < collectedCoins.length; i++) {
+                // only copy over new coin data for coins that aren't completed
+                // effect: array and array
+                if (roomProgress.get(name)[i] == false) {
+                    roomProgress.get(name)[i] = collectedCoins[i];
+                }
             }
         }
     }
 
     public static void initialiseRooms() {
-        coinsCollected = new HashMap<String, Boolean[]>();
+        roomProgress = new HashMap<String, Boolean[]>();
     }
 
     public void openDoors() {

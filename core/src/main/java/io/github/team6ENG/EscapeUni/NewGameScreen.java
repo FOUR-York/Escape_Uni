@@ -52,7 +52,7 @@ public class NewGameScreen implements Screen {
         this.game = game;
 
         room = null;
-        nextRoom = "projectileReception.json";
+        nextRoom = "classRoom.json";
 
         // initialise screen space framebuffer
         frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 640, 480, false);

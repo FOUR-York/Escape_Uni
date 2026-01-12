@@ -22,7 +22,7 @@
     },
     {
       "door": {
-        "nextRoom": "storageRoom.json"
+        "nextRoom": "corridorRoom.json"
       }
     },
     {
