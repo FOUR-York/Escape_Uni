@@ -33,7 +33,7 @@ public class ScorePickup extends RoomObject {
 
                 if (countScore) {
                     Main.score += 25;
-                    NewGameScreen.player.scoreEarnedThisRoom += 25;
+                    NewGameScreen.player.scoreEarnedThisRoom += 50;
                 }
             }
         }

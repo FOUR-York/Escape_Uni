@@ -28,8 +28,10 @@ public class HiddenBob extends RoomObject {
                     Main.foundHiddenEvents++;
                 }
 
-                Main.score += 500;
-                NewGameScreen.player.scoreEarnedThisRoom += 500;
+                if (NewGameScreen.room.isVisited()){
+                    Main.score += 500;
+                    NewGameScreen.player.scoreEarnedThisRoom += 500;
+                }
             }
         }
     }

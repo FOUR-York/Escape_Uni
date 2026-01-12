@@ -156,7 +156,7 @@ public class Room {
                     }
                     case "turret": {
                         int r = jsonObject.get("direction").asInt();
-                        addObject(new Turret(turretTex, i * NewGameScreen.tileWidth, j * NewGameScreen.tileHeight, r, 4f));
+                        addObject(new Turret(turretTex, i * NewGameScreen.tileWidth, j * NewGameScreen.tileHeight, r, 3f));
                         break;
                     }
                     case "playerSpawn": {
