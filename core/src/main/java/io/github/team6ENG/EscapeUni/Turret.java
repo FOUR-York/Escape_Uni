@@ -21,8 +21,8 @@ public class Turret extends RoomObject {
      * @param texture
      * @param x
      * @param y
-     * @param dir
-     * @param speed
+     * @param dir cardinal direction that the turret fires
+     * @param speed speed of projectiles and turret firing rate
      */
     public Turret(Texture texture, float x, float y, int dir, float speed) {
         super(texture, x, y);
@@ -43,7 +43,7 @@ public class Turret extends RoomObject {
         t += delta;
         // fire if the value of the oscillating stepwise function has changed
         if ((int)Math.min(func(speed*t)+1, 1) != amp) {
-            NewGameScreen.room.spawnProjectile(x+NewGameScreen.tileWidth/2f, y+NewGameScreen.tileHeight/2f, 4f, dir, NewGameScreen.tileWidth/4f);
+            NewGameScreen.room.spawnProjectile(x+NewGameScreen.tileWidth/2f, y+NewGameScreen.tileHeight/2f, speed, dir, NewGameScreen.tileWidth/4f);
             amp = (int)Math.min(func(speed*t)+1, 1) ; // 0 or 1
         }
     }

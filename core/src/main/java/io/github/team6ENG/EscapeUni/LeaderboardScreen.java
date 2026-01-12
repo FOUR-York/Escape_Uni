@@ -18,6 +18,9 @@ import com.badlogic.gdx.utils.TimeUtils;
 
 import static io.github.team6ENG.EscapeUni.NewGameScreen.audioManager;
 
+/**
+ * Leaderboard menu screen
+ */
 public class LeaderboardScreen implements Screen {
 
     private final Main game;
@@ -37,8 +40,8 @@ public class LeaderboardScreen implements Screen {
     private com.badlogic.gdx.InputProcessor previousInputProcessor; // used to restore on hide()
 
     /**
-     * initialise win screen
-     * @param game current Instance of Main
+     * Initialise leaderboard screen
+     * @param game the current instance of main
      */
     public LeaderboardScreen(final Main game) {
         this.game = game;
@@ -74,6 +77,9 @@ public class LeaderboardScreen implements Screen {
         setupUI();
     }
 
+    /**
+     * Create buttons and add them to the stage
+     */
     private void setupUI() {
         exitButton = createButton("Exit");
         mainMenuButton = createButton("Main Menu");
@@ -85,6 +91,11 @@ public class LeaderboardScreen implements Screen {
         addListeners();
     }
 
+    /**
+     * Creates a new button with the given name
+     * @param text
+     * @return
+     */
     private TextButton createButton(String text) {
         // If skin is null, fallback to a simple TextButton may fail; ensure game.buttonSkin exists in assets
         TextButton button = new TextButton(text, skin);
@@ -95,6 +106,9 @@ public class LeaderboardScreen implements Screen {
         return button;
     }
 
+    /**
+     * Set button positions in the viewport
+     */
     private void positionButtons() {
         float w = stage.getViewport().getWorldWidth();
         float h = stage.getViewport().getWorldHeight();
@@ -103,6 +117,9 @@ public class LeaderboardScreen implements Screen {
         exitButton.setPosition(10f, 10f);
     }
 
+    /**
+     * Set button listeners, link screens
+     */
     private void addListeners() {
         Color normalColor = new Color(0.0f, 0.95f, 0.95f, 1f);
         Color clickColor = new Color(0.4f, 1f, 1f, 1f);

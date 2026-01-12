@@ -4,12 +4,23 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
+/**
+ * RoomObjects that increases score when collected
+ */
 public class ScorePickup extends RoomObject {
     private int gridX, gridY;
     private boolean collected = false;
     private boolean countScore;
     private int id;
 
+    /**
+     * Creates and initialises a coin
+     * @param texture
+     * @param x
+     * @param y
+     * @param countScore adds to score when collected if true
+     * @param id corresponding index in the collection array
+     */
     public ScorePickup(Texture texture, float x, float y, boolean countScore, int id) {
         super(texture, x, y);
         gridX = (int) (x/NewGameScreen.tileWidth);
@@ -32,7 +43,7 @@ public class ScorePickup extends RoomObject {
                 NewGameScreen.room.collectCoin(id);
 
                 if (countScore) {
-                    Main.score += 25;
+                    Main.score += 50;
                     NewGameScreen.player.scoreEarnedThisRoom += 50;
                 }
             }
@@ -41,6 +52,7 @@ public class ScorePickup extends RoomObject {
 
     @Override
     public void draw(SpriteBatch batch) {
+        // draws if uncollected
         if (!collected) {
             batch.draw(texture, x, y);
         }

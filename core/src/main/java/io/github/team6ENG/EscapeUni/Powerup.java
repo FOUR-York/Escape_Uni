@@ -4,10 +4,19 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
+/**
+ * RoomObject that applies invulnerability to the player when collected
+ */
 public class Powerup extends RoomObject {
     private int gridX, gridY;
     private boolean collected = false;
 
+    /**
+     * Create and initialise new Powerup
+     * @param texture
+     * @param x
+     * @param y
+     */
     public Powerup(Texture texture, float x, float y) {
         super(texture, x, y);
         gridX = (int) (x/NewGameScreen.tileWidth);
@@ -26,6 +35,7 @@ public class Powerup extends RoomObject {
                     Main.foundPositiveEvents++;
                 }
 
+                // make player invulnerable for 4 seconds
                 NewGameScreen.player.invinciblePowerup(4f);
             }
         }

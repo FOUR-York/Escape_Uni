@@ -22,7 +22,7 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 import static io.github.team6ENG.EscapeUni.NewGameScreen.audioManager;
 
 /**
- * screen displayed when player wins
+ * screen displayed when player wins with a high score
  */
 public class HiddenEndingScreen implements Screen {
 
@@ -47,7 +47,7 @@ public class HiddenEndingScreen implements Screen {
     private ShapeRenderer shapeRenderer;
 
     /**
-     * initialise win screen
+     * initialise hidden win screen
      * @param game current Instance of Main
      */
     public HiddenEndingScreen(final Main game) {
@@ -89,6 +89,9 @@ public class HiddenEndingScreen implements Screen {
         setupUI();
     }
 
+    /**
+     * Create buttons and positions
+     */
     private void setupUI() {
         exitButton = createButton("Exit");
         mainMenuButton = createButton("Continue");
@@ -100,6 +103,11 @@ public class HiddenEndingScreen implements Screen {
         addListeners();
     }
 
+    /**
+     * Helper function that creates a new button
+     * @param text button text
+     * @return
+     */
     private TextButton createButton(String text) {
         // If skin is null, fallback to a simple TextButton may fail; ensure game.buttonSkin exists in assets
         TextButton button = new TextButton(text, skin);
@@ -110,6 +118,9 @@ public class HiddenEndingScreen implements Screen {
         return button;
     }
 
+    /**
+     * Helper function to set the buttons positions
+     */
     private void positionButtons() {
         float w = stage.getViewport().getWorldWidth();
         float h = stage.getViewport().getWorldHeight();
@@ -118,6 +129,9 @@ public class HiddenEndingScreen implements Screen {
         exitButton.setPosition((w - exitButton.getWidth()) / 2f, h / 2f -170);
     }
 
+    /**
+     * Link buttons to their respective screens
+     */
     private void addListeners() {
         Color normalColor = new Color(0.0f, 0.95f, 0.95f, 1f);
         Color clickColor = new Color(0.4f, 1f, 1f, 1f);
@@ -181,6 +195,7 @@ public class HiddenEndingScreen implements Screen {
         game.batch.draw(currentFrame, 0, 0, w, h);
         game.batch.end();
 
+        // reset shapeRenderer
         shapeRenderer.setProjectionMatrix(game.batch.getProjectionMatrix());
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(0, 0, 0, 1);

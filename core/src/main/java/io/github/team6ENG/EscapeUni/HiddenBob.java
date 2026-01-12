@@ -5,11 +5,20 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
+/**
+ * RoomObject that displays a collectable hidden event
+ */
 public class HiddenBob extends RoomObject {
     private int gridX, gridY;
     private boolean collected = false;
     private Sprite sprite;
 
+    /**
+     * Create and initialise HiddenBob
+     * @param texture
+     * @param x
+     * @param y
+     */
     public HiddenBob(Texture texture, float x, float y) {
         super(texture, x, y);
         gridX = (int) (x/NewGameScreen.tileWidth);
@@ -17,6 +26,11 @@ public class HiddenBob extends RoomObject {
         sprite = new Sprite(texture);
     }
 
+
+    /**
+     * Update logic function, called each frame
+     * @param delta
+     */
     @Override
     public void update(float delta) {
         if (!collected) {
@@ -28,7 +42,8 @@ public class HiddenBob extends RoomObject {
                     Main.foundHiddenEvents++;
                 }
 
-                if (NewGameScreen.room.isVisited()){
+                // count score if room is uncompleted
+                if (!NewGameScreen.room.isVisited()){
                     Main.score += 500;
                     NewGameScreen.player.scoreEarnedThisRoom += 500;
                 }
@@ -36,6 +51,11 @@ public class HiddenBob extends RoomObject {
         }
     }
 
+    /**
+     * Draw function called every frame
+     * Draw bob if the player is in range
+     * @param batch
+     */
     @Override
     public void draw(SpriteBatch batch) {
         if (!collected) {

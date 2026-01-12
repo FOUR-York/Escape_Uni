@@ -61,6 +61,9 @@ public class WinScreen implements Screen {
         setupUI();
     }
 
+    /**
+     * Create buttons and positions
+     */
     private void setupUI() {
         exitButton = createButton("Exit");
         mainMenuButton = createButton("Continue");
@@ -72,6 +75,11 @@ public class WinScreen implements Screen {
         addListeners();
     }
 
+    /**
+     * Helper function that creates a new button
+     * @param text button text
+     * @return
+     */
     private TextButton createButton(String text) {
         // If skin is null, fallback to a simple TextButton may fail; ensure game.buttonSkin exists in assets
         TextButton button = new TextButton(text, skin);
@@ -82,6 +90,9 @@ public class WinScreen implements Screen {
         return button;
     }
 
+    /**
+     * Helper function to set the buttons positions
+     */
     private void positionButtons() {
         float w = stage.getViewport().getWorldWidth();
         float h = stage.getViewport().getWorldHeight();
@@ -90,6 +101,9 @@ public class WinScreen implements Screen {
         exitButton.setPosition((w - exitButton.getWidth()) / 2f, h / 2f -170);
     }
 
+    /**
+     * Link buttons to their respective screens
+     */
     private void addListeners() {
         Color normalColor = new Color(0.0f, 0.95f, 0.95f, 1f);
         Color clickColor = new Color(0.4f, 1f, 1f, 1f);
