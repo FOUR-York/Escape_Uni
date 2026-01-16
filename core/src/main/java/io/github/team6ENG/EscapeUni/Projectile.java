@@ -24,7 +24,7 @@ public class Projectile {
     public Projectile(float x, float y, float speed, int dir, float radius, int id) {
         this.x = x;
         this.y = y;
-        this.speed = speed;
+        this.speed = speed * 60;
         this.dir = dir;
         this.radius = radius;
         this.id = id;
