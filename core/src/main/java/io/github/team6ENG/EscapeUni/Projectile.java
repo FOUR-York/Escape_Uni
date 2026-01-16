@@ -43,19 +43,19 @@ public class Projectile {
         // update position
         switch (dir) {
             case 0:
-                y += speed;
+                y += speed * delta;
                 cellY += 1;
                 break;
             case 1:
-                x -= speed;
+                x -= speed * delta;
                 cellX -= 1;
                 break;
             case 2:
-                y -= speed;
+                y -= speed * delta;
                 cellY -= 1;
                 break;
             case 3:
-                x += speed;
+                x += speed * delta;
                 cellX += 1;
                 break;
         }
